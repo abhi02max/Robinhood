@@ -1,0 +1,95 @@
+{
+  "topic_slug": "binary-search",
+  "patterns": [
+    {
+      "slug": "classic-binary-search",
+      "name": "Classic Binary Search on Sorted Array",
+      "order_index": 1,
+      "explanation": "Search a sorted array for a target value by repeatedly halving the search range. The canonical `low, high, mid` template, with careful attention to inclusive vs. exclusive bounds.",
+      "when_to_use": "When the input is sorted and you want to test membership, find an exact value, or get a yes/no answer. The simplest binary-search problem.",
+      "intuition": "At every step, half of the remaining range cannot contain the target. After log N halvings, the range has size 1.",
+      "common_pitfalls": [
+        "`mid = (low + high) / 2` overflows for large `low + high` — use `low + (high - low) / 2`",
+        "Off-by-one in the termination condition (`<` vs. `<=`)",
+        "Updating `low = mid` (not `mid + 1`) and infinite-looping",
+        "Using binary search on an unsorted array because you forgot to sort"
+      ],
+      "complexity_signature": "O(log N) time, O(1) space"
+    },
+    {
+      "slug": "lower-upper-bound",
+      "name": "Lower Bound & Upper Bound",
+      "order_index": 2,
+      "explanation": "`lower_bound` returns the first index whose value is ≥ target; `upper_bound` returns the first index whose value is > target. Together they bracket all occurrences of the target in O(log N).",
+      "when_to_use": "Counting occurrences of a value in a sorted array; finding insertion position; range queries on sorted data; the inner primitive of LIS-by-binary-search.",
+      "intuition": "Both are binary searches on a *predicate* ('is `a[i] >= target`?'). Once you can express your problem as 'find the first index where this monotone predicate becomes true', you have a binary search.",
+      "common_pitfalls": [
+        "Confusing `lower_bound` with 'first equal' — they coincide only when the target is present",
+        "Returning `n` (past-the-end) without handling that case at the call site",
+        "Writing two separate searches when one parametric predicate suffices",
+        "Using `>` where `>=` was needed in the predicate"
+      ],
+      "complexity_signature": "O(log N) per query"
+    },
+    {
+      "slug": "binary-search-on-rotated",
+      "name": "Binary Search on Rotated Sorted Array",
+      "order_index": 3,
+      "explanation": "Search a sorted-then-rotated array (or find the rotation point) by deciding at each step which half is sorted, and whether the target lies inside it. Generalizes to bitonic and 'mountain' arrays.",
+      "when_to_use": "When the input is described as 'sorted but rotated by an unknown amount' or 'first increasing then decreasing'. Often appears in interviews because it tests whether you understand binary search beyond memorized templates.",
+      "intuition": "At each step, exactly one of the two halves around `mid` is fully sorted (since rotation breaks at most one place). Check which one, then test if `target` lies in the sorted half: if yes, recurse there; otherwise the other half.",
+      "common_pitfalls": [
+        "Duplicates break the 'one half is sorted' invariant — must shrink by one and retry, degrading to O(N)",
+        "Confusing 'left half is sorted' with 'left half contains target'",
+        "Wrong inclusive/exclusive checks in `target in [low, mid]`",
+        "Forgetting that the rotation could be 0 (array is already sorted)"
+      ],
+      "complexity_signature": "O(log N) without duplicates, O(N) worst case with duplicates"
+    },
+    {
+      "slug": "binary-search-on-2d-matrix",
+      "name": "Binary Search on 2D Matrix",
+      "order_index": 4,
+      "explanation": "Two flavors: (1) row-sorted AND column-sorted ('staircase' search from top-right in O(R+C)), and (2) row-sorted with each row's first > previous row's last (treat as flat array, true binary search in O(log RC)).",
+      "when_to_use": "Matrix search problems, 'k-th smallest in sorted matrix', 'is value in matrix'. Picking the right flavor depends on whether rows are 'concatenated sorted' or merely 'row-and-column sorted'.",
+      "intuition": "In flavor (1), starting at top-right: going down strictly increases, going left strictly decreases — so each comparison eliminates a row or column. In flavor (2), the matrix linearizes cleanly into a 1D sorted array.",
+      "common_pitfalls": [
+        "Applying flavor (2)'s flat-array trick to a flavor (1) matrix (incorrect)",
+        "Off-by-one when converting `mid` index to `(row, col)`",
+        "Starting the staircase at top-left or bottom-right — neither works",
+        "Assuming the matrix is rectangular when it isn't"
+      ],
+      "complexity_signature": "Flavor 1: O(R+C). Flavor 2: O(log(R·C))."
+    },
+    {
+      "slug": "binary-search-on-answer",
+      "name": "Binary Search on the Answer Space",
+      "order_index": 5,
+      "explanation": "When the answer is a number in a known range and there is a *monotone feasibility predicate* `canDoIt(x)` (if it's possible at x, it's possible at all x' ≥ x), binary-search the smallest feasible x.",
+      "when_to_use": "Minimize the maximum / maximize the minimum problems: 'minimum capacity to ship within D days', 'split array into K parts minimizing max sum', 'koko eating bananas', 'aggressive cows'.",
+      "intuition": "You don't know the answer, but you know how to *check* whether a candidate works. Binary search over candidates — O(log range) checks of an O(N) verifier gives O(N log range) total.",
+      "common_pitfalls": [
+        "Predicate isn't actually monotone — algorithm returns wrong answer silently",
+        "Initial `high` too small, so the true answer is outside the search space",
+        "Verifier inside the binary search is buggy or non-deterministic",
+        "Converging on the wrong side of the threshold (off-by-one in `low`/`high` updates)"
+      ],
+      "complexity_signature": "O(N · log(answer range))"
+    },
+    {
+      "slug": "peak-and-bitonic",
+      "name": "Peak Element & Bitonic Search",
+      "order_index": 6,
+      "explanation": "Find a peak (an element greater than both neighbors) in O(log N) even when the array is unsorted, by exploiting that each step climbs uphill toward *some* peak. Extends to bitonic arrays (strictly increasing then strictly decreasing).",
+      "when_to_use": "'Find peak element', 'find peak in mountain array', 'find in bitonic sequence' problems. Anywhere a derivative-like sign change exists.",
+      "intuition": "If `a[mid] < a[mid+1]`, an uphill direction exists rightward — a peak must lie to the right. Each halving brings you closer to a peak; the boundary of the array acts as −∞.",
+      "common_pitfalls": [
+        "Out-of-bounds when comparing `a[mid+1]` near the right edge",
+        "Confusing 'find the peak' with 'find the maximum' (any peak is acceptable)",
+        "Assuming uniqueness of the peak when the problem allows plateaus",
+        "Wrong update direction when the comparison is reversed"
+      ],
+      "complexity_signature": "O(log N) time, O(1) space"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+[package]
+name = "architecture-audit-checker-rs"
+version = "0.0.0"
+edition = "2021"
+publish = false
+description = "Rust track of the architecture-audit deliverable checker harness. Loads the six Markdown deliverables under .kiro/specs/architecture-audit/ and runs the 17 Correctness Properties via proptest."
+
+[lib]
+name = "architecture_audit_checker_rs"
+path = "src/lib.rs"
+
+[dependencies]
+pulldown-cmark = "0.10"
+
+[dev-dependencies]
+proptest = "1"

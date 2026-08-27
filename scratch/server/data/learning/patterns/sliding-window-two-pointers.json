@@ -1,0 +1,111 @@
+{
+  "topic_slug": "sliding-window-two-pointers",
+  "patterns": [
+    {
+      "slug": "fixed-size-sliding-window",
+      "name": "Fixed-Size Sliding Window",
+      "order_index": 1,
+      "explanation": "The window has a fixed size K specified by the problem. Maintain a running aggregate (sum, count, frequency map) over the K elements. As the window slides one step, add the entering element and subtract the leaving element — O(1) per slide.",
+      "when_to_use": "Problem says 'subarray of length K' or 'window of size K': maximum average of K consecutive, count anagrams of length K, K-radius averages, max sum of K cards from either end.",
+      "intuition": "Recomputing the aggregate for every position would cost O(N·K). The window of size K shares K−1 elements with the previous window, so the difference is exactly one entering and one leaving element.",
+      "common_pitfalls": [
+        "Off-by-one when K equals N or K equals 1",
+        "Updating the aggregate before checking that the window has reached size K",
+        "Using a sum when a frequency map is needed (anagram problems)",
+        "Re-creating data structures inside the loop instead of incrementally updating them"
+      ],
+      "complexity_signature": "O(N) time, O(K) or O(σ) space"
+    },
+    {
+      "slug": "variable-size-sliding-window",
+      "name": "Variable-Size Sliding Window (Shrink-on-Violation)",
+      "order_index": 2,
+      "explanation": "Two indices `left` and `right`. Expand `right` greedily, adding new elements to the running aggregate. When a constraint is violated, advance `left` until it's satisfied again. Track the best window size or count along the way.",
+      "when_to_use": "Problem asks for the longest / shortest / count of subarrays satisfying a constraint that is *monotone in window size* — longest substring without repeats, minimum window containing all chars, longest substring with at most K distinct, fruit into baskets.",
+      "intuition": "If a window is valid, every subwindow inside it might also be relevant. Shrinking from the left until validity returns is exactly what 'find the smallest l such that [l..r] is valid' demands. Each index enters and leaves at most once → amortized O(N).",
+      "common_pitfalls": [
+        "Updating the answer outside the validity region (counting invalid windows)",
+        "Forgetting to update auxiliary structures (counts, sums) on shrink",
+        "Confusing 'shrink while invalid' with 'shrink until valid' — direction matters",
+        "Trying variable-window where the constraint isn't monotone (then the technique is wrong)"
+      ],
+      "complexity_signature": "Amortized O(N) — each index visited twice"
+    },
+    {
+      "slug": "at-most-k-window",
+      "name": "At-Most-K / Exactly-K Window Decomposition",
+      "order_index": 3,
+      "explanation": "To count subarrays with *exactly* K of something, compute `atMost(K) - atMost(K-1)`. Each `atMost(K)` is solved with a variable sliding window in O(N).",
+      "when_to_use": "Subarrays with K different integers, count number of nice subarrays (exactly K odd), binary subarrays with sum, count subarrays where max element appears at least K times. The signature word is 'exactly'.",
+      "intuition": "'Exactly K' is hard to count directly; 'at most K' is easy with a sliding window because the constraint is monotone. The difference of two at-most-K counts is exactly-K by inclusion–exclusion.",
+      "common_pitfalls": [
+        "Trying to count exactly-K directly with a single window — usually wrong or much more complex",
+        "Off-by-one between `atMost(K) − atMost(K−1)` and `atMost(K) − atMost(K)`",
+        "Counting 'subarrays' vs. 'substrings' inconsistently (length-1 included or not)",
+        "Forgetting that the technique requires a count-of-windows aggregator (`r − l + 1` per right)"
+      ],
+      "complexity_signature": "O(N) per `atMost`, O(N) total"
+    },
+    {
+      "slug": "opposite-direction-two-pointers",
+      "name": "Opposite-Direction Two Pointers (Converging on Sorted Input)",
+      "order_index": 4,
+      "explanation": "Place pointers `l = 0` and `r = n-1` at opposite ends of a sorted array and move them toward each other based on a comparison against a target. Replaces O(N²) brute force with O(N) by exploiting sortedness.",
+      "when_to_use": "Two Sum II on a sorted array, 3Sum and 4Sum (after fixing the leading elements), Container With Most Water, Trapping Rain Water (two-pointer variant), Valid Palindrome, Squares of a Sorted Array, Boats to Save People.",
+      "intuition": "Sortedness means moving `l` right strictly increases the left value and moving `r` left strictly decreases the right value. The comparison against the target tells you which pointer must move to make progress — the wrong move provably cannot improve the answer, so each index is touched at most once.",
+      "common_pitfalls": [
+        "Forgetting to skip duplicates after a match (produces duplicate triples in 3Sum)",
+        "Moving the wrong pointer when the sum overshoots/undershoots the target",
+        "Applying the technique to an unsorted array (or sorting destroys index information the problem needs)",
+        "Off-by-one at the meeting point (`l < r` vs. `l <= r` — depends on whether the same index can pair with itself)"
+      ],
+      "complexity_signature": "O(N) per pass, O(1) extra space"
+    },
+    {
+      "slug": "same-direction-two-pointers",
+      "name": "Same-Direction Two Pointers (Fast & Slow / Partition)",
+      "order_index": 5,
+      "explanation": "Both pointers move from left to right but at different rates or with different roles. The 'slow' pointer marks the write position; the 'fast' pointer scans for elements to keep. Used for in-place filtering and partitioning.",
+      "when_to_use": "Move zeroes to end, remove duplicates from sorted array, remove element by value, partition array by parity, sort array by parity, backspace string compare.",
+      "intuition": "Slow stays at the next 'good' write position; fast scans ahead to find values that should be written. The technique gives O(N) in-place rearrangement with O(1) extra space.",
+      "common_pitfalls": [
+        "Swapping when overwriting would suffice (or vice versa)",
+        "Off-by-one at the end — what does the slow pointer represent: 'next write' or 'last written'?",
+        "Forgetting to zero out the tail when the problem requires it",
+        "Confusing this pattern with the linked-list fast/slow (different invariants)"
+      ],
+      "complexity_signature": "O(N) time, O(1) space, in-place"
+    },
+    {
+      "slug": "multi-pointer-merge",
+      "name": "Multi-Pointer Merge & Sweep",
+      "order_index": 6,
+      "explanation": "Three or more synchronized pointers: merging multiple sorted sequences, intersecting two interval lists, sweeping with one fixed and two free pointers (e.g., for triples), or combining two sliding windows.",
+      "when_to_use": "Merge Sorted Array (in-place from the back), Interval List Intersections, 3Sum Smaller, Valid Triangle Number, Longest Mountain in Array, Number of Subsequences That Satisfy Sum Condition.",
+      "intuition": "When two sorted streams need to be merged or intersected, advance whichever pointer points to the smaller (or earlier-ending) element. For triples on a sorted array, fix the smallest and run two converging pointers on the rest.",
+      "common_pitfalls": [
+        "In-place merge from the front instead of from the back (overwrites unread data)",
+        "Advancing both pointers on equal values when only one should move",
+        "Off-by-one in interval intersection (`max(start) <= min(end)`)",
+        "Forgetting that the technique requires sortedness"
+      ],
+      "complexity_signature": "O(N + M) per pass, O(1) extra"
+    },
+    {
+      "slug": "monotonic-deque-window",
+      "name": "Monotonic Deque Window (Sliding Min/Max in O(1) Amortized)",
+      "order_index": 7,
+      "explanation": "Maintain a deque of *indices* into the input such that the values they reference are monotonic (decreasing for window-max, increasing for window-min). On each slide: pop expired indices from the front (those that have left the window), pop dominated indices from the back (their values can never be the answer while a strictly better value exists later), then push the current index. The front of the deque is always the current window optimum.",
+      "when_to_use": "Sliding Window Maximum, Sliding Window Minimum, Shortest Subarray with Sum at Least K, Constrained Subsequence Sum, Jump Game VI, Largest Rectangle in Histogram (with a stack variant). Whenever a sliding window asks for the running min/max in O(1) amortized.",
+      "intuition": "If a smaller (for max-queries) earlier element is still in the deque when a larger one arrives, the smaller one is permanently dominated — it can never become the window max while the larger one is alive, and the larger one is alive longer because its expiry index is greater. So drop it. Each index is pushed once and popped once — amortized O(1) per slide.",
+      "common_pitfalls": [
+        "Storing values instead of indices (you cannot tell when an element has slid out of the window without its index)",
+        "Forgetting to pop expired indices from the front before reading the answer",
+        "Using the wrong monotonicity (decreasing deque for min, or vice versa)",
+        "Reading the deque front before the window has filled to size K",
+        "Reaching for a heap (O(log N)) when a deque (O(1) amortized) is the canonical fit"
+      ],
+      "complexity_signature": "O(N) amortized time, O(K) space"
+    }
+  ]
+}

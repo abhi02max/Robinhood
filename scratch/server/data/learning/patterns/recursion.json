@@ -1,0 +1,95 @@
+{
+  "topic_slug": "recursion",
+  "patterns": [
+    {
+      "slug": "subset-include-exclude",
+      "name": "Subset Generation (Include / Exclude)",
+      "order_index": 1,
+      "explanation": "Generate all 2^N subsets by recursing with a 'choose to include or skip the current element' branch. The recursion tree has depth N and 2^N leaves.",
+      "when_to_use": "Enumerate all subsets / power set, count subsets satisfying a property, partition problems where the brute-force is feasible (N ≤ 20).",
+      "intuition": "Each element has two fates: in or out. The recursion captures this binary choice; the leaves enumerate all combinations.",
+      "common_pitfalls": [
+        "Mutating a shared list and forgetting to undo on backtrack",
+        "Pushing a reference to the running list instead of a copy when collecting results",
+        "Recursing with the same index twice and exploding into N!",
+        "Using subset generation when N > 20 — switch to DP"
+      ],
+      "complexity_signature": "O(N · 2^N) time, O(N) recursion depth"
+    },
+    {
+      "slug": "permutation-swap",
+      "name": "Permutations (Swap-Based)",
+      "order_index": 2,
+      "explanation": "Generate all N! permutations by swapping the current position with each later position, recursing, then swapping back. Avoids the O(N) overhead of a 'used' array per call.",
+      "when_to_use": "Permutations, permutations II (with duplicates), letter-tile possibilities, anywhere you need all orderings of a small N.",
+      "intuition": "At index i, fix one of the remaining elements at position i (by swapping), recurse on i+1, then unswap. Each leaf of the recursion is one permutation.",
+      "common_pitfalls": [
+        "Forgetting to swap back (corrupts the array for sibling branches)",
+        "Producing duplicates when input has duplicates — must skip equal swaps",
+        "Recursing with N! complexity when DP would suffice",
+        "Returning a reference to the working array instead of a snapshot"
+      ],
+      "complexity_signature": "O(N · N!) time, O(N) depth"
+    },
+    {
+      "slug": "backtracking-with-restore",
+      "name": "Backtracking with State Restore",
+      "order_index": 3,
+      "explanation": "Explore a decision tree where each branch makes a choice, recurses, and then *undoes* the choice before trying the next branch. The 'restore' step is what makes backtracking different from naive recursion.",
+      "when_to_use": "N-Queens, Sudoku, word search, combination sum, generate parentheses, palindrome partitioning. Anywhere the search space is huge but pruning makes it tractable.",
+      "intuition": "Backtracking = DFS over a decision tree + pruning + undo. Pruning cuts branches that can't lead to a valid answer; undo restores the shared state so the next branch sees a clean slate.",
+      "common_pitfalls": [
+        "Forgetting to restore the state after the recursive call",
+        "Pruning too aggressively and missing valid solutions",
+        "Pruning too weakly and timing out",
+        "Using deep copies of state instead of mutate-then-restore (correct but slow)"
+      ],
+      "complexity_signature": "Exponential in branching factor; pruning is essential"
+    },
+    {
+      "slug": "divide-and-conquer",
+      "name": "Divide & Conquer",
+      "order_index": 4,
+      "explanation": "Split a problem into k smaller independent subproblems, solve each recursively, combine the results. Master theorem governs complexity: T(N) = a·T(N/b) + f(N).",
+      "when_to_use": "Merge sort, quick sort, closest pair of points, Strassen-style matrix multiply, max subarray (D&C variant), majority element, count inversions.",
+      "intuition": "If two halves of the problem can be solved independently and combined cheaply, total cost is the sum across the recursion tree — usually O(N log N) when combine is O(N).",
+      "common_pitfalls": [
+        "Combine step that's secretly O(N²), wrecking the complexity",
+        "Subproblems that overlap (then it's DP, not D&C)",
+        "Not actually halving — recursing on size N−1 gives O(N²) instead of O(N log N)",
+        "Using D&C where simple iteration would be clearer"
+      ],
+      "complexity_signature": "Master theorem: typically O(N log N) when combine is O(N)"
+    },
+    {
+      "slug": "decision-tree",
+      "name": "Decision Tree Recursion",
+      "order_index": 5,
+      "explanation": "Frame the problem as 'at each step, what decisions can I make, and what's the best outcome?' Recurse on each decision. Without memoization, exponential; with memoization, this becomes top-down DP.",
+      "when_to_use": "Coin change, climbing stairs, house robber, target sum, partition equal subset sum — when the state is small enough that memoization will tame the exponential.",
+      "intuition": "A clean recursive formulation has a return contract ('the best answer for this subproblem') and a small recursion body ('try each decision, take the best'). Memoizing the return is mechanical.",
+      "common_pitfalls": [
+        "Mutating shared state instead of returning values (memoization breaks)",
+        "Memo key that doesn't capture all of the subproblem's state",
+        "Forgetting base cases or getting them off by one",
+        "Recursing with parameters whose ranges aren't bounded → memo explosion"
+      ],
+      "complexity_signature": "O(states × work per state) once memoized"
+    },
+    {
+      "slug": "recursion-on-data-structures",
+      "name": "Recursion on Linked Structures",
+      "order_index": 6,
+      "explanation": "Recurse along a data structure's natural shape: linked lists by `next`, trees by children, expressions by sub-expressions. The function's return value carries the answer for the subtree.",
+      "when_to_use": "Tree height/diameter, list reversal (recursive), expression evaluation, JSON-like nested aggregation. Anything where the structure dictates the recursion shape.",
+      "intuition": "Define the function's contract for *any* node, then assume the contract holds for its children and combine. This is mathematical induction in code.",
+      "common_pitfalls": [
+        "Stack overflow on long lists or unbalanced trees",
+        "Recomputing the same subtree multiple times (use memoization or one-pass)",
+        "Failing to define the base case clearly",
+        "Mixing return-value recursion with mutation"
+      ],
+      "complexity_signature": "O(N) time, O(H) recursion depth"
+    }
+  ]
+}

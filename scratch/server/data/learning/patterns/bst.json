@@ -1,0 +1,80 @@
+{
+  "topic_slug": "bst",
+  "patterns": [
+    {
+      "slug": "in-order-property",
+      "name": "In-Order Sortedness",
+      "order_index": 1,
+      "explanation": "An inorder traversal of a BST produces values in sorted order. Many BST problems reduce to 'inorder traversal + check property': validate, find successor, find k-th element.",
+      "when_to_use": "Validate BST (one-pass with previous value), Convert Sorted Array to BST, BST Iterator, Inorder Successor, Recover BST (two swapped nodes detected via inorder).",
+      "intuition": "Inorder: left → root → right. The recursion processes the entire left subtree first, ensuring the root sees a value greater than everything before it.",
+      "common_pitfalls": [
+        "Validating BST with parent-only comparison (need bounds, not just direct parent)",
+        "Failing on duplicate values (definition-dependent)",
+        "Inorder iterator not initialized correctly (must push left spine first)",
+        "Confusing inorder of BST with BFS"
+      ],
+      "complexity_signature": "O(N) time, O(H) space"
+    },
+    {
+      "slug": "validation-with-bounds",
+      "name": "Validation with Bounds",
+      "order_index": 2,
+      "explanation": "Each node has an allowed range `(low, high)` inherited from ancestors: going left tightens `high`, going right tightens `low`. A node is valid iff its value is strictly inside its bounds.",
+      "when_to_use": "Validate BST (the rigorous version), Trim BST (cut nodes outside [low, high]), Range Sum of BST, BST queries with constraints.",
+      "intuition": "The BST invariant is global, not local. A node's value must beat all of its left ancestors (lower bound) and all of its right ancestors (upper bound). Bounds propagate through recursion exactly.",
+      "common_pitfalls": [
+        "Comparing only with the immediate parent — fails on grandparent constraints",
+        "Using `<=` where `<` was needed (or vice versa)",
+        "Initializing bounds with `INT_MIN/INT_MAX` and overflow on edge inputs",
+        "Mixing inorder check and bounds check redundantly"
+      ],
+      "complexity_signature": "O(N) time, O(H) recursion"
+    },
+    {
+      "slug": "insert-delete-bst",
+      "name": "Insert / Delete in BST",
+      "order_index": 3,
+      "explanation": "Insertion: descend until null, attach new leaf. Deletion: three cases — no child (just remove), one child (splice), two children (replace with inorder successor or predecessor and recursively delete that).",
+      "when_to_use": "Insert into a Binary Search Tree, Delete Node in a BST, Trim BST. BST mutation problems.",
+      "intuition": "Insertion is straightforward; deletion is hard because you must preserve the BST invariant after removing an interior node. The successor/predecessor swap reduces the two-child case to a leaf deletion.",
+      "common_pitfalls": [
+        "Forgetting to return the (possibly new) subtree root from the recursion",
+        "Mishandling the two-child deletion (failing to recurse on the successor's removal)",
+        "Skewing the tree into a linked list with biased input (would need balancing)",
+        "Not handling 'root deleted' (the entire tree's root may change)"
+      ],
+      "complexity_signature": "O(H) time, O(H) recursion"
+    },
+    {
+      "slug": "kth-element-via-inorder",
+      "name": "K-th Smallest / Largest via Inorder",
+      "order_index": 4,
+      "explanation": "Inorder traversal yields sorted order; stop after K elements. With node-count augmentation per subtree, you can answer k-th in O(H) by descending: compare k to left subtree's size and recurse.",
+      "when_to_use": "Kth Smallest Element in BST, Kth Largest (reverse inorder), 'with frequent inserts' variants that demand augmented BSTs.",
+      "intuition": "If you know the size of the left subtree, you know whether the k-th element is on the left, at the root, or on the right. Recurse on the appropriate side with the adjusted k.",
+      "common_pitfalls": [
+        "Walking the entire tree when you can short-circuit at K elements",
+        "Confusing 'k-th smallest' with 'k-th in level order'",
+        "Not maintaining subtree-size augmentation correctly under inserts/deletes",
+        "Off-by-one between 0-indexed and 1-indexed k"
+      ],
+      "complexity_signature": "O(H + K) inorder, O(H) augmented"
+    },
+    {
+      "slug": "range-queries-bst",
+      "name": "Range Queries on BST",
+      "order_index": 5,
+      "explanation": "When queries are bounded by `[low, high]`, prune subtrees: if `node.val < low`, skip the left subtree; if `node.val > high`, skip the right subtree. Otherwise visit and recurse on both.",
+      "when_to_use": "Range Sum of BST, Find Mode in BST (range-bounded), counting/summing nodes in [low, high], Closest BST Value (single-value variant of bound pruning).",
+      "intuition": "The BST property allows you to skip whole subtrees that can't contain values in the range. The traversal is O(H + K) where K is the number of matched nodes — much better than O(N) for narrow ranges.",
+      "common_pitfalls": [
+        "Visiting all nodes anyway (correct but slow)",
+        "Inclusive vs. exclusive endpoints differ from problem to problem",
+        "Mishandling duplicates at the boundary",
+        "Confusing 'range sum' with 'k-th smallest in range' (different algorithms)"
+      ],
+      "complexity_signature": "O(H + K) where K = matched nodes"
+    }
+  ]
+}

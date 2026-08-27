@@ -1,0 +1,133 @@
+{
+  "$schema": "../../problem.schema.json",
+  "schema_version": "2.0",
+  "topic_slug": "sliding-window-two-pointers",
+  "pattern_slug": "variable-size-sliding-window",
+  "problems": [
+    {
+      "slug": "longest-substring-without-repeating-characters",
+      "title": "Longest Substring Without Repeating Characters",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "variable-size-sliding-window", "string", "hash-map"],
+      "companies": ["Amazon", "Bloomberg", "Microsoft", "Apple", "Adobe", "Yahoo"],
+      "description": "Given a string `s`, find the length of the **longest substring** without repeating characters.\n\nA *substring* is a contiguous, non-empty sequence of characters within a string. The substring must contain only distinct characters; the moment a character would repeat inside the candidate, the candidate is invalid.\n\nReturn the length of the longest valid substring (a single integer). If the input is empty, return `0`.",
+      "real_world_analogy": "Imagine you're listening to a playlist and want the longest run of songs you can play without any artist repeating. The moment a duplicate artist appears, you must skip forward — but only past the *first* occurrence of that duplicate, not all the way back to the start. The window of currently allowed songs only ever shrinks from the left, never the right, and you record the longest window you ever held.",
+      "examples": [
+        {
+          "input": "s = \"abcabcbb\"",
+          "output": "3",
+          "explanation": "The longest valid substring is `\"abc\"` (length 3). Once we read the second `'a'`, the window must shrink past the first `'a'`. The substring then continues as `\"bca\"`, `\"cab\"`, `\"abc\"`, etc. — none can grow beyond length 3 because every 4-character window contains a repeat."
+        },
+        {
+          "input": "s = \"bbbbb\"",
+          "output": "1",
+          "explanation": "Every consecutive pair is a duplicate, so the window can never hold more than one character. The longest valid substring is `\"b\"`."
+        },
+        {
+          "input": "s = \"pwwkew\"",
+          "output": "3",
+          "explanation": "The answer is `\"wke\"` (length 3). Note that `\"pwke\"` is a *subsequence* (skip the second `'w'`) — but the problem asks for a contiguous substring, where you cannot skip. After the second `'w'`, the window must shrink past the first `'w'`."
+        },
+        {
+          "input": "s = \"dvdf\"",
+          "output": "3",
+          "explanation": "A classic trap. After reading `\"dv\"`, the second `'d'` arrives. A naive shrink-by-one would set `left = 1`, giving window `\"vd\"`. But the correct jump is `left = 1` (one past the first `'d'` at index 0). Then `'f'` arrives and the window grows to `\"vdf\"`, length 3. The hashmap of last-seen indices makes this jump O(1)."
+        },
+        {
+          "input": "s = \"\"",
+          "output": "0",
+          "explanation": "Empty string. There are no substrings, so the answer is 0."
+        }
+      ],
+      "constraints": [
+        "0 <= s.length <= 5 * 10^4",
+        "s consists of English letters, digits, symbols, and spaces"
+      ],
+      "edge_cases": [
+        "Empty string → 0",
+        "Single character → 1",
+        "All identical characters → 1",
+        "All distinct characters → entire string length",
+        "Mixed case — `'A'` and `'a'` are distinct characters",
+        "Repeats far apart — `\"abba\"`: when reading the second `'a'`, the previous `'a'` is OUTSIDE the current window, so left should NOT jump backward",
+        "Only whitespace or symbols — characters are still characters; treat them like any other"
+      ],
+      "hints": [
+        "The brute force checks every substring (i, j) for distinctness with a hash set, paying O(N^2) substrings × O(N) check = O(N^3). Can you avoid re-examining a substring you've already validated?",
+        "Use two indices, `left` and `right`. Move `right` forward greedily. The moment the entering character creates a duplicate inside the window, advance `left` enough to exclude the previous occurrence — but never further than that.",
+        "A hashmap from character to its **most recent index** lets you set `left = max(left, lastIndex[c] + 1)` in O(1). The `max` is critical: if the previous occurrence is already to the left of the current window (i.e., outside), don't move `left` backward."
+      ],
+      "approaches": [
+        {
+          "name": "Brute Force (Check Every Substring)",
+          "summary": "Enumerate all O(N^2) substrings; for each, check uniqueness with a hash set as you extend the right end.",
+          "intuition": "A substring is uniquely determined by `(i, j)` with `i <= j`. For each starting index `i`, walk the right end `j` outward, keeping a set of characters in the current window. The moment a duplicate appears, every longer substring starting at `i` is also invalid, so break and try the next `i`. Updating the running maximum size on every successful extension gives the answer.\n\nThe set lookup makes each (i, j) cost O(1) amortized (rather than the naive O(j - i + 1) for a linear scan), so total time is O(N^2). Correct, but for `N = 50_000` that's 2.5 × 10^9 operations — too slow for the constraint.",
+          "steps": [
+            "Initialize `best = 0`.",
+            "For each `i` from 0 to N-1:",
+            "  Initialize an empty set.",
+            "  For each `j` from `i` to N-1:",
+            "    If `s[j]` is in the set, break (any longer substring starting at `i` is also invalid).",
+            "    Otherwise add `s[j]` to the set and update `best = max(best, j - i + 1)`.",
+            "Return `best`."
+          ],
+          "code": {
+            "javascript": "function lengthOfLongestSubstring(s) {\n  let best = 0;\n  for (let i = 0; i < s.length; i++) {\n    const seen = new Set();\n    for (let j = i; j < s.length; j++) {\n      if (seen.has(s[j])) break;\n      seen.add(s[j]);\n      if (j - i + 1 > best) best = j - i + 1;\n    }\n  }\n  return best;\n}",
+            "python": "def length_of_longest_substring(s):\n    best = 0\n    n = len(s)\n    for i in range(n):\n        seen = set()\n        for j in range(i, n):\n            if s[j] in seen:\n                break\n            seen.add(s[j])\n            if j - i + 1 > best:\n                best = j - i + 1\n    return best"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(min(N, sigma))"
+        },
+        {
+          "name": "Variable Sliding Window with Hash Map (Optimal)",
+          "summary": "Two indices form a window; on each duplicate, jump `left` past the previous occurrence using a `char -> last_index` map.",
+          "intuition": "Maintain a window `[left, right]` that always contains *only distinct characters*. The window grows by advancing `right`; it shrinks only when forced by a duplicate.\n\nWhen we read `c = s[right]`:\n\n- If `c` was last seen at an index INSIDE the current window (i.e., `lastIndex[c] >= left`), the window must shrink to exclude that previous occurrence. Set `left = lastIndex[c] + 1`.\n- If `c` was last seen BEFORE the current window (`lastIndex[c] < left`), the previous occurrence is no longer in the window, so do nothing — leave `left` where it is. **This is the trap step**: a naive implementation would always set `left = lastIndex[c] + 1`, which can move `left` backward and re-include duplicates. Hence the `max(left, lastIndex[c] + 1)` formulation.\n\nThen update `lastIndex[c] = right` and record `best = max(best, right - left + 1)`. Each index is visited by `right` exactly once, and `left` only moves forward, so total work is O(N). The hashmap holds at most σ entries (alphabet size), so space is O(min(N, σ)).\n\n**Why this is the canonical variable-window pattern.** The constraint 'window contains only distinct characters' is *monotone*: if a window is valid, every sub-window is also valid; if a window is invalid (has a duplicate), every super-window is also invalid. That monotonicity is exactly what makes the shrink-on-violation pattern correct.",
+          "steps": [
+            "Initialize `lastIndex` as an empty map, `left = 0`, `best = 0`.",
+            "For each `right` from 0 to N-1, let `c = s[right]`:",
+            "  If `c` is in `lastIndex` and `lastIndex[c] >= left`, set `left = lastIndex[c] + 1`.",
+            "  Set `lastIndex[c] = right`.",
+            "  Update `best = max(best, right - left + 1)`.",
+            "Return `best`."
+          ],
+          "code": {
+            "javascript": "function lengthOfLongestSubstring(s) {\n  const lastIndex = new Map();\n  let left = 0;\n  let best = 0;\n  for (let right = 0; right < s.length; right++) {\n    const c = s[right];\n    if (lastIndex.has(c) && lastIndex.get(c) >= left) {\n      left = lastIndex.get(c) + 1;\n    }\n    lastIndex.set(c, right);\n    if (right - left + 1 > best) best = right - left + 1;\n  }\n  return best;\n}",
+            "python": "def length_of_longest_substring(s):\n    last_index = {}\n    left = 0\n    best = 0\n    for right, c in enumerate(s):\n        if c in last_index and last_index[c] >= left:\n            left = last_index[c] + 1\n        last_index[c] = right\n        cur = right - left + 1\n        if cur > best:\n            best = cur\n    return best"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(min(N, sigma))"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function lengthOfLongestSubstring(s) {\n  // Your code here\n}",
+        "python": "def length_of_longest_substring(s):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(min(N, sigma))",
+      "test_cases": [
+        { "input_payload": { "s": "abcabcbb" },                "expected_output": 3, "is_hidden": false, "order_index": 1, "label": "canonical example" },
+        { "input_payload": { "s": "bbbbb" },                   "expected_output": 1, "is_hidden": false, "order_index": 2, "label": "all same character" },
+        { "input_payload": { "s": "pwwkew" },                  "expected_output": 3, "is_hidden": false, "order_index": 3, "label": "substring vs subsequence trap" },
+        { "input_payload": { "s": "" },                        "expected_output": 0, "is_hidden": false, "order_index": 4, "label": "empty string" },
+        { "input_payload": { "s": "a" },                       "expected_output": 1, "is_hidden": false, "order_index": 5, "label": "single character" },
+
+        { "input_payload": { "s": "dvdf" },                    "expected_output": 3, "is_hidden": true, "order_index": 6,  "label": "naive-shrink trap" },
+        { "input_payload": { "s": "abba" },                    "expected_output": 2, "is_hidden": true, "order_index": 7,  "label": "do-not-jump-backward trap" },
+        { "input_payload": { "s": "tmmzuxt" },                 "expected_output": 5, "is_hidden": true, "order_index": 8,  "label": "second variant of jump-backward trap" },
+        { "input_payload": { "s": " " },                       "expected_output": 1, "is_hidden": true, "order_index": 9,  "label": "single space character" },
+        { "input_payload": { "s": "aab" },                     "expected_output": 2, "is_hidden": true, "order_index": 10, "label": "leading duplicate" },
+        { "input_payload": { "s": "abcdef" },                  "expected_output": 6, "is_hidden": true, "order_index": 11, "label": "all distinct, short" },
+        { "input_payload": { "s": "abcdefghijklmnop" },        "expected_output": 16, "is_hidden": true, "order_index": 12, "label": "all distinct, long" },
+        { "input_payload": { "s": "ohomm" },                   "expected_output": 3, "is_hidden": true, "order_index": 13, "label": "mid-string trap" },
+        { "input_payload": { "s": "qrsvbspk" },                "expected_output": 5, "is_hidden": true, "order_index": 14, "label": "duplicate then continue" },
+        { "input_payload": { "s": "Aa" },                      "expected_output": 2, "is_hidden": true, "order_index": 15, "label": "case-sensitive distinctness" }
+      ],
+      "related_problems": [
+        { "slug": "longest-substring-with-at-most-k-distinct", "title": "Longest Substring with At Most K Distinct Characters", "difficulty": "Medium" },
+        { "slug": "minimum-window-substring",                  "title": "Minimum Window Substring",                              "difficulty": "Hard"   },
+        { "slug": "fruit-into-baskets",                        "title": "Fruit Into Baskets",                                    "difficulty": "Medium" },
+        { "slug": "longest-repeating-character-replacement",   "title": "Longest Repeating Character Replacement",               "difficulty": "Medium" }
+      ]
+    }
+  ]
+}

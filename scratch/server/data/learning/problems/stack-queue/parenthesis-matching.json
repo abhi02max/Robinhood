@@ -1,0 +1,129 @@
+{
+  "$schema": "../../problem.schema.json",
+  "schema_version": "2.0",
+  "topic_slug": "stack-queue",
+  "pattern_slug": "parenthesis-matching",
+  "problems": [
+    {
+      "slug": "valid-parentheses",
+      "title": "Valid Parentheses",
+      "difficulty": "Easy",
+      "tags": ["stack-queue", "parenthesis-matching", "stack", "string"],
+      "companies": ["Google", "Amazon", "Microsoft", "Facebook", "Bloomberg", "Adobe"],
+      "description": "Given a string `s` containing just the characters `'('`, `')'`, `'{'`, `'}'`, `'['` and `']'`, determine if the input string is **valid**.\n\nA string is valid iff:\n\n1. **Open brackets must be closed by the same type of brackets** — `(` matches `)`, `[` matches `]`, `{` matches `}`.\n2. **Open brackets must be closed in the correct order** — the most recent unmatched opener must be the next thing closed.\n3. **Every close bracket has a corresponding open bracket of the same type** — no orphan closers.\n\nReturn `true` if valid, `false` otherwise.",
+      "real_world_analogy": "Picture a chef stacking trays in a kitchen pass-through during service: every tray placed on top (an opener) must eventually come down (a closer), and the only tray you can remove is the one currently on top — last in, first out. If a server tries to remove a tray that doesn't match what's on top, service is in chaos. The string is valid iff every place is paired with the correct remove in LIFO order, and the pass-through is empty at the end of service.",
+      "examples": [
+        {
+          "input": "s = \"()\"",
+          "output": "true",
+          "explanation": "A single matched pair. Push '(' onto an empty stack; on ')' the top is the matching '(', so pop. Stack is empty at end → valid."
+        },
+        {
+          "input": "s = \"()[]{}\"",
+          "output": "true",
+          "explanation": "Three independent matched pairs. Each closer arrives when its opener is on top. Stack stays balanced throughout."
+        },
+        {
+          "input": "s = \"(]\"",
+          "output": "false",
+          "explanation": "The closer ']' arrives when '(' is on top. Mismatched types — invalid."
+        },
+        {
+          "input": "s = \"([)]\"",
+          "output": "false",
+          "explanation": "Crossed nesting. After '(' and '[' are pushed, the next character ')' tries to match — but the top of the stack is '[', not '('. Brackets must be strictly nested, not interleaved."
+        },
+        {
+          "input": "s = \"{[]}\"",
+          "output": "true",
+          "explanation": "Strictly nested: outer '{', inner '['. The inner pair closes first, then the outer. Stack empties at end."
+        }
+      ],
+      "constraints": [
+        "1 <= s.length <= 10^4",
+        "s consists of parentheses only '()[]{}'"
+      ],
+      "edge_cases": [
+        "Single open bracket like '(' → false (leftover on stack at end)",
+        "Single close bracket like ')' → false (close arrives on empty stack)",
+        "Long alternating sequence '()()()...' (validity stress)",
+        "Deeply nested sequence '(((...))))' (stack-depth stress)",
+        "Closer followed by valid opener like '){}' → false (the leading orphan closer is detected immediately)",
+        "Mixed types in correct nesting '({[]})' (all three bracket families)"
+      ],
+      "hints": [
+        "The order of unmatched openers matters: the most recently opened bracket must be the next one closed. Which classic data structure naturally tracks 'most recent'?",
+        "On every opener, push it. On every closer, peek at the top — if it doesn't match the closer's expected partner, the string is invalid. If you reach the end with an empty stack, the string is valid.",
+        "Use a small lookup table from closer character to its matching opener: `{')':'(', ']':'[', '}':'{'}`. On each closer, pop the stack and compare with the lookup. Two failure modes — stack already empty when a closer arrives, or pop returns the wrong opener type."
+      ],
+      "approaches": [
+        {
+          "name": "Repeated String Reduction (Brute Force)",
+          "summary": "Repeatedly delete adjacent matched pairs ('()', '[]', '{}') until none remain. Valid iff the string reduces to empty.",
+          "intuition": "Any valid bracket string contains at least one **innermost** matched pair: somewhere there's an opener immediately followed by its matching closer with nothing between them. Deleting that innermost pair preserves validity (and invalidity), because it just collapses one nesting layer. By induction, the original string is valid iff the iterated deletion reaches the empty string.\n\nThis approach is intuitive but quadratic: each scan-and-replace is O(N), and you might need up to N/2 scans (one per pair to remove). Useful pedagogically — it makes the structure of nesting visible — but not for the constraint of N up to 10^4 (≈ 5 × 10^7 operations, borderline TLE).",
+          "steps": [
+            "Loop until the string stops changing:",
+            "  Replace the first occurrence of '()' with the empty string.",
+            "  Replace the first occurrence of '[]' with the empty string.",
+            "  Replace the first occurrence of '{}' with the empty string.",
+            "If the resulting string is empty, return true; otherwise return false."
+          ],
+          "code": {
+            "javascript": "function isValid(s) {\n  let prev;\n  do {\n    prev = s;\n    s = s.replace('()', '').replace('[]', '').replace('{}', '');\n  } while (s !== prev);\n  return s.length === 0;\n}",
+            "python": "def is_valid(s):\n    prev = None\n    while prev != s:\n        prev = s\n        s = s.replace('()', '', 1).replace('[]', '', 1).replace('{}', '', 1)\n    return len(s) == 0"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Stack (Optimal)",
+          "summary": "Push openers onto a stack; on each closer, pop and verify the type matches. Empty stack at end ⇔ valid.",
+          "intuition": "A stack mirrors the nesting structure of brackets exactly: each opener stays on the stack until its matching closer arrives. The stack's *top* is always the most recent unmatched opener — and that's exactly the bracket the next closer must match.\n\nWhy a stack and not a counter? Consider `\"([)]\"`. A counter that just tracks 'open vs. close' counts equals `0` at the end — false positive. The stack catches it because when `)` arrives, the top is `[`, not `(`. The stack remembers **which kind** of opener is most recent, not just **how many**.\n\nTwo failure modes to detect:\n\n1. A closer arrives on an empty stack (orphan closer like `\")(\"` or `\")\"`).\n2. A closer arrives but the top of the stack is the wrong opener type (`\"(]\"`).\n\nAt the end, the stack must be empty. A non-empty stack means there are unmatched openers (`\"(\"` or `\"((\"`). Each character is pushed at most once and popped at most once → amortized O(1) per character → O(N) total.",
+          "steps": [
+            "Initialize an empty stack and a lookup `{')':'(', ']':'[', '}':'{'}`.",
+            "For each character `c` in `s`:",
+            "  If `c` is an opener (`(`, `[`, or `{`), push it onto the stack.",
+            "  Otherwise (`c` is a closer): if the stack is empty OR `stack.pop()` is not the matching opener, return false.",
+            "After the loop: return true iff the stack is empty."
+          ],
+          "code": {
+            "javascript": "function isValid(s) {\n  const match = { ')': '(', ']': '[', '}': '{' };\n  const stack = [];\n  for (const c of s) {\n    if (c === '(' || c === '[' || c === '{') {\n      stack.push(c);\n    } else {\n      if (stack.length === 0 || stack.pop() !== match[c]) return false;\n    }\n  }\n  return stack.length === 0;\n}",
+            "python": "def is_valid(s):\n    match = {')': '(', ']': '[', '}': '{'}\n    stack = []\n    for c in s:\n        if c in '([{':\n            stack.append(c)\n        else:\n            if not stack or stack.pop() != match[c]:\n                return False\n    return not stack"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(N)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function isValid(s) {\n  // Your code here\n}",
+        "python": "def is_valid(s):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": { "s": "()" },        "expected_output": true,  "is_hidden": false, "order_index": 1, "label": "single pair" },
+        { "input_payload": { "s": "()[]{}" },    "expected_output": true,  "is_hidden": false, "order_index": 2, "label": "three siblings" },
+        { "input_payload": { "s": "(]" },        "expected_output": false, "is_hidden": false, "order_index": 3, "label": "type mismatch" },
+        { "input_payload": { "s": "([)]" },      "expected_output": false, "is_hidden": false, "order_index": 4, "label": "crossed nesting" },
+        { "input_payload": { "s": "{[]}" },      "expected_output": true,  "is_hidden": false, "order_index": 5, "label": "two-deep correct nest" },
+
+        { "input_payload": { "s": "(" },         "expected_output": false, "is_hidden": true,  "order_index": 6,  "label": "lone open" },
+        { "input_payload": { "s": ")" },         "expected_output": false, "is_hidden": true,  "order_index": 7,  "label": "lone close" },
+        { "input_payload": { "s": "((" },        "expected_output": false, "is_hidden": true,  "order_index": 8,  "label": "two opens leftover" },
+        { "input_payload": { "s": "(((((((" },   "expected_output": false, "is_hidden": true,  "order_index": 9,  "label": "all opens stress" },
+        { "input_payload": { "s": "((()))" },    "expected_output": true,  "is_hidden": true,  "order_index": 10, "label": "deeply nested same kind" },
+        { "input_payload": { "s": "()){" },      "expected_output": false, "is_hidden": true,  "order_index": 11, "label": "extra close mid-stream" },
+        { "input_payload": { "s": "({[]})" },    "expected_output": true,  "is_hidden": true,  "order_index": 12, "label": "all three families nested" },
+        { "input_payload": { "s": "(())[]" },    "expected_output": true,  "is_hidden": true,  "order_index": 13, "label": "nested then sibling" },
+        { "input_payload": { "s": "}{" },        "expected_output": false, "is_hidden": true,  "order_index": 14, "label": "closer-then-opener" },
+        { "input_payload": { "s": "((((((((((()))))))))))" }, "expected_output": true, "is_hidden": true, "order_index": 15, "label": "very deep nest" }
+      ],
+      "related_problems": [
+        { "slug": "min-add-to-make-parentheses-valid", "title": "Minimum Add to Make Parentheses Valid", "difficulty": "Medium" },
+        { "slug": "longest-valid-parentheses",         "title": "Longest Valid Parentheses",            "difficulty": "Hard"   },
+        { "slug": "generate-parentheses",              "title": "Generate Parentheses",                  "difficulty": "Medium" },
+        { "slug": "remove-invalid-parentheses",        "title": "Remove Invalid Parentheses",            "difficulty": "Hard"   }
+      ]
+    }
+  ]
+}

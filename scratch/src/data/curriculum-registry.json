@@ -1,0 +1,2402 @@
+{
+  "schemaVersion": "1.0.0",
+  "generatedAt": "2026-04-20",
+  "registryMeta": {
+    "focus": "practical-learning",
+    "orientation": "interview",
+    "subjectOrder": [
+      "os",
+      "dbms",
+      "cn",
+      "oops",
+      "sql"
+    ],
+    "problemLevels": [
+      "easy",
+      "medium",
+      "hard"
+    ],
+    "unitContract": {
+      "requiredFields": [
+        "id",
+        "name",
+        "explanation",
+        "youtubeLink",
+        "problems",
+        "companies"
+      ]
+    }
+  },
+  "subjects": [
+    {
+      "id": "os",
+      "name": "Operating Systems",
+      "topics": [
+        {
+          "id": "os-process-threading",
+          "name": "Process and Threading",
+          "subtopics": [
+            {
+              "id": "os-process-vs-thread",
+              "name": "Process vs Thread",
+              "explanation": "A process has isolated memory and stronger fault boundaries. Threads share process memory and are cheaper for concurrent work.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=process+vs+thread+operating+system+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Given 8 product scenarios, choose process or thread and justify with isolation and memory cost.",
+                  "id": "cq-os-1001"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design a browser tab architecture using process and thread boundaries.",
+                  "id": "cq-os-1002"
+                },
+                {
+                  "level": "hard",
+                  "item": "Analyze a crash report and redesign process-thread model to reduce blast radius.",
+                  "id": "cq-os-1003"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Microsoft",
+                  "Adobe"
+                ],
+                "mediumFrequency": [
+                  "Uber",
+                  "Atlassian",
+                  "ServiceNow",
+                  "Salesforce"
+                ]
+              }
+            },
+            {
+              "id": "os-cpu-scheduling",
+              "name": "CPU Scheduling",
+              "explanation": "Scheduling decides which ready task gets CPU next. Main trade-offs are throughput, latency, fairness, and starvation.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=cpu+scheduling+os+interview+fcfs+sjf+round+robin",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Compute waiting and turnaround time for FCFS and Round Robin for a small process table.",
+                  "id": "cq-os-1004"
+                },
+                {
+                  "level": "medium",
+                  "item": "Choose scheduling policy for an API server and justify with workload profile.",
+                  "id": "cq-os-1005"
+                },
+                {
+                  "level": "hard",
+                  "item": "Propose anti-starvation strategy for mixed interactive and batch jobs.",
+                  "id": "cq-os-1006"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Microsoft",
+                  "Amazon",
+                  "NVIDIA"
+                ],
+                "mediumFrequency": [
+                  "Intel",
+                  "AMD",
+                  "VMware",
+                  "Oracle"
+                ]
+              }
+            },
+            {
+              "id": "os-context-switch-system-calls",
+              "name": "Context Switch and System Calls",
+              "explanation": "Context switch saves and restores execution state. System calls move execution from user mode to kernel mode for privileged operations.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=context+switch+system+calls+os+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Trace read() from user code to kernel and back with mode transitions.",
+                  "id": "cq-os-1007"
+                },
+                {
+                  "level": "medium",
+                  "item": "Estimate overhead impact of frequent context switches in a chat server.",
+                  "id": "cq-os-1008"
+                },
+                {
+                  "level": "hard",
+                  "item": "Optimize a syscall-heavy workload using batching and async IO.",
+                  "id": "cq-os-1009"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Meta",
+                  "Google",
+                  "Apple"
+                ],
+                "mediumFrequency": [
+                  "Dropbox",
+                  "Snowflake",
+                  "Datadog",
+                  "Palantir"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "os-synchronization-deadlocks",
+          "name": "Synchronization and Deadlocks",
+          "subtopics": [
+            {
+              "id": "os-mutex-semaphore-monitor",
+              "name": "Mutex, Semaphore, and Monitor",
+              "explanation": "Mutex gives exclusive ownership, semaphore controls resource count, and monitor wraps shared state with synchronized methods.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=mutex+semaphore+monitor+os+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Identify correct primitive for printer pool, counter increment, and producer queue.",
+                  "id": "cq-os-1010"
+                },
+                {
+                  "level": "medium",
+                  "item": "Implement bounded buffer with semaphores and explain race prevention.",
+                  "id": "cq-os-1011"
+                },
+                {
+                  "level": "hard",
+                  "item": "Fix priority inversion in a lock-based service design.",
+                  "id": "cq-os-1012"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Microsoft",
+                  "Uber"
+                ],
+                "mediumFrequency": [
+                  "LinkedIn",
+                  "DoorDash",
+                  "Stripe",
+                  "Atlassian"
+                ]
+              }
+            },
+            {
+              "id": "os-deadlock-detection-prevention",
+              "name": "Deadlock Detection and Prevention",
+              "explanation": "Deadlock occurs when cyclic waits cannot resolve. Prevention breaks one Coffman condition; detection finds and recovers from cycles.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=deadlock+detection+prevention+banker+algorithm",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Given lock acquisition order of threads, detect if deadlock is possible.",
+                  "id": "cq-os-1013"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design lock ordering for payment plus inventory plus notification workflows.",
+                  "id": "cq-os-1014"
+                },
+                {
+                  "level": "hard",
+                  "item": "Build deadlock recovery playbook for DB and service-layer locks.",
+                  "id": "cq-os-1015"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Oracle",
+                  "Amazon",
+                  "Google",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "PayPal",
+                  "Square",
+                  "Robinhood",
+                  "Intuit"
+                ]
+              }
+            },
+            {
+              "id": "os-producer-consumer-reader-writer",
+              "name": "Producer-Consumer and Reader-Writer",
+              "explanation": "These are canonical concurrency patterns to control throughput while preserving correctness under shared access.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=producer+consumer+reader+writer+problem+os",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Model producer-consumer with finite queue and identify blocking points.",
+                  "id": "cq-os-1016"
+                },
+                {
+                  "level": "medium",
+                  "item": "Implement reader-writer lock strategy for config cache service.",
+                  "id": "cq-os-1017"
+                },
+                {
+                  "level": "hard",
+                  "item": "Redesign event pipeline to avoid writer starvation under burst reads.",
+                  "id": "cq-os-1018"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Meta",
+                  "Google",
+                  "ByteDance"
+                ],
+                "mediumFrequency": [
+                  "Pinterest",
+                  "Snap",
+                  "Spotify",
+                  "Shopify"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "os-memory-management",
+          "name": "Memory Management",
+          "subtopics": [
+            {
+              "id": "os-virtual-memory-paging",
+              "name": "Virtual Memory and Paging",
+              "explanation": "Virtual memory gives each process a private address space and maps pages to physical frames on demand.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=virtual+memory+paging+os+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Translate virtual address to physical address using a simple page table.",
+                  "id": "cq-os-1019"
+                },
+                {
+                  "level": "medium",
+                  "item": "Explain demand paging behavior under memory pressure with page faults.",
+                  "id": "cq-os-1020"
+                },
+                {
+                  "level": "hard",
+                  "item": "Diagnose thrashing in a multi-tenant node and propose mitigation.",
+                  "id": "cq-os-1021"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Microsoft",
+                  "Amazon",
+                  "Apple"
+                ],
+                "mediumFrequency": [
+                  "NVIDIA",
+                  "Qualcomm",
+                  "Intel",
+                  "VMware"
+                ]
+              }
+            },
+            {
+              "id": "os-tlb-page-replacement",
+              "name": "TLB and Page Replacement",
+              "explanation": "TLB caches page translations. Page replacement policies choose victim pages and directly impact latency and fault rate.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=tlb+page+replacement+lru+clock+algorithm",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Simulate FIFO and LRU page replacement for a given reference string.",
+                  "id": "cq-os-1022"
+                },
+                {
+                  "level": "medium",
+                  "item": "Compare TLB hit ratio impact on request latency for two workloads.",
+                  "id": "cq-os-1023"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design memory policy for low-latency service with mixed hot and cold pages.",
+                  "id": "cq-os-1024"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Apple",
+                  "Google",
+                  "Microsoft",
+                  "Amazon"
+                ],
+                "mediumFrequency": [
+                  "AMD",
+                  "Intel",
+                  "Nutanix",
+                  "Databricks"
+                ]
+              }
+            },
+            {
+              "id": "os-segmentation-fragmentation",
+              "name": "Segmentation and Fragmentation",
+              "explanation": "Segmentation organizes memory by logical regions. Fragmentation wastes memory due to allocation patterns and layout constraints.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=segmentation+fragmentation+os+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Classify examples into internal or external fragmentation.",
+                  "id": "cq-os-1025"
+                },
+                {
+                  "level": "medium",
+                  "item": "Propose allocator strategy for workload with frequent small object churn.",
+                  "id": "cq-os-1026"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design compaction and allocation policy for long-lived memory-intensive process.",
+                  "id": "cq-os-1027"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Microsoft",
+                  "Oracle"
+                ],
+                "mediumFrequency": [
+                  "Paytm",
+                  "Adobe",
+                  "Cisco",
+                  "Zoho"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "os-storage-io-ipc",
+          "name": "Storage, IO, and IPC",
+          "subtopics": [
+            {
+              "id": "os-file-systems-inodes-journaling",
+              "name": "File Systems, Inodes, and Journaling",
+              "explanation": "File systems map filenames to metadata and blocks. Journaling improves crash recovery by writing intent before applying changes.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=file+system+inode+journaling+os",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Trace file open to inode lookup to block read in ext-style layout.",
+                  "id": "cq-os-1028"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design log sequence for safe rename and metadata update crash recovery.",
+                  "id": "cq-os-1029"
+                },
+                {
+                  "level": "hard",
+                  "item": "Compare journaling vs copy-on-write under write-heavy workloads.",
+                  "id": "cq-os-1030"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Dropbox",
+                  "Google",
+                  "Microsoft",
+                  "Amazon"
+                ],
+                "mediumFrequency": [
+                  "Cloudflare",
+                  "Box",
+                  "NetApp",
+                  "Snowflake"
+                ]
+              }
+            },
+            {
+              "id": "os-disk-scheduling-raid",
+              "name": "Disk Scheduling and RAID",
+              "explanation": "Disk scheduling reduces seek latency, and RAID balances performance, availability, and usable capacity.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=disk+scheduling+raid+os+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Compute total head movement for FCFS and SSTF for a request queue.",
+                  "id": "cq-os-1031"
+                },
+                {
+                  "level": "medium",
+                  "item": "Choose RAID level for analytics warehouse and justify trade-offs.",
+                  "id": "cq-os-1032"
+                },
+                {
+                  "level": "hard",
+                  "item": "Plan degraded-mode read strategy after multiple disk failures.",
+                  "id": "cq-os-1033"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Oracle",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Dell",
+                  "HP",
+                  "IBM",
+                  "Nutanix"
+                ]
+              }
+            },
+            {
+              "id": "os-ipc-signals-pipes-shared-memory",
+              "name": "IPC: Signals, Pipes, and Shared Memory",
+              "explanation": "IPC mechanisms enable process communication with different latency and complexity profiles.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=ipc+signals+pipes+shared+memory+os",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Pick IPC method for parent-child status updates, stream data, and low-latency exchange.",
+                  "id": "cq-os-1034"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design worker pool using message queue plus graceful shutdown signal handling.",
+                  "id": "cq-os-1035"
+                },
+                {
+                  "level": "hard",
+                  "item": "Debug race condition in shared-memory ring buffer with multiple producers.",
+                  "id": "cq-os-1036"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Meta",
+                  "Google",
+                  "Amazon",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Uber",
+                  "Datadog",
+                  "Stripe",
+                  "Airbnb"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dbms",
+      "name": "Database Management Systems",
+      "topics": [
+        {
+          "id": "dbms-data-modeling",
+          "name": "Data Modeling",
+          "subtopics": [
+            {
+              "id": "dbms-er-to-relational",
+              "name": "ER to Relational Mapping",
+              "explanation": "ER modeling captures entities and relationships; relational mapping turns them into tables, keys, and constraints.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=er+to+relational+mapping+dbms+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Convert a simple ER diagram (student-course) into normalized tables.",
+                  "id": "cq-dbms-1037"
+                },
+                {
+                  "level": "medium",
+                  "item": "Model many-to-many with attributes and enforce uniqueness constraints.",
+                  "id": "cq-dbms-1038"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design schema for multi-tenant SaaS with audit and soft-delete support.",
+                  "id": "cq-dbms-1039"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Meta",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Atlassian",
+                  "Salesforce",
+                  "Oracle",
+                  "Adobe"
+                ]
+              }
+            },
+            {
+              "id": "dbms-normalization",
+              "name": "Normalization (1NF to BCNF)",
+              "explanation": "Normalization reduces redundancy and update anomalies by decomposing tables based on dependencies.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=normalization+1nf+2nf+3nf+bcnf+dbms",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Identify anomalies in denormalized order table and suggest 2NF decomposition.",
+                  "id": "cq-dbms-1040"
+                },
+                {
+                  "level": "medium",
+                  "item": "Decompose schema to 3NF while preserving dependencies.",
+                  "id": "cq-dbms-1041"
+                },
+                {
+                  "level": "hard",
+                  "item": "Balance normalization and read performance for reporting-heavy workload.",
+                  "id": "cq-dbms-1042"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Oracle",
+                  "Amazon",
+                  "Microsoft",
+                  "Google"
+                ],
+                "mediumFrequency": [
+                  "Flipkart",
+                  "PayPal",
+                  "Intuit",
+                  "SAP"
+                ]
+              }
+            },
+            {
+              "id": "dbms-keys-constraints",
+              "name": "Keys and Constraints",
+              "explanation": "Primary, foreign, and unique keys enforce integrity. Constraints prevent invalid state at write time.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=primary+key+foreign+key+constraints+dbms",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Choose primary and candidate keys for a user-identity model.",
+                  "id": "cq-dbms-1043"
+                },
+                {
+                  "level": "medium",
+                  "item": "Add foreign key and check constraints for order lifecycle state machine.",
+                  "id": "cq-dbms-1044"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design deferrable constraints strategy for bulk import pipelines.",
+                  "id": "cq-dbms-1045"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Meta",
+                  "Oracle"
+                ],
+                "mediumFrequency": [
+                  "Stripe",
+                  "Uber",
+                  "Airbnb",
+                  "Shopify"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dbms-querying-optimization",
+          "name": "Querying and Optimization",
+          "subtopics": [
+            {
+              "id": "dbms-joins-grouping",
+              "name": "Joins and Grouping",
+              "explanation": "Joins combine related tables; grouping summarizes data. Correct join cardinality is critical for correctness and speed.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+joins+group+by+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Write INNER and LEFT JOIN queries for users and orders with missing orders case.",
+                  "id": "cq-dbms-1046"
+                },
+                {
+                  "level": "medium",
+                  "item": "Produce top categories by revenue with HAVING filter and date constraints.",
+                  "id": "cq-dbms-1047"
+                },
+                {
+                  "level": "hard",
+                  "item": "Diagnose duplicate rows in multi-join report and fix aggregation logic.",
+                  "id": "cq-dbms-1048"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Meta",
+                  "Google",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Uber",
+                  "Airbnb",
+                  "LinkedIn",
+                  "Swiggy"
+                ]
+              }
+            },
+            {
+              "id": "dbms-indexing",
+              "name": "Indexing",
+              "explanation": "Indexes speed reads by avoiding full scans but add storage and write overhead. Index choice must follow query patterns.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=dbms+indexing+b+tree+composite+index",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Pick single-column index for a frequent WHERE plus ORDER BY query.",
+                  "id": "cq-dbms-1049"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design composite index for timeline query with user_id and created_at.",
+                  "id": "cq-dbms-1050"
+                },
+                {
+                  "level": "hard",
+                  "item": "Eliminate slow query in high-write table without hurting ingestion throughput.",
+                  "id": "cq-dbms-1051"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Meta",
+                  "Oracle"
+                ],
+                "mediumFrequency": [
+                  "Snowflake",
+                  "Databricks",
+                  "Stripe",
+                  "Salesforce"
+                ]
+              }
+            },
+            {
+              "id": "dbms-execution-plans",
+              "name": "Execution Plans",
+              "explanation": "Execution plans show how the optimizer will run your query. Reading cost, scan type, and join strategy is interview critical.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+execution+plan+explain+analyze",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Interpret plan nodes for simple filter query and identify table scan.",
+                  "id": "cq-dbms-1052"
+                },
+                {
+                  "level": "medium",
+                  "item": "Rewrite query to push predicate earlier and reduce rows before join.",
+                  "id": "cq-dbms-1053"
+                },
+                {
+                  "level": "hard",
+                  "item": "Compare two execution plans and justify optimizer behavior under stale stats.",
+                  "id": "cq-dbms-1054"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Oracle",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Intuit",
+                  "Adobe",
+                  "Uber",
+                  "PayPal"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dbms-transactions-concurrency",
+          "name": "Transactions and Concurrency",
+          "subtopics": [
+            {
+              "id": "dbms-acid-transactions",
+              "name": "ACID and Transactions",
+              "explanation": "Transactions group operations into atomic units. ACID ensures consistency under failures and concurrency.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=acid+transactions+dbms+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Explain transfer workflow and where atomicity is required.",
+                  "id": "cq-dbms-1055"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design transaction boundaries for order placement with inventory decrement.",
+                  "id": "cq-dbms-1056"
+                },
+                {
+                  "level": "hard",
+                  "item": "Handle partial failure in distributed payment plus order confirmation flow.",
+                  "id": "cq-dbms-1057"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Stripe",
+                  "PayPal",
+                  "Amazon",
+                  "Google"
+                ],
+                "mediumFrequency": [
+                  "Razorpay",
+                  "Robinhood",
+                  "Coinbase",
+                  "Intuit"
+                ]
+              }
+            },
+            {
+              "id": "dbms-isolation-levels",
+              "name": "Isolation Levels",
+              "explanation": "Isolation levels trade consistency anomalies against throughput. Know dirty read, non-repeatable read, and phantom read.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=isolation+levels+dbms+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Classify anomalies shown in transaction timeline examples.",
+                  "id": "cq-dbms-1058"
+                },
+                {
+                  "level": "medium",
+                  "item": "Choose isolation level for wallet service with balance checks.",
+                  "id": "cq-dbms-1059"
+                },
+                {
+                  "level": "hard",
+                  "item": "Resolve phantom-read bug without defaulting to serializable everywhere.",
+                  "id": "cq-dbms-1060"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Microsoft",
+                  "Meta"
+                ],
+                "mediumFrequency": [
+                  "Uber",
+                  "Airbnb",
+                  "Booking",
+                  "Stripe"
+                ]
+              }
+            },
+            {
+              "id": "dbms-locking-deadlocks-mvcc",
+              "name": "Locking, Deadlocks, and MVCC",
+              "explanation": "Pessimistic and optimistic concurrency approaches solve different workloads. MVCC allows non-blocking reads with version visibility rules.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=mvcc+locking+deadlock+dbms",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Explain row lock vs table lock with simple update workload.",
+                  "id": "cq-dbms-1061"
+                },
+                {
+                  "level": "medium",
+                  "item": "Diagnose deadlock logs and propose lock ordering fix.",
+                  "id": "cq-dbms-1062"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design retry and idempotency strategy for serializable transaction conflicts.",
+                  "id": "cq-dbms-1063"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Meta",
+                  "Oracle"
+                ],
+                "mediumFrequency": [
+                  "Snowflake",
+                  "Databricks",
+                  "MongoDB",
+                  "Couchbase"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "dbms-scalability-reliability",
+          "name": "Scalability and Reliability",
+          "subtopics": [
+            {
+              "id": "dbms-replication",
+              "name": "Replication",
+              "explanation": "Replication improves availability and read scalability but introduces lag and consistency decisions.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=dbms+replication+leader+follower+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Explain leader-follower read flow with replication lag example.",
+                  "id": "cq-dbms-1064"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design read routing policy for session-consistent user dashboard.",
+                  "id": "cq-dbms-1065"
+                },
+                {
+                  "level": "hard",
+                  "item": "Mitigate stale reads in multi-region checkout service.",
+                  "id": "cq-dbms-1066"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Netflix",
+                  "Meta"
+                ],
+                "mediumFrequency": [
+                  "Shopify",
+                  "Dropbox",
+                  "Slack",
+                  "Atlassian"
+                ]
+              }
+            },
+            {
+              "id": "dbms-sharding-partitioning",
+              "name": "Sharding and Partitioning",
+              "explanation": "Sharding distributes data horizontally using a shard key. Good key choice avoids hotspots and uneven load.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=database+sharding+partitioning+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Compare range and hash partitioning for order table.",
+                  "id": "cq-dbms-1067"
+                },
+                {
+                  "level": "medium",
+                  "item": "Pick shard key for social app and justify against hotspot risk.",
+                  "id": "cq-dbms-1068"
+                },
+                {
+                  "level": "hard",
+                  "item": "Plan online resharding with minimal downtime and data correctness.",
+                  "id": "cq-dbms-1069"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Meta",
+                  "Uber"
+                ],
+                "mediumFrequency": [
+                  "Airbnb",
+                  "Pinterest",
+                  "Snap",
+                  "Robinhood"
+                ]
+              }
+            },
+            {
+              "id": "dbms-wal-recovery-backup",
+              "name": "WAL, Recovery, and Backup",
+              "explanation": "Write-ahead logging ensures recoverability. Backup and restore strategy defines RPO and RTO guarantees.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=wal+recovery+checkpoint+backup+dbms",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Explain why log must be persisted before data page flush.",
+                  "id": "cq-dbms-1070"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design nightly backup plus binlog replay restore process.",
+                  "id": "cq-dbms-1071"
+                },
+                {
+                  "level": "hard",
+                  "item": "Create disaster recovery runbook for region-level outage.",
+                  "id": "cq-dbms-1072"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Oracle",
+                  "Amazon",
+                  "Google",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Salesforce",
+                  "Databricks",
+                  "Snowflake",
+                  "IBM"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cn",
+      "name": "Computer Networks",
+      "topics": [
+        {
+          "id": "cn-fundamentals",
+          "name": "Network Fundamentals",
+          "subtopics": [
+            {
+              "id": "cn-osi-tcpip",
+              "name": "OSI vs TCP/IP",
+              "explanation": "OSI is conceptual for troubleshooting; TCP/IP is the practical Internet stack used in real systems.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=osi+vs+tcp+ip+model+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Map DNS, TLS, HTTP, TCP, IP to correct layers.",
+                  "id": "cq-cn-1073"
+                },
+                {
+                  "level": "medium",
+                  "item": "Given packet loss symptoms, identify likely layer and first debug step.",
+                  "id": "cq-cn-1074"
+                },
+                {
+                  "level": "hard",
+                  "item": "Build layer-wise incident diagnosis flow for latency spikes.",
+                  "id": "cq-cn-1075"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Cloudflare",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Cisco",
+                  "Akamai",
+                  "Meta",
+                  "Oracle"
+                ]
+              }
+            },
+            {
+              "id": "cn-ip-subnetting-routing",
+              "name": "IP, Subnetting, and Routing",
+              "explanation": "IP addresses identify hosts; subnetting partitions networks; routing determines next hop across networks.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=ip+subnetting+routing+interview+computer+networks",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Calculate network, broadcast, and host range for CIDR blocks.",
+                  "id": "cq-cn-1076"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design subnet plan for three-tier application VPC.",
+                  "id": "cq-cn-1077"
+                },
+                {
+                  "level": "hard",
+                  "item": "Diagnose asymmetric routing issue causing intermittent failures.",
+                  "id": "cq-cn-1078"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Microsoft",
+                  "Cisco"
+                ],
+                "mediumFrequency": [
+                  "Cloudflare",
+                  "Akamai",
+                  "VMware",
+                  "Oracle"
+                ]
+              }
+            },
+            {
+              "id": "cn-dns-dhcp-arp",
+              "name": "DNS, DHCP, and ARP",
+              "explanation": "DNS resolves names to IPs, DHCP assigns IP configuration, and ARP maps IP to MAC in local network.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=dns+dhcp+arp+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Trace website access path from DNS query to ARP resolution.",
+                  "id": "cq-cn-1079"
+                },
+                {
+                  "level": "medium",
+                  "item": "Debug DNS cache TTL issue causing stale endpoint resolution.",
+                  "id": "cq-cn-1080"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design resilient internal DNS strategy for multi-region microservices.",
+                  "id": "cq-cn-1081"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Cloudflare",
+                  "Google",
+                  "Amazon",
+                  "Meta"
+                ],
+                "mediumFrequency": [
+                  "Akamai",
+                  "Netflix",
+                  "Uber",
+                  "Atlassian"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "cn-transport-layer",
+          "name": "Transport Layer",
+          "subtopics": [
+            {
+              "id": "cn-tcp-handshake-reliability",
+              "name": "TCP Handshake and Reliability",
+              "explanation": "TCP provides ordered and reliable delivery using handshake, sequence numbers, ACKs, and retransmission.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=tcp+3+way+handshake+reliability+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Explain SYN, SYN-ACK, ACK and why handshake is needed.",
+                  "id": "cq-cn-1082"
+                },
+                {
+                  "level": "medium",
+                  "item": "Analyze packet trace with retransmissions and identify root cause.",
+                  "id": "cq-cn-1083"
+                },
+                {
+                  "level": "hard",
+                  "item": "Tune reliable delivery for high-latency mobile network path.",
+                  "id": "cq-cn-1084"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Meta",
+                  "Cloudflare"
+                ],
+                "mediumFrequency": [
+                  "Netflix",
+                  "Uber",
+                  "Microsoft",
+                  "Cisco"
+                ]
+              }
+            },
+            {
+              "id": "cn-flow-congestion-control",
+              "name": "Flow and Congestion Control",
+              "explanation": "Flow control protects receiver capacity; congestion control protects network capacity and avoids collapse.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=flow+control+congestion+control+tcp",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Differentiate receiver window and congestion window with examples.",
+                  "id": "cq-cn-1085"
+                },
+                {
+                  "level": "medium",
+                  "item": "Reason about slow start and congestion avoidance for burst traffic.",
+                  "id": "cq-cn-1086"
+                },
+                {
+                  "level": "hard",
+                  "item": "Propose tuning strategy for throughput drops in long-haul links.",
+                  "id": "cq-cn-1087"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Cloudflare",
+                  "Google",
+                  "Amazon",
+                  "Akamai"
+                ],
+                "mediumFrequency": [
+                  "Meta",
+                  "Netflix",
+                  "Apple",
+                  "Microsoft"
+                ]
+              }
+            },
+            {
+              "id": "cn-udp-quic",
+              "name": "UDP and QUIC",
+              "explanation": "UDP is minimal transport with no built-in reliability. QUIC builds secure and low-latency transport over UDP.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=udp+vs+quic+http3+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Choose UDP or TCP for video call, file transfer, and telemetry.",
+                  "id": "cq-cn-1088"
+                },
+                {
+                  "level": "medium",
+                  "item": "Explain why HTTP/3 uses QUIC and where latency is saved.",
+                  "id": "cq-cn-1089"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design packet loss recovery strategy for real-time game traffic.",
+                  "id": "cq-cn-1090"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Cloudflare",
+                  "Meta",
+                  "Amazon"
+                ],
+                "mediumFrequency": [
+                  "Riot Games",
+                  "Epic",
+                  "Zoom",
+                  "Discord"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "cn-web-real-time",
+          "name": "Web and Real-Time Communication",
+          "subtopics": [
+            {
+              "id": "cn-http-https",
+              "name": "HTTP and HTTPS",
+              "explanation": "HTTP is request-response protocol; HTTPS adds TLS for confidentiality and integrity.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=http+https+interview+computer+networks",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Differentiate GET, POST, PUT, PATCH in API design examples.",
+                  "id": "cq-cn-1091"
+                },
+                {
+                  "level": "medium",
+                  "item": "Debug mixed-content and redirect loop issue in HTTPS migration.",
+                  "id": "cq-cn-1092"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design secure session handling across multiple subdomains.",
+                  "id": "cq-cn-1093"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Meta",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Stripe",
+                  "PayPal",
+                  "Shopify",
+                  "Airbnb"
+                ]
+              }
+            },
+            {
+              "id": "cn-websocket-sse-polling",
+              "name": "WebSocket, SSE, and Polling",
+              "explanation": "These patterns serve different real-time needs: full duplex (WebSocket), server push (SSE), and periodic pull (polling).",
+              "youtubeLink": "https://www.youtube.com/results?search_query=websocket+vs+sse+vs+polling+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Pick protocol for stock ticker, chat, and background notifications.",
+                  "id": "cq-cn-1094"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design reconnection strategy for flaky mobile clients.",
+                  "id": "cq-cn-1095"
+                },
+                {
+                  "level": "hard",
+                  "item": "Scale WebSocket gateway to millions of concurrent connections.",
+                  "id": "cq-cn-1096"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Meta",
+                  "Google",
+                  "Amazon",
+                  "Slack"
+                ],
+                "mediumFrequency": [
+                  "Discord",
+                  "Zoom",
+                  "Notion",
+                  "Figma"
+                ]
+              }
+            },
+            {
+              "id": "cn-load-balancer-cdn-cache",
+              "name": "Load Balancer, CDN, and Caching",
+              "explanation": "Load balancers distribute traffic, CDNs bring content closer to users, and cache strategy controls latency and origin load.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=load+balancer+cdn+caching+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Choose L4 vs L7 load balancing for three API patterns.",
+                  "id": "cq-cn-1097"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design cache keys and TTL for product catalog endpoints.",
+                  "id": "cq-cn-1098"
+                },
+                {
+                  "level": "hard",
+                  "item": "Plan cache invalidation during flash sale price changes.",
+                  "id": "cq-cn-1099"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Cloudflare",
+                  "Amazon",
+                  "Google",
+                  "Netflix"
+                ],
+                "mediumFrequency": [
+                  "Akamai",
+                  "Fastly",
+                  "Shopify",
+                  "Flipkart"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "cn-security-troubleshooting",
+          "name": "Security and Troubleshooting",
+          "subtopics": [
+            {
+              "id": "cn-tls-pki",
+              "name": "TLS, PKI, and Certificates",
+              "explanation": "TLS secures transport; PKI establishes trust using certificate authorities and validation chains.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=tls+pki+certificates+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Explain TLS handshake steps at high level.",
+                  "id": "cq-cn-1100"
+                },
+                {
+                  "level": "medium",
+                  "item": "Debug certificate mismatch and chain validation failure.",
+                  "id": "cq-cn-1101"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design certificate rotation policy for service mesh with zero downtime.",
+                  "id": "cq-cn-1102"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Cloudflare",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Stripe",
+                  "PayPal",
+                  "Datadog",
+                  "Atlassian"
+                ]
+              }
+            },
+            {
+              "id": "cn-nat-firewall-vpn",
+              "name": "NAT, Firewalls, and VPN",
+              "explanation": "NAT translates addresses, firewalls enforce policy boundaries, and VPNs create secure tunnels over untrusted networks.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=nat+firewall+vpn+network+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Explain why private subnet instances need NAT for outbound Internet access.",
+                  "id": "cq-cn-1103"
+                },
+                {
+                  "level": "medium",
+                  "item": "Define firewall rules for public API and internal admin services.",
+                  "id": "cq-cn-1104"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design site-to-site VPN failover architecture for hybrid cloud.",
+                  "id": "cq-cn-1105"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Microsoft",
+                  "Cisco"
+                ],
+                "mediumFrequency": [
+                  "Palo Alto",
+                  "Fortinet",
+                  "VMware",
+                  "Cloudflare"
+                ]
+              }
+            },
+            {
+              "id": "cn-network-debugging",
+              "name": "Network Debugging",
+              "explanation": "Practical debugging uses packet path checks, DNS validation, latency decomposition, and traffic capture tools.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=network+troubleshooting+tcpdump+traceroute+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Use ping and traceroute output to localize failure segment.",
+                  "id": "cq-cn-1106"
+                },
+                {
+                  "level": "medium",
+                  "item": "Diagnose API timeout by splitting DNS, connect, TLS, and server latency.",
+                  "id": "cq-cn-1107"
+                },
+                {
+                  "level": "hard",
+                  "item": "Create production runbook for intermittent packet loss across regions.",
+                  "id": "cq-cn-1108"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Cloudflare",
+                  "Meta"
+                ],
+                "mediumFrequency": [
+                  "Datadog",
+                  "New Relic",
+                  "Akamai",
+                  "Uber"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "oops",
+      "name": "Object-Oriented Programming and Design",
+      "topics": [
+        {
+          "id": "oops-basics",
+          "name": "OOP Basics",
+          "subtopics": [
+            {
+              "id": "oops-class-object-encapsulation",
+              "name": "Class, Object, and Encapsulation",
+              "explanation": "Classes model behavior and state; objects are runtime instances. Encapsulation protects invariants behind clear interfaces.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=class+object+encapsulation+oops+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Model bank account with private state and validated operations.",
+                  "id": "cq-oops-1109"
+                },
+                {
+                  "level": "medium",
+                  "item": "Refactor a god class into cohesive objects with clear responsibilities.",
+                  "id": "cq-oops-1110"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design immutable domain entity strategy for concurrent reads.",
+                  "id": "cq-oops-1111"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Microsoft",
+                  "Google",
+                  "Adobe"
+                ],
+                "mediumFrequency": [
+                  "Flipkart",
+                  "Intuit",
+                  "Atlassian",
+                  "SAP"
+                ]
+              }
+            },
+            {
+              "id": "oops-abstraction-inheritance-polymorphism",
+              "name": "Abstraction, Inheritance, and Polymorphism",
+              "explanation": "Abstraction defines contracts, inheritance reuses behavior, and polymorphism enables interchangeable implementations.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=abstraction+inheritance+polymorphism+oops",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Design payment interface with card and UPI implementations.",
+                  "id": "cq-oops-1112"
+                },
+                {
+                  "level": "medium",
+                  "item": "Replace long switch-case with polymorphic dispatch.",
+                  "id": "cq-oops-1113"
+                },
+                {
+                  "level": "hard",
+                  "item": "Resolve fragile base class issue in existing inheritance tree.",
+                  "id": "cq-oops-1114"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Microsoft",
+                  "Oracle"
+                ],
+                "mediumFrequency": [
+                  "Salesforce",
+                  "VMware",
+                  "Cisco",
+                  "Nokia"
+                ]
+              }
+            },
+            {
+              "id": "oops-composition-over-inheritance",
+              "name": "Composition over Inheritance",
+              "explanation": "Composition keeps modules flexible by assembling behavior through interfaces instead of deep class hierarchies.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=composition+over+inheritance+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Refactor bird hierarchy where penguin cannot fly using composition.",
+                  "id": "cq-oops-1115"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design notification engine with pluggable channels via composition.",
+                  "id": "cq-oops-1116"
+                },
+                {
+                  "level": "hard",
+                  "item": "Migrate legacy inheritance-heavy module to strategy-based architecture.",
+                  "id": "cq-oops-1117"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Meta",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Uber",
+                  "Airbnb",
+                  "Shopify",
+                  "Atlassian"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "oops-design-principles",
+          "name": "Design Principles",
+          "subtopics": [
+            {
+              "id": "oops-solid-srp-ocp-lsp",
+              "name": "SOLID: SRP, OCP, LSP",
+              "explanation": "These principles reduce change impact by separating concerns, extending behavior safely, and preserving substitutability.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=solid+principles+srp+ocp+lsp",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Find SRP violations in order service and split responsibilities.",
+                  "id": "cq-oops-1118"
+                },
+                {
+                  "level": "medium",
+                  "item": "Extend discount engine without modifying tested core classes.",
+                  "id": "cq-oops-1119"
+                },
+                {
+                  "level": "hard",
+                  "item": "Fix LSP break in subclass overriding contract behavior.",
+                  "id": "cq-oops-1120"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Microsoft",
+                  "Google",
+                  "Adobe"
+                ],
+                "mediumFrequency": [
+                  "Intuit",
+                  "Oracle",
+                  "Salesforce",
+                  "PayPal"
+                ]
+              }
+            },
+            {
+              "id": "oops-isp-dip",
+              "name": "SOLID: ISP and DIP",
+              "explanation": "ISP keeps interfaces focused; DIP inverts dependencies toward abstractions to improve testability and flexibility.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=interface+segregation+dependency+inversion+principle",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Split bulky repository interface into read and write contracts.",
+                  "id": "cq-oops-1121"
+                },
+                {
+                  "level": "medium",
+                  "item": "Introduce dependency injection for payment gateway integration.",
+                  "id": "cq-oops-1122"
+                },
+                {
+                  "level": "hard",
+                  "item": "Decouple domain layer from framework-specific persistence code.",
+                  "id": "cq-oops-1123"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Microsoft",
+                  "Meta"
+                ],
+                "mediumFrequency": [
+                  "Atlassian",
+                  "Shopify",
+                  "Stripe",
+                  "Airbnb"
+                ]
+              }
+            },
+            {
+              "id": "oops-coupling-cohesion",
+              "name": "Coupling and Cohesion",
+              "explanation": "Good design minimizes unnecessary dependencies and groups closely related behavior in the same module.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=low+coupling+high+cohesion+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Score coupling and cohesion of provided module boundaries.",
+                  "id": "cq-oops-1124"
+                },
+                {
+                  "level": "medium",
+                  "item": "Refactor service mesh to reduce cross-module call graph complexity.",
+                  "id": "cq-oops-1125"
+                },
+                {
+                  "level": "hard",
+                  "item": "Define bounded contexts for a monolith under rapid feature growth.",
+                  "id": "cq-oops-1126"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Uber",
+                  "Google",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "DoorDash",
+                  "LinkedIn",
+                  "Razorpay",
+                  "CRED"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "oops-design-patterns",
+          "name": "Design Patterns",
+          "subtopics": [
+            {
+              "id": "oops-creational-patterns",
+              "name": "Creational Patterns",
+              "explanation": "Factory, Abstract Factory, Builder, and Singleton manage object creation with controlled construction complexity.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=creational+design+patterns+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Use Factory pattern for parser selection by file format.",
+                  "id": "cq-oops-1127"
+                },
+                {
+                  "level": "medium",
+                  "item": "Apply Builder to construct configurable report pipeline object.",
+                  "id": "cq-oops-1128"
+                },
+                {
+                  "level": "hard",
+                  "item": "Redesign singleton-based global state into testable configurable provider.",
+                  "id": "cq-oops-1129"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Microsoft",
+                  "Google",
+                  "Oracle"
+                ],
+                "mediumFrequency": [
+                  "Adobe",
+                  "SAP",
+                  "Salesforce",
+                  "VMware"
+                ]
+              }
+            },
+            {
+              "id": "oops-structural-patterns",
+              "name": "Structural Patterns",
+              "explanation": "Adapter, Decorator, Facade, and Composite organize class relationships for extensibility and cleaner integration.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=structural+design+patterns+adapter+decorator+facade",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Wrap third-party logger API with Adapter for internal contract.",
+                  "id": "cq-oops-1130"
+                },
+                {
+                  "level": "medium",
+                  "item": "Add dynamic discount behavior using Decorator without subclass explosion.",
+                  "id": "cq-oops-1131"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design service integration facade for payment plus fraud plus notification stack.",
+                  "id": "cq-oops-1132"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Microsoft",
+                  "Meta"
+                ],
+                "mediumFrequency": [
+                  "Atlassian",
+                  "Uber",
+                  "Airbnb",
+                  "Stripe"
+                ]
+              }
+            },
+            {
+              "id": "oops-behavioral-patterns",
+              "name": "Behavioral Patterns",
+              "explanation": "Strategy, Observer, Command, and State patterns model runtime behavior changes cleanly.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=behavioral+design+patterns+strategy+observer+state",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Use Strategy for selecting shipping cost algorithm by region.",
+                  "id": "cq-oops-1133"
+                },
+                {
+                  "level": "medium",
+                  "item": "Design Observer-based event system for inventory updates.",
+                  "id": "cq-oops-1134"
+                },
+                {
+                  "level": "hard",
+                  "item": "Implement State pattern for multi-step order lifecycle with retries.",
+                  "id": "cq-oops-1135"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Meta",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Flipkart",
+                  "DoorDash",
+                  "Shopify",
+                  "Slack"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "oops-lld-practice",
+          "name": "LLD Interview Practice",
+          "subtopics": [
+            {
+              "id": "oops-requirement-to-class-diagram",
+              "name": "Requirement to Class Diagram",
+              "explanation": "Convert ambiguous requirements into entities, responsibilities, and relationships before coding.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=low+level+design+class+diagram+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Create class diagram for parking lot from a short requirement note.",
+                  "id": "cq-oops-1136"
+                },
+                {
+                  "level": "medium",
+                  "item": "Model elevator system with service contracts and invariants.",
+                  "id": "cq-oops-1137"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design extensible ride-matching core with surge and assignment policies.",
+                  "id": "cq-oops-1138"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Uber",
+                  "Google",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Flipkart",
+                  "Swiggy",
+                  "Zomato",
+                  "Grab"
+                ]
+              }
+            },
+            {
+              "id": "oops-state-modeling-workflows",
+              "name": "State Modeling and Workflows",
+              "explanation": "State transitions prevent invalid behavior and make business workflows explicit and testable.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=state+machine+design+interview+lld",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Define valid state transitions for ticket booking lifecycle.",
+                  "id": "cq-oops-1139"
+                },
+                {
+                  "level": "medium",
+                  "item": "Implement retry plus timeout handling in asynchronous workflow state model.",
+                  "id": "cq-oops-1140"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design saga-style compensation flow for distributed order pipeline.",
+                  "id": "cq-oops-1141"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Stripe",
+                  "Uber",
+                  "Airbnb"
+                ],
+                "mediumFrequency": [
+                  "DoorDash",
+                  "PayPal",
+                  "Coupang",
+                  "Booking"
+                ]
+              }
+            },
+            {
+              "id": "oops-refactoring-testing-clean-code",
+              "name": "Refactoring, Testing, and Clean Code",
+              "explanation": "Interview-quality design includes maintainable code, focused tests, and iterative refactoring under changing requirements.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=refactoring+clean+code+unit+testing+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Refactor duplicated logic into reusable object with unit tests.",
+                  "id": "cq-oops-1142"
+                },
+                {
+                  "level": "medium",
+                  "item": "Write test plan for failure paths and edge cases in payment module.",
+                  "id": "cq-oops-1143"
+                },
+                {
+                  "level": "hard",
+                  "item": "Perform safe large refactor with contract tests and backward compatibility.",
+                  "id": "cq-oops-1144"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Microsoft",
+                  "Atlassian"
+                ],
+                "mediumFrequency": [
+                  "Intuit",
+                  "Adobe",
+                  "Shopify",
+                  "LinkedIn"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "sql",
+      "name": "SQL",
+      "topics": [
+        {
+          "id": "sql-foundation",
+          "name": "SQL Foundation",
+          "subtopics": [
+            {
+              "id": "sql-filtering-sorting-limit",
+              "name": "Filtering, Sorting, and LIMIT",
+              "explanation": "Start with deterministic result sets using WHERE, ORDER BY, and LIMIT for precise retrieval.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+where+order+by+limit+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Return top 5 highest salary employees in each city.",
+                  "id": "cq-sql-1145"
+                },
+                {
+                  "level": "medium",
+                  "item": "Filter active users in last 30 days and sort by engagement score.",
+                  "id": "cq-sql-1146"
+                },
+                {
+                  "level": "hard",
+                  "item": "Create stable pagination query for high-write feed table.",
+                  "id": "cq-sql-1147"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Meta",
+                  "Google",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Uber",
+                  "Airbnb",
+                  "LinkedIn",
+                  "Swiggy"
+                ]
+              }
+            },
+            {
+              "id": "sql-joins",
+              "name": "Joins",
+              "explanation": "Joins combine data across entities. Master join types and cardinality to avoid duplicates and missing rows.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+joins+easy+to+advanced",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "List customers with zero orders using LEFT JOIN.",
+                  "id": "cq-sql-1148"
+                },
+                {
+                  "level": "medium",
+                  "item": "Compute order value by customer and payment status across three tables.",
+                  "id": "cq-sql-1149"
+                },
+                {
+                  "level": "hard",
+                  "item": "Fix over-counting issue in many-to-many join analytics query.",
+                  "id": "cq-sql-1150"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Meta",
+                  "Google",
+                  "Uber"
+                ],
+                "mediumFrequency": [
+                  "Airbnb",
+                  "DoorDash",
+                  "Booking",
+                  "Shopify"
+                ]
+              }
+            },
+            {
+              "id": "sql-group-by-having-aggregates",
+              "name": "GROUP BY, HAVING, and Aggregates",
+              "explanation": "Aggregation summarizes metrics per group. HAVING filters grouped output after aggregate computation.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+group+by+having+aggregate+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Find department-wise average salary and highest paid employee count.",
+                  "id": "cq-sql-1151"
+                },
+                {
+                  "level": "medium",
+                  "item": "Compute weekly active users by platform and filter weeks above threshold.",
+                  "id": "cq-sql-1152"
+                },
+                {
+                  "level": "hard",
+                  "item": "Build monthly revenue report with rolling quality checks and anomaly flags.",
+                  "id": "cq-sql-1153"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Meta",
+                  "Amazon",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Stripe",
+                  "PayPal",
+                  "Flipkart",
+                  "Nubank"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "sql-intermediate",
+          "name": "Intermediate SQL",
+          "subtopics": [
+            {
+              "id": "sql-subqueries-and-cte",
+              "name": "Subqueries and CTE",
+              "explanation": "Subqueries compose logic in-place; CTEs improve readability and stepwise transformation of data.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=subquery+cte+sql+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Find employees earning above department average using correlated subquery.",
+                  "id": "cq-sql-1154"
+                },
+                {
+                  "level": "medium",
+                  "item": "Use CTEs to compute conversion rate from visit to purchase funnel.",
+                  "id": "cq-sql-1155"
+                },
+                {
+                  "level": "hard",
+                  "item": "Rewrite nested query chain into optimized CTE pipeline.",
+                  "id": "cq-sql-1156"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Meta",
+                  "Google",
+                  "Uber"
+                ],
+                "mediumFrequency": [
+                  "Airbnb",
+                  "Stripe",
+                  "DoorDash",
+                  "LinkedIn"
+                ]
+              }
+            },
+            {
+              "id": "sql-window-functions",
+              "name": "Window Functions",
+              "explanation": "Window functions compute analytics across partitions without collapsing rows.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+window+functions+rank+lag+lead+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Rank employees by salary within each department.",
+                  "id": "cq-sql-1157"
+                },
+                {
+                  "level": "medium",
+                  "item": "Compute running revenue by month and region.",
+                  "id": "cq-sql-1158"
+                },
+                {
+                  "level": "hard",
+                  "item": "Find churn candidates using LAG on activity gaps with custom thresholds.",
+                  "id": "cq-sql-1159"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Meta",
+                  "Google",
+                  "Amazon",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Uber",
+                  "Airbnb",
+                  "Netflix",
+                  "Databricks"
+                ]
+              }
+            },
+            {
+              "id": "sql-case-null-date",
+              "name": "CASE, NULL Handling, and Date Functions",
+              "explanation": "Production SQL relies on robust conditional logic, null-safe calculations, and correct date truncation and intervals.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+case+null+date+functions+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Bucket transactions into risk tiers using CASE expression.",
+                  "id": "cq-sql-1160"
+                },
+                {
+                  "level": "medium",
+                  "item": "Build week-over-week KPI table handling NULL values correctly.",
+                  "id": "cq-sql-1161"
+                },
+                {
+                  "level": "hard",
+                  "item": "Fix timezone and date-boundary bug in retention dashboard query.",
+                  "id": "cq-sql-1162"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Meta",
+                  "Stripe"
+                ],
+                "mediumFrequency": [
+                  "PayPal",
+                  "Intuit",
+                  "Uber",
+                  "Airbnb"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "sql-advanced",
+          "name": "Advanced SQL",
+          "subtopics": [
+            {
+              "id": "sql-ranking-percentiles",
+              "name": "Ranking and Percentiles",
+              "explanation": "Use rank and percentile functions for distribution-aware analytics and benchmark reporting.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+percentile+rank+dense_rank+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Return top 3 products by region using DENSE_RANK.",
+                  "id": "cq-sql-1163"
+                },
+                {
+                  "level": "medium",
+                  "item": "Compute p50 and p95 order delivery time by city.",
+                  "id": "cq-sql-1164"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design robust percentile query for skewed latency data with outliers.",
+                  "id": "cq-sql-1165"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Meta",
+                  "Google",
+                  "Amazon",
+                  "Uber"
+                ],
+                "mediumFrequency": [
+                  "Airbnb",
+                  "DoorDash",
+                  "Swiggy",
+                  "Datadog"
+                ]
+              }
+            },
+            {
+              "id": "sql-recursive-queries",
+              "name": "Recursive Queries",
+              "explanation": "Recursive CTEs solve hierarchical and graph-like traversal directly in SQL.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=recursive+cte+sql+hierarchy+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "List employee-manager hierarchy from CEO to leaves.",
+                  "id": "cq-sql-1166"
+                },
+                {
+                  "level": "medium",
+                  "item": "Generate category tree with depth and breadcrumb path.",
+                  "id": "cq-sql-1167"
+                },
+                {
+                  "level": "hard",
+                  "item": "Detect cycle in referral graph and return offending path.",
+                  "id": "cq-sql-1168"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Amazon",
+                  "Microsoft",
+                  "Oracle"
+                ],
+                "mediumFrequency": [
+                  "LinkedIn",
+                  "SAP",
+                  "Salesforce",
+                  "Atlassian"
+                ]
+              }
+            },
+            {
+              "id": "sql-performance-index-aware-sql",
+              "name": "Performance and Index-Aware SQL",
+              "explanation": "Interview-level SQL includes query rewrites, index-aware predicates, and plan-based optimization.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+performance+tuning+index+aware+queries",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Rewrite non-sargable predicate to use index.",
+                  "id": "cq-sql-1169"
+                },
+                {
+                  "level": "medium",
+                  "item": "Optimize slow dashboard query by reducing sort and join cost.",
+                  "id": "cq-sql-1170"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design query strategy for billion-row table under strict latency SLO.",
+                  "id": "cq-sql-1171"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Amazon",
+                  "Google",
+                  "Meta",
+                  "Snowflake"
+                ],
+                "mediumFrequency": [
+                  "Databricks",
+                  "Stripe",
+                  "Shopify",
+                  "Oracle"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "id": "sql-interview-scenarios",
+          "name": "Interview SQL Scenarios",
+          "subtopics": [
+            {
+              "id": "sql-cohort-retention-funnel",
+              "name": "Cohort, Retention, and Funnel Analysis",
+              "explanation": "These are common analytics interview tasks requiring careful event definitions and time windows.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+cohort+retention+funnel+analysis+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Compute D1 retention by signup cohort week.",
+                  "id": "cq-sql-1172"
+                },
+                {
+                  "level": "medium",
+                  "item": "Build conversion funnel from view to add_to_cart to purchase.",
+                  "id": "cq-sql-1173"
+                },
+                {
+                  "level": "hard",
+                  "item": "Explain retention drop with segmented cohort analysis and query validation.",
+                  "id": "cq-sql-1174"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Meta",
+                  "Google",
+                  "Amazon",
+                  "Uber"
+                ],
+                "mediumFrequency": [
+                  "Airbnb",
+                  "DoorDash",
+                  "Netflix",
+                  "Spotify"
+                ]
+              }
+            },
+            {
+              "id": "sql-ledger-reconciliation",
+              "name": "Ledger and Reconciliation Queries",
+              "explanation": "Fintech and commerce interviews test balancing, mismatch detection, and idempotent reconciliation logic.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+ledger+reconciliation+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Find transactions missing corresponding settlement records.",
+                  "id": "cq-sql-1175"
+                },
+                {
+                  "level": "medium",
+                  "item": "Reconcile gateway and internal ledger with tolerance thresholds.",
+                  "id": "cq-sql-1176"
+                },
+                {
+                  "level": "hard",
+                  "item": "Design daily reconciliation job query suite with failure rerun safety.",
+                  "id": "cq-sql-1177"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Stripe",
+                  "PayPal",
+                  "Amazon",
+                  "Intuit"
+                ],
+                "mediumFrequency": [
+                  "Razorpay",
+                  "Adyen",
+                  "Visa",
+                  "Mastercard"
+                ]
+              }
+            },
+            {
+              "id": "sql-debugging-query-review",
+              "name": "SQL Debugging and Query Review",
+              "explanation": "Strong candidates can debug wrong results quickly and explain trade-offs in readability, correctness, and performance.",
+              "youtubeLink": "https://www.youtube.com/results?search_query=sql+debugging+query+review+interview",
+              "problems": [
+                {
+                  "level": "easy",
+                  "item": "Find bug in query caused by incorrect join key.",
+                  "id": "cq-sql-1178"
+                },
+                {
+                  "level": "medium",
+                  "item": "Review teammate query for NULL handling and grouping mistakes.",
+                  "id": "cq-sql-1179"
+                },
+                {
+                  "level": "hard",
+                  "item": "Refactor long business query into readable CTE pipeline while preserving output.",
+                  "id": "cq-sql-1180"
+                }
+              ],
+              "companies": {
+                "highFrequency": [
+                  "Google",
+                  "Meta",
+                  "Amazon",
+                  "Microsoft"
+                ],
+                "mediumFrequency": [
+                  "Uber",
+                  "Airbnb",
+                  "Atlassian",
+                  "LinkedIn"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

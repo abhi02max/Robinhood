@@ -1,0 +1,125 @@
+{
+  "topic_slug": "graphs",
+  "patterns": [
+    {
+      "slug": "bfs-shortest-path",
+      "name": "BFS for Unweighted Shortest Path",
+      "order_index": 1,
+      "explanation": "BFS visits nodes in order of distance from the source on an unweighted graph. The first time a node is reached is by the shortest path. Multi-source BFS solves 'distance to nearest of several sources' in one pass.",
+      "when_to_use": "Shortest path in unweighted graph, word ladder, rotting oranges, walls and gates, 01-matrix, open the lock, shortest bridge, jump game IV.",
+      "intuition": "BFS expands a frontier one layer at a time. Distance from source equals BFS layer at which the node is discovered.",
+      "common_pitfalls": [
+        "Forgetting the visited set — duplicates and exponential blowup",
+        "Tracking distance per node instead of per layer (subtle off-by-one)",
+        "Using BFS on weighted graphs (wrong)",
+        "Not enqueuing all sources at the start when the problem is multi-source"
+      ],
+      "complexity_signature": "O(V + E) time, O(V) space"
+    },
+    {
+      "slug": "dfs-connectivity",
+      "name": "DFS for Connectivity & Components",
+      "order_index": 2,
+      "explanation": "DFS marks reachable nodes from a start. Repeated DFS from each unvisited node enumerates connected components (undirected) or strongly connected components (with extra machinery).",
+      "when_to_use": "Number of Islands, Number of Connected Components in Undirected Graph, Surrounded Regions, Pacific Atlantic Water Flow, Friend Circles, Flood Fill.",
+      "intuition": "From any unvisited node, a DFS explores its entire component. Counting how many DFS launches you do = number of components.",
+      "common_pitfalls": [
+        "Recursive DFS on huge grids → stack overflow (use iterative)",
+        "Forgetting to mark visited before recursing",
+        "Confusing component count with cycle count",
+        "Treating directed graphs as undirected and miscounting"
+      ],
+      "complexity_signature": "O(V + E) time, O(V) recursion"
+    },
+    {
+      "slug": "topological-sort",
+      "name": "Topological Sort",
+      "order_index": 3,
+      "explanation": "Linear ordering of vertices such that every directed edge u→v has u before v. Two algorithms: Kahn's (BFS over zero-in-degree nodes) and DFS-based (postorder reversed). Both detect cycles as a side effect.",
+      "when_to_use": "Course Schedule (I, II), Alien Dictionary, Sequence Reconstruction, Sort Items by Groups Respecting Dependencies, Parallel Courses, Build Order.",
+      "intuition": "A DAG has a 'water-flow' direction; topological sort linearizes it. Kahn's algorithm peels off zero-indegree nodes; if the graph isn't fully consumed, there's a cycle.",
+      "common_pitfalls": [
+        "Forgetting cycle detection — algorithm silently produces wrong order",
+        "DFS-based topo: pushing on entry instead of exit",
+        "Tie-breaking lexicographically when not requested (or vice versa)",
+        "Using on undirected graphs (undefined)"
+      ],
+      "complexity_signature": "O(V + E) time"
+    },
+    {
+      "slug": "union-find",
+      "name": "Union-Find (DSU)",
+      "order_index": 4,
+      "explanation": "Disjoint-Set Union: maintain a forest where each tree represents a set. `find` walks to the root (with path compression); `union` attaches one root to another (with union by rank/size). Near-O(1) amortized.",
+      "when_to_use": "Number of Connected Components, Redundant Connection, Accounts Merge, Friend Circles, Smallest String With Swaps, Most Stones Removed With Same Row or Column, Earliest Moment When Everyone Become Friends.",
+      "intuition": "DSU answers 'are u and v in the same set?' and 'merge their sets' incrementally — useful when edges arrive online or when you need to query connectivity at multiple points in time.",
+      "common_pitfalls": [
+        "Forgetting path compression and union by rank — gets O(N) per op",
+        "Storing parents as a Map instead of array when keys aren't dense",
+        "Mutating during iteration",
+        "Trying to *split* a union (DSU only supports merges)"
+      ],
+      "complexity_signature": "Near O(α(N)) per op, effectively O(1)"
+    },
+    {
+      "slug": "dijkstra",
+      "name": "Dijkstra's Algorithm",
+      "order_index": 5,
+      "explanation": "Single-source shortest path on a graph with non-negative edge weights. A min-heap pulls out the closest unvisited node; relax each outgoing edge.",
+      "when_to_use": "Network Delay Time, Cheapest Flights Within K Stops (with state extension), Path with Minimum Effort, Swim in Rising Water, Minimum Cost to Make at Least One Valid Path. Any non-negative weighted shortest-path problem.",
+      "intuition": "If all weights are non-negative, the closest unvisited node has its final distance settled — relaxing it can only update farther nodes. The heap orders this 'closest unvisited' query in O(log V).",
+      "common_pitfalls": [
+        "Using on graphs with negative edges (incorrect)",
+        "Decrease-key not implemented — accept the lazy-delete pattern (push duplicates, skip stale)",
+        "Missing the 'skip if popped distance > known' check",
+        "Confusing edges with nodes in the priority queue tuple"
+      ],
+      "complexity_signature": "O((V + E) log V) with binary heap"
+    },
+    {
+      "slug": "bellman-ford",
+      "name": "Bellman–Ford & Negative Cycles",
+      "order_index": 6,
+      "explanation": "V−1 rounds of relaxing every edge. Detects negative cycles in a final extra round. Slower than Dijkstra but handles negative weights and is simpler to reason about.",
+      "when_to_use": "Cheapest Flights Within K Stops (limited-edge variant), arbitrage detection (negative log of FX rates), find shortest path with at most K edges. Whenever Dijkstra cannot apply due to negative weights.",
+      "intuition": "After V−1 relaxation rounds, all shortest paths (with V vertices) have been found, since any simple path has ≤ V−1 edges. A V-th round that still relaxes proves a negative cycle.",
+      "common_pitfalls": [
+        "Stopping early when no relaxation happens (correct optimization but easy to forget)",
+        "Confusing 'reachable from a negative cycle' with 'on a negative cycle'",
+        "Using Bellman–Ford when Dijkstra would suffice (unnecessarily slow)",
+        "Off-by-one in 'at most K edges' (number of relaxation rounds)"
+      ],
+      "complexity_signature": "O(V · E) time, O(V) space"
+    },
+    {
+      "slug": "mst-prim-kruskal",
+      "name": "Minimum Spanning Tree (Prim / Kruskal)",
+      "order_index": 7,
+      "explanation": "Two algorithms for MST: Prim grows the tree from a seed using a min-heap of crossing edges; Kruskal sorts all edges and unions endpoints with DSU, accepting an edge iff it connects two components.",
+      "when_to_use": "Min Cost to Connect All Points, Optimize Water Distribution in a Village, Connecting Cities with Minimum Cost. Whenever you need 'cheapest set of edges that connects all nodes'.",
+      "intuition": "MST is the lightest acyclic spanning subgraph. The cut property guarantees that the lightest edge crossing any cut belongs to *some* MST. Prim and Kruskal are two ways of incrementally honoring this property.",
+      "common_pitfalls": [
+        "Building the wrong adjacency representation (Kruskal only needs edge list; Prim needs adjacency)",
+        "Forgetting cycle prevention (DSU union returning false)",
+        "Allowing duplicate edges and double-counting",
+        "Implementing Prim with O(V²) when O(E log V) is required"
+      ],
+      "complexity_signature": "Kruskal: O(E log E). Prim: O((V+E) log V)."
+    },
+    {
+      "slug": "cycle-and-scc",
+      "name": "Cycles & Strongly Connected Components",
+      "order_index": 8,
+      "explanation": "Cycle detection: in directed graphs via DFS coloring (WHITE/GRAY/BLACK), in undirected graphs via DFS-with-parent or DSU. SCCs via Tarjan (one DFS with low-links) or Kosaraju (two DFS passes).",
+      "when_to_use": "Detect cycles (Course Schedule), Critical Connections in a Network (bridges via Tarjan), Strongly Connected Components, Find Eventual Safe States.",
+      "intuition": "GRAY-on-GRAY in directed DFS = back edge = cycle. SCCs partition a directed graph into maximal mutually-reachable groups; Tarjan/Kosaraju find them in O(V+E).",
+      "common_pitfalls": [
+        "Using two-color DFS in directed graph (insufficient — must distinguish in-progress)",
+        "Confusing bridges with articulation points (related but not the same)",
+        "Implementing Tarjan from memory and getting low-link wrong",
+        "Treating undirected as directed (or vice versa) for cycle detection"
+      ],
+      "complexity_signature": "O(V + E) time, O(V) space"
+    }
+  ]
+}

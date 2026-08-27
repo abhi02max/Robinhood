@@ -1,0 +1,95 @@
+{
+  "topic_slug": "sorting",
+  "patterns": [
+    {
+      "slug": "comparison-sorts-elementary",
+      "name": "Elementary Comparison Sorts",
+      "order_index": 1,
+      "explanation": "Bubble, insertion, and selection sort. O(N²) worst case, but each one teaches a distinct invariant: bubble *bubbles* the maximum to the end, insertion maintains a sorted prefix, selection picks the minimum of the suffix.",
+      "when_to_use": "When N is tiny (≤ 20), when the array is nearly sorted (insertion sort runs in O(N + inversions)), or when you need a stable in-place sort with no auxiliary memory and O(N²) is acceptable.",
+      "intuition": "Each elementary sort grows a sorted region by one element per outer iteration. The differences are *which* element is moved and *where* it comes from. Insertion sort is the workhorse because it adapts to existing order.",
+      "common_pitfalls": [
+        "Using bubble sort in production — there is essentially no case where it beats insertion sort",
+        "Not exploiting insertion sort's adaptivity by adding an early-exit",
+        "Confusing stable vs. unstable behavior (selection sort is unstable in its naive form)",
+        "Writing an O(N²) sort when the input is already sorted in reverse"
+      ],
+      "complexity_signature": "O(N²) time, O(1) space, stable (except naive selection)"
+    },
+    {
+      "slug": "merge-sort-divide-conquer",
+      "name": "Merge Sort (Divide & Conquer)",
+      "order_index": 2,
+      "explanation": "Recursively split the array in half, sort each half, then merge two sorted halves in linear time. Stable, predictable O(N log N) — the gold standard when stability matters or when you're sorting linked lists.",
+      "when_to_use": "When you need a guaranteed O(N log N) regardless of input distribution; when stability is required; when sorting a linked list (merge sort is the only easy O(N log N) for linked lists); or when the merge step itself is the algorithmically interesting part (counting inversions, k-way merge).",
+      "intuition": "If two halves are individually sorted, merging them takes one linear pass. T(N) = 2·T(N/2) + N → O(N log N) by the master theorem. The merge step is also the place where many counting/aggregation algorithms hide.",
+      "common_pitfalls": [
+        "Allocating a fresh buffer in every recursive call instead of one shared buffer",
+        "Off-by-one in the merge bounds (`mid` inclusive vs. exclusive)",
+        "Recursing on subarrays of size ≤ 1 unnecessarily",
+        "Forgetting to copy back from the buffer when merging in-place is required"
+      ],
+      "complexity_signature": "O(N log N) time, O(N) space, stable"
+    },
+    {
+      "slug": "quick-sort-and-partition",
+      "name": "Quicksort & Partitioning",
+      "order_index": 3,
+      "explanation": "Pick a pivot, partition the array into 'less than pivot' and 'greater than pivot', recurse on each side. Average O(N log N), worst O(N²). The partition primitive is more useful than the sort itself — it's the basis of quickselect.",
+      "when_to_use": "When you want in-place sorting with low constant factors and cache-friendliness; when randomized expected O(N log N) is acceptable. The partition primitive is essential for quickselect (k-th element in average O(N)) and for Dutch-flag style 3-way partitioning.",
+      "intuition": "Partitioning around a pivot puts the pivot in its final sorted position and divides the rest into two independent subproblems. With a good (random) pivot, both sides are roughly balanced and the recursion depth is O(log N).",
+      "common_pitfalls": [
+        "Always picking `arr[0]` as pivot — gives O(N²) on already-sorted input",
+        "Hoare vs. Lomuto confusion (different invariants, different bug surfaces)",
+        "Recursing on the larger side first and blowing the call stack",
+        "Forgetting to handle equal elements (without 3-way partition, equals cause O(N²) on all-equal arrays)"
+      ],
+      "complexity_signature": "Average O(N log N), worst O(N²), O(log N) stack space, in-place, unstable"
+    },
+    {
+      "slug": "heap-sort",
+      "name": "Heap Sort",
+      "order_index": 4,
+      "explanation": "Build a max-heap in O(N), then repeatedly extract the max and place it at the end of the array. Guaranteed O(N log N), in-place, but unstable and cache-unfriendly compared to mergesort/quicksort.",
+      "when_to_use": "When you need O(N log N) worst case AND in-place AND don't need stability — niche but real (embedded systems, tight memory). Also pedagogically: heap sort cements the heap data structure used everywhere else.",
+      "intuition": "A max-heap gives you the max in O(1); repeated extraction gives sorted order in reverse. Floyd's bottom-up heapify builds the heap in O(N), not O(N log N), because most nodes are near the leaves.",
+      "common_pitfalls": [
+        "Sift-up vs. sift-down confusion when implementing heapify",
+        "0-indexed vs. 1-indexed heap arithmetic (`parent = (i-1)/2` vs. `i/2`)",
+        "Building the heap top-down in O(N log N) instead of bottom-up in O(N)",
+        "Using heap sort when the array is small enough that quicksort would dominate"
+      ],
+      "complexity_signature": "O(N log N) time, O(1) space, unstable"
+    },
+    {
+      "slug": "non-comparison-sorts",
+      "name": "Non-Comparison Sorts (Counting / Radix / Bucket)",
+      "order_index": 5,
+      "explanation": "When keys are bounded integers, you can sort in linear time by *not* comparing. Counting sort tallies frequencies; radix sort sorts by digit; bucket sort distributes by range and sorts each bucket.",
+      "when_to_use": "When keys are integers in a known small range (counting sort), when keys are integers up to ~10^9 (radix sort), or when keys are uniformly distributed reals (bucket sort). The Ω(N log N) lower bound only applies to comparison sorts.",
+      "intuition": "Comparison sorts are limited because each comparison gives one bit of information. Non-comparison sorts read the *value* of each key and use it to place the element directly — bypassing the information-theoretic bound.",
+      "common_pitfalls": [
+        "Using counting sort on a huge key range (memory blows up)",
+        "Forgetting that radix sort needs a stable inner sort to be correct",
+        "Bucket sort with a bad hash function devolves to O(N²)",
+        "Negative keys in counting sort require a shift"
+      ],
+      "complexity_signature": "Counting: O(N + K). Radix: O(D · (N + B)). Bucket: O(N) expected on uniform input."
+    },
+    {
+      "slug": "custom-comparator-and-stability",
+      "name": "Custom Comparators & Stability",
+      "order_index": 6,
+      "explanation": "Encode multi-key ordering, tie-breakers, and unusual orderings (e.g., 'largest concatenation' on numbers) by writing a custom comparator. Understand when stability matters and how to obtain it.",
+      "when_to_use": "Whenever the natural order isn't the right order: sorting strings by length then lexicographically, sorting events by start ascending then end descending, sorting numbers to form the largest possible concatenation. Also when you must preserve relative order of equal keys (stability) — e.g., when chaining multiple sorts.",
+      "intuition": "A comparator returns negative/zero/positive for less/equal/greater. Sorting stability means equal-key elements keep their input order, which lets you compose simple sorts to achieve complex orderings.",
+      "common_pitfalls": [
+        "Writing a non-transitive comparator (violates strict weak ordering, may infinite-loop)",
+        "Returning `a - b` for floats or large ints (overflow / precision)",
+        "Assuming `Array.prototype.sort` is stable everywhere (it is in modern JS, but wasn't always)",
+        "Confusing 'smallest first' with 'largest first' on the comparator sign"
+      ],
+      "complexity_signature": "Same as underlying sort, with comparator cost as a multiplier"
+    }
+  ]
+}

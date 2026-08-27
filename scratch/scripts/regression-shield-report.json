@@ -1,0 +1,87 @@
+{
+  "phase": "regression-shield",
+  "startedAt": "2026-07-22T16:51:07.324Z",
+  "finishedAt": "2026-07-22T16:52:44.941Z",
+  "thresholds": {
+    "aiP95TargetMs": 5000,
+    "executionPassTarget": 1
+  },
+  "tasks": [
+    {
+      "label": "Route smoke",
+      "scriptPath": "scripts/smoke-routes.mjs",
+      "ok": false,
+      "exitCode": 1,
+      "durationMs": 30300,
+      "reason": "exit code 1"
+    },
+    {
+      "label": "API smoke",
+      "scriptPath": "scripts/smoke-api.mjs",
+      "ok": false,
+      "exitCode": 1,
+      "durationMs": 8292,
+      "reason": "exit code 1"
+    },
+    {
+      "label": "Flow smoke",
+      "scriptPath": "scripts/smoke-flows.mjs",
+      "ok": false,
+      "exitCode": 1,
+      "durationMs": 12302,
+      "reason": "exit code 1"
+    },
+    {
+      "label": "Beta journeys",
+      "scriptPath": "scripts/beta-journeys.mjs",
+      "ok": false,
+      "exitCode": 1,
+      "durationMs": 306,
+      "reason": "exit code 1"
+    },
+    {
+      "label": "Provider latency validation",
+      "scriptPath": "scripts/provider-latency-validation.mjs",
+      "ok": false,
+      "exitCode": 1,
+      "durationMs": 412,
+      "reason": "exit code 1"
+    },
+    {
+      "label": "Execution correctness matrix",
+      "scriptPath": "scripts/execution-correctness-matrix.mjs",
+      "ok": false,
+      "exitCode": 1,
+      "durationMs": 46000,
+      "reason": "exit code 1"
+    }
+  ],
+  "providerLatency": {
+    "available": true,
+    "overallP95TargetMet": false,
+    "learnP95Ms": 0,
+    "mentorP95Ms": 0,
+    "learnFullyDegraded": false,
+    "mentorFullyDegraded": false,
+    "learnProviderCounts": {},
+    "mentorProviderCounts": {}
+  },
+  "executionMatrix": {
+    "available": true,
+    "passed": false,
+    "totalCases": 50,
+    "passedCases": 0,
+    "passRate": 0
+  },
+  "blockers": [
+    "Route smoke failed (exit code 1)",
+    "API smoke failed (exit code 1)",
+    "Flow smoke failed (exit code 1)",
+    "Beta journeys failed (exit code 1)",
+    "Provider latency validation failed (exit code 1)",
+    "Execution correctness matrix failed (exit code 1)",
+    "AI p95 latency threshold breach (target <= 5000ms, learn=0ms, mentor=0ms).",
+    "Execution matrix below threshold (required 100%, actual 0.00%)."
+  ],
+  "passed": false
+}

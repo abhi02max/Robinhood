@@ -1,0 +1,307 @@
+{
+  "generatedAt": "2026-04-15T08:23:24.636Z",
+  "webBase": "http://127.0.0.1:5174",
+  "apiBase": "http://127.0.0.1:3300",
+  "readinessPct": 93,
+  "passCount": 13,
+  "totalJourneys": 14,
+  "journeys": [
+    {
+      "journey": "dashboard",
+      "route": "/dashboard",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass (no-dropdowns-present)",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "learn hub",
+      "route": "/learn",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass (journey-specific-dropdown-check)",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "subject page",
+      "route": "/learn/cn",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass (no-dropdowns-present)",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "topic page",
+      "route": "/learn/cn/topic/osi-and-tcp-ip",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass (no-dropdowns-present)",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "subtopic tabs",
+      "route": "/learn/cn/topic/osi-and-tcp-ip/subtopic/layer-responsibilities",
+      "status": "FAIL",
+      "desktopStatus": "FAIL",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "fail",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass (no-dropdowns-present)",
+        "apiPayloadRendering": "fail",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": [
+        "console: Failed to load resource: the server responded with a status of 500 (Internal Server Error)",
+        "API contract mismatch for pdf payload: 500 on /api/content/pdf/CN/OSI%20and%20TCP%20IP."
+      ]
+    },
+    {
+      "journey": "problem detail",
+      "route": "/problem/a1",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "SQL editor",
+      "route": "/problem/a1",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "AI mentor",
+      "route": "/problem/a1",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "interview mock",
+      "route": "/interview/mock",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "debugger",
+      "route": "/debugger",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "scheduler",
+      "route": "/scheduler",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass (no-dropdowns-present)",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "analytics",
+      "route": "/analytics",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass (no-dropdowns-present)",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "auth login/signup",
+      "route": "/auth",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass (no-dropdowns-present)",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    },
+    {
+      "journey": "profile/settings",
+      "route": "/profile",
+      "status": "PASS",
+      "desktopStatus": "PASS",
+      "mobileStatus": "PASS",
+      "checks": {
+        "pageLoad": "pass",
+        "consoleErrors": "pass",
+        "buttonsClickable": "pass",
+        "dropdownsFunctional": "pass (no-dropdowns-present)",
+        "apiPayloadRendering": "pass",
+        "loadingStates": "pass",
+        "routeTransitions": "pass",
+        "backNavigation": "pass",
+        "duplicateListeners": "pass",
+        "layoutOverflow": "pass",
+        "whiteScreen": "pass"
+      },
+      "issues": []
+    }
+  ]
+}

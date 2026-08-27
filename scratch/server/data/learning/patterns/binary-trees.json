@@ -1,0 +1,110 @@
+{
+  "topic_slug": "binary-trees",
+  "patterns": [
+    {
+      "slug": "dfs-traversals",
+      "name": "DFS Traversals (Pre / In / Post-Order)",
+      "order_index": 1,
+      "explanation": "Three orderings of root vs. left vs. right: preorder visits root first (good for cloning), inorder gives sorted order on a BST, postorder visits root last (good for deletion and bottom-up aggregation).",
+      "when_to_use": "Binary Tree Preorder/Inorder/Postorder Traversal (recursive and iterative), Construct Binary Tree from Traversals, Serialize/Deserialize, Validate BST (inorder), Path Sum (preorder with running total).",
+      "intuition": "The traversal order is the order in which the *root* of each subtree is visited relative to its children. The choice of order encodes what kind of computation the traversal is performing.",
+      "common_pitfalls": [
+        "Iterative inorder requires explicit stack management — easy to mis-order pushes",
+        "Returning a reference to a mutable list rather than a snapshot",
+        "Confusing iterative postorder (two stacks or reversed preorder)",
+        "Using DFS where BFS was needed (or vice versa)"
+      ],
+      "complexity_signature": "O(N) time, O(H) space"
+    },
+    {
+      "slug": "bfs-level-order",
+      "name": "BFS / Level-Order Traversal",
+      "order_index": 2,
+      "explanation": "Process tree level by level using a queue. Captures level structure: levels-as-arrays, zigzag, right-side view, average-of-each-level. The 'level size' trick (`int sz = q.size()` at the start of each level) is key.",
+      "when_to_use": "Binary Tree Level Order Traversal, Right Side View, Average of Levels, Zigzag Level Order, Cousins in Binary Tree, Populating Next Right Pointers.",
+      "intuition": "BFS naturally enumerates nodes in increasing depth order. Capturing the queue size at the start of a level gives you exactly that level's nodes.",
+      "common_pitfalls": [
+        "Forgetting the level-size snapshot and mixing levels",
+        "Using a list-as-queue (O(N) shift cost in some languages)",
+        "Building level arrays out of order in zigzag",
+        "Not handling null children in next-pointer problems"
+      ],
+      "complexity_signature": "O(N) time, O(W) space (W = max width)"
+    },
+    {
+      "slug": "tree-recursion-with-return",
+      "name": "Recursion with Return Contract",
+      "order_index": 3,
+      "explanation": "Define what the recursive call returns from a subtree (a number, a struct, a tuple), assume the contract holds for children, and combine. The recursion does the work; you only define the combine step.",
+      "when_to_use": "Maximum Depth, Balanced Binary Tree, Diameter of Binary Tree, House Robber III, Sum Root to Leaf Numbers, Count Univalue Subtrees, Longest Univalue Path.",
+      "intuition": "Trust the recursion. You only need to define: (1) what the function returns for any subtree, (2) the combine step at an internal node, (3) the base case at null/leaf. No iteration, no global mutation.",
+      "common_pitfalls": [
+        "Using a global accumulator when a return value would be cleaner",
+        "Over-specifying the return — returning more than the parent needs",
+        "Forgetting the leaf vs. null distinction in the base case",
+        "Recomputing children twice (call once, save the result)"
+      ],
+      "complexity_signature": "O(N) time, O(H) recursion"
+    },
+    {
+      "slug": "path-and-diameter",
+      "name": "Path Sum & Diameter",
+      "order_index": 4,
+      "explanation": "Find paths from root to leaf (preorder + running sum), or paths between any two nodes (postorder returning longest downward path, with a global max for paths bending through the current node).",
+      "when_to_use": "Path Sum (I, II, III), Binary Tree Maximum Path Sum, Diameter of Binary Tree, Longest Univalue Path, Sum of Distances in Tree.",
+      "intuition": "Any path in a binary tree decomposes into a downward path from some 'pivot' node into its left subtree and another into its right subtree. So compute the best downward path per subtree, and at each node consider the bending path of L + R + value.",
+      "common_pitfalls": [
+        "Returning the bending path to the parent (the parent can only consume a downward path)",
+        "Forgetting to clamp negative subtree sums to zero in 'maximum path sum'",
+        "Counting nodes vs. edges in diameter (off by one)",
+        "Confusing 'root-to-leaf' with 'any path'"
+      ],
+      "complexity_signature": "O(N) time, O(H) recursion"
+    },
+    {
+      "slug": "construction-from-traversals",
+      "name": "Construction from Traversals",
+      "order_index": 5,
+      "explanation": "Reconstruct a unique binary tree from two of its traversals (e.g., preorder + inorder, or postorder + inorder). The first/last element of pre/post identifies the root; the inorder split tells you the size of each subtree.",
+      "when_to_use": "Construct Binary Tree from Preorder and Inorder, from Inorder and Postorder, from Preorder and Postorder (when ambiguity is permitted). Verify uniqueness.",
+      "intuition": "Each traversal gives a different view; the 'root locator' (first of pre / last of post) plus 'subtree splitter' (inorder) together uniquely determine the structure.",
+      "common_pitfalls": [
+        "Linear scan for the inorder split inside recursion → O(N²)",
+        "Forgetting to use a hashmap of value→index for O(1) split lookup",
+        "Off-by-one in the recursive index ranges",
+        "Trying to reconstruct from preorder + postorder alone (not unique in general)"
+      ],
+      "complexity_signature": "O(N) with hashmap, O(N²) without"
+    },
+    {
+      "slug": "lowest-common-ancestor",
+      "name": "Lowest Common Ancestor (LCA)",
+      "order_index": 6,
+      "explanation": "Recursively search both subtrees for two target nodes. If both subtrees return non-null, the current node is the LCA; otherwise propagate the non-null result upward.",
+      "when_to_use": "LCA of Binary Tree, LCA of BST (use the BST property for O(H)), LCA of Deepest Leaves, Smallest Subtree with All the Deepest Nodes.",
+      "intuition": "An LCA is the deepest node where the two paths to the targets diverge. The recursion implicitly finds this divergence point — the only node where both children return success.",
+      "common_pitfalls": [
+        "Returning the first hit instead of the divergence point",
+        "Not handling 'one is the ancestor of the other' (then that one is the LCA)",
+        "Using O(N) per query when O(N) preprocessing + O(log N) per query is possible (binary lifting)",
+        "Confusing tree LCA with BST LCA (they have different optimal algorithms)"
+      ],
+      "complexity_signature": "O(N) per query, O(N) preprocessing for repeated queries"
+    },
+    {
+      "slug": "serialization",
+      "name": "Serialization & Deserialization",
+      "order_index": 7,
+      "explanation": "Serialize a tree to a string (or array) so that it can be uniquely reconstructed. Preorder with null markers is canonical; level-order with null markers is the LeetCode convention.",
+      "when_to_use": "Serialize and Deserialize Binary Tree, Serialize/Deserialize BST (no null markers needed), Verify Preorder Serialization, Find Duplicate Subtrees (serialize + hash).",
+      "intuition": "A traversal alone doesn't reconstruct a tree; you need null markers to fix structure. Preorder with nulls is most compact and easiest to deserialize recursively.",
+      "common_pitfalls": [
+        "Forgetting null markers and getting an ambiguous serialization",
+        "Using `String.split` without limiting on the delimiter",
+        "Recomputing string concatenations inside recursion (O(N²) time)",
+        "Misordering pre/post for ser/des (must match)"
+      ],
+      "complexity_signature": "O(N) ser, O(N) deser"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "architecture-audit-checker-py"
+version = "0.0.1"
+description = "Python track of the architecture-audit deliverable checker. Hosts the 17 Correctness Properties as Hypothesis property-based tests against the six Markdown deliverables under .kiro/specs/architecture-audit/."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "architecture-audit harness" }]
+keywords = ["architecture-audit", "property-based-testing", "hypothesis", "markdown"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Testing",
+    "Private :: Do Not Upload",
+]
+dependencies = [
+    "hypothesis>=6.100,<7",
+    "markdown-it-py>=3.0,<4",
+    "pytest>=8.0,<9",
+]
+
+[project.optional-dependencies]
+dev = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["audit_checker*"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+]
+markers = [
+    "property: property-based test backed by Hypothesis (one Correctness Property per test)",
+    "smoke: scaffold smoke check, not a Correctness Property",
+]

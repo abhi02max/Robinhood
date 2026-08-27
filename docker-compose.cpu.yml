@@ -1,0 +1,11 @@
+# Docker Compose Override for CPU-only systems (no NVIDIA GPU)
+# Use this file if you don't have an NVIDIA GPU:
+# docker compose -f docker-compose.yml -f docker-compose.cpu.yml up -d --build
+
+services:
+  ollama:
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G

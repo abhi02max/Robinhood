@@ -1,0 +1,136 @@
+{
+  "$schema": "../../problem.schema.json",
+  "schema_version": "2.0",
+  "topic_slug": "arrays",
+  "pattern_slug": "kadane-maximum-subarray",
+  "problems": [
+    {
+      "slug": "maximum-subarray",
+      "title": "Maximum Subarray",
+      "difficulty": "Medium",
+      "tags": ["arrays", "kadane-maximum-subarray", "dynamic-programming", "greedy"],
+      "companies": ["Amazon", "Microsoft", "Bloomberg", "LinkedIn", "Apple"],
+      "description": "Given an integer array `nums`, find the contiguous subarray (containing **at least one number**) which has the largest sum, and return its sum.\n\nA *subarray* is a contiguous, non-empty sequence of elements within an array. Note that you must take at least one element — even if every element is negative, you must return the largest single element rather than `0`.\n\n**Follow-up:** if you have figured out the `O(N)` solution, try coding another solution using the *divide and conquer* approach, which is more subtle.",
+      "real_world_analogy": "Imagine your daily portfolio profit/loss for a year — some days gain, some lose. The Maximum Subarray is the best contiguous stretch of trading days: a run you cannot break in the middle, that, taken together, produced the highest cumulative profit. You must pick at least one day, even on a year where every day lost money (in which case you pick the smallest loss).",
+      "examples": [
+        {
+          "input": "nums = [-2,1,-3,4,-1,2,1,-5,4]",
+          "output": "6",
+          "explanation": "The subarray [4,-1,2,1] has the largest sum 6. Note that [4,-1,2,1,-5,4] sums to 5, which is worse — extending into the -5 hurts. The algorithm restarts whenever extending becomes worse than starting fresh."
+        },
+        {
+          "input": "nums = [1]",
+          "output": "1",
+          "explanation": "Only one element; the only valid subarray is the array itself."
+        },
+        {
+          "input": "nums = [5,4,-1,7,8]",
+          "output": "23",
+          "explanation": "The entire array sums to 23. The single dip to -1 is more than recovered by the surrounding gains, so the optimal subarray is the whole array."
+        },
+        {
+          "input": "nums = [-1,-2,-3,-4]",
+          "output": "-1",
+          "explanation": "Every element is negative. Since we must take at least one, the answer is the largest single element, -1. A common bug is to initialize the running maximum to 0 — that returns 0 here, which is wrong."
+        },
+        {
+          "input": "nums = [3,-2,5,-1]",
+          "output": "6",
+          "explanation": "The subarray [3,-2,5] sums to 6. Extending into -1 drops the sum to 5, so the algorithm stops there."
+        }
+      ],
+      "constraints": [
+        "1 <= nums.length <= 10^5",
+        "-10^4 <= nums[i] <= 10^4"
+      ],
+      "edge_cases": [
+        "Single element (positive, negative, or zero) — answer is the element itself",
+        "All-negative array — answer is the maximum (least negative) element, not zero",
+        "All-positive array — answer is the sum of the entire array",
+        "Optimal subarray is at the very start or very end of the array",
+        "Optimal subarray is a single element flanked by larger negatives",
+        "Array length exactly 1 (boundary of the constraint)"
+      ],
+      "hints": [
+        "The brute force is to try every (i, j) pair and compute the sum directly. Can you avoid recomputing partial sums by accumulating as you extend the right endpoint?",
+        "For each ending index `i`, ask: what is the maximum sum of a subarray that ends *exactly* at `i`? Express this recursively in terms of the answer for `i-1` — you have only two choices: extend the previous best, or restart at `nums[i]`.",
+        "Let `f(i)` be the best subarray sum ending at index `i`. Then `f(i) = max(nums[i], f(i-1) + nums[i])`. The final answer is `max(f(0), f(1), ..., f(N-1))`. You don't need an array — just two scalars: the running `f(i-1)` and the global maximum so far. That's Kadane's Algorithm: O(N) time, O(1) space."
+      ],
+      "approaches": [
+        {
+          "name": "Brute Force (Running Sum)",
+          "summary": "Enumerate every (i, j) subarray and track the maximum, accumulating the sum incrementally so each (i, j) costs O(1).",
+          "intuition": "Every contiguous subarray is uniquely determined by its left and right endpoints. The naïve naïve approach computes each subarray sum from scratch in O(N), giving O(N^3) total. We can do better by reusing work: as the right endpoint `j` advances by one with `i` fixed, the new sum is just the old sum plus `nums[j]`. That eliminates the inner sum computation and gives O(N^2).\n\nThis is still too slow for the constraint `N = 10^5` (would be 10^10 operations), but it's the right baseline to build intuition. Notice that for fixed `i`, the running sum either keeps growing or eventually becomes worse than restarting from a later index. That observation is the key to the optimal algorithm.",
+          "steps": [
+            "Initialize `best` to negative infinity (NOT zero — must handle all-negative arrays).",
+            "For each `i` from 0 to N-1:",
+            "  Initialize `running_sum = 0`.",
+            "  For each `j` from `i` to N-1:",
+            "    Add `nums[j]` to `running_sum`.",
+            "    Update `best = max(best, running_sum)`.",
+            "Return `best`."
+          ],
+          "code": {
+            "javascript": "function maxSubArray(nums) {\n  let best = -Infinity;\n  for (let i = 0; i < nums.length; i++) {\n    let runningSum = 0;\n    for (let j = i; j < nums.length; j++) {\n      runningSum += nums[j];\n      if (runningSum > best) best = runningSum;\n    }\n  }\n  return best;\n}",
+            "python": "def max_subarray(nums):\n    best = float('-inf')\n    n = len(nums)\n    for i in range(n):\n        running_sum = 0\n        for j in range(i, n):\n            running_sum += nums[j]\n            if running_sum > best:\n                best = running_sum\n    return best"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(1)"
+        },
+        {
+          "name": "Kadane's Algorithm (Optimal)",
+          "summary": "One pass. At each index, decide to extend the previous best subarray or restart fresh at the current element.",
+          "intuition": "Define `f(i)` = the maximum sum of a subarray that ends *precisely at index `i`*. There are exactly two candidates:\n\n- **Extend** the previous best ending at `i-1`: that gives `f(i-1) + nums[i]`.\n- **Restart** at `i`: that gives just `nums[i]`.\n\nWe pick whichever is larger: `f(i) = max(nums[i], f(i-1) + nums[i])`. The final answer is `max(f(0), f(1), ..., f(N-1))` — we have to take the max over all ending positions because the best subarray could end anywhere.\n\nWhy is this correct? Any contiguous subarray ending at index `i` is either (a) just `[nums[i]]`, or (b) `[...something..., nums[i]]` where the prefix is itself a contiguous subarray ending at `i-1`. The best prefix to attach is by definition `f(i-1)`. If `f(i-1)` is negative, attaching it can only hurt, so we restart — that's exactly what the `max` selects.\n\n**Space optimization:** we don't need the full `f` array — only `f(i-1)` (the running 'current') and the running global maximum 'best'. Two scalars, O(1) space.\n\nThe negative-only edge case is handled automatically: `best` is initialized to `nums[0]`, so even an all-negative input returns the largest element.",
+          "steps": [
+            "Initialize `current = nums[0]` and `best = nums[0]`.",
+            "For each `i` from 1 to N-1:",
+            "  Set `current = max(nums[i], current + nums[i])` — extend or restart.",
+            "  Set `best = max(best, current)` — update the global maximum.",
+            "Return `best`."
+          ],
+          "code": {
+            "javascript": "function maxSubArray(nums) {\n  let current = nums[0];\n  let best = nums[0];\n  for (let i = 1; i < nums.length; i++) {\n    current = Math.max(nums[i], current + nums[i]);\n    if (current > best) best = current;\n  }\n  return best;\n}",
+            "python": "def max_subarray(nums):\n    current = best = nums[0]\n    for i in range(1, len(nums)):\n        current = max(nums[i], current + nums[i])\n        if current > best:\n            best = current\n    return best"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function maxSubArray(nums) {\n  // Your code here\n}",
+        "python": "def max_subarray(nums):\n    pass"
+      },
+      "cpp_signature": {
+        "fn": "maxSubArray",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "nums": [-2,1,-3,4,-1,2,1,-5,4] }, "expected_output": 6,  "is_hidden": false, "order_index": 1, "label": "canonical example with restart" },
+        { "input_payload": { "nums": [1] },                      "expected_output": 1,  "is_hidden": false, "order_index": 2, "label": "single positive" },
+        { "input_payload": { "nums": [5,4,-1,7,8] },             "expected_output": 23, "is_hidden": false, "order_index": 3, "label": "entire array optimal" },
+        { "input_payload": { "nums": [-1] },                     "expected_output": -1, "is_hidden": false, "order_index": 4, "label": "single negative" },
+        { "input_payload": { "nums": [0] },                      "expected_output": 0,  "is_hidden": false, "order_index": 5, "label": "single zero" },
+
+        { "input_payload": { "nums": [-1,-2,-3,-4] },            "expected_output": -1, "is_hidden": true,  "order_index": 6,  "label": "all-negative — must return largest, not 0" },
+        { "input_payload": { "nums": [-2,-1] },                  "expected_output": -1, "is_hidden": true,  "order_index": 7,  "label": "two negatives" },
+        { "input_payload": { "nums": [1,2,3,4,5] },              "expected_output": 15, "is_hidden": true,  "order_index": 8,  "label": "all-positive monotone" },
+        { "input_payload": { "nums": [-5,-4,-3,-2,-1] },         "expected_output": -1, "is_hidden": true,  "order_index": 9,  "label": "monotone negatives" },
+        { "input_payload": { "nums": [10000,-1,10000] },         "expected_output": 19999, "is_hidden": true, "order_index": 10, "label": "large values, dip is recoverable" },
+        { "input_payload": { "nums": [3,-2,5,-1] },              "expected_output": 6,  "is_hidden": true,  "order_index": 11, "label": "stop before final negative" },
+        { "input_payload": { "nums": [8,-19,5,-4,20] },          "expected_output": 21, "is_hidden": true,  "order_index": 12, "label": "restart pays off" },
+        { "input_payload": { "nums": [-2,-3,4,-1,-2,1,5,-3] },   "expected_output": 7,  "is_hidden": true,  "order_index": 13, "label": "interior subarray optimal" },
+        { "input_payload": { "nums": [0,0,0,0] },                "expected_output": 0,  "is_hidden": true,  "order_index": 14, "label": "all zeros" }
+      ],
+      "related_problems": [
+        { "slug": "maximum-product-subarray",        "title": "Maximum Product Subarray",         "difficulty": "Medium" },
+        { "slug": "best-time-to-buy-and-sell-stock", "title": "Best Time to Buy and Sell Stock",  "difficulty": "Easy"   },
+        { "slug": "maximum-circular-subarray-sum",   "title": "Maximum Circular Subarray Sum",    "difficulty": "Medium" },
+        { "slug": "minimum-size-subarray-sum",       "title": "Minimum Size Subarray Sum",        "difficulty": "Medium" }
+      ]
+    }
+  ]
+}

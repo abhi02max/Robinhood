@@ -1,0 +1,226 @@
+{
+  "phase": "final-performance-sweep",
+  "startedAt": "2026-04-16T12:15:04.462Z",
+  "finishedAt": "2026-04-16T12:16:15.649Z",
+  "apiBase": "http://127.0.0.1:3000",
+  "webBase": "http://127.0.0.1:5173",
+  "apiLatency": {
+    "ai": {
+      "name": "AI learn endpoint",
+      "sampleSize": 24,
+      "allowedStatuses": [
+        200,
+        429
+      ],
+      "failed": 0,
+      "timedOut": 0,
+      "statuses": {
+        "200": 5,
+        "429": 19
+      },
+      "latency": {
+        "count": 24,
+        "minMs": 6,
+        "avgMs": 1218.71,
+        "p50Ms": 8,
+        "p95Ms": 5827,
+        "p99Ms": 5861,
+        "maxMs": 5861
+      },
+      "passed": true
+    },
+    "code": {
+      "name": "Code run endpoint",
+      "sampleSize": 24,
+      "allowedStatuses": [
+        200,
+        429
+      ],
+      "failed": 0,
+      "timedOut": 0,
+      "statuses": {
+        "200": 24
+      },
+      "latency": {
+        "count": 24,
+        "minMs": 143,
+        "avgMs": 212.54,
+        "p50Ms": 176,
+        "p95Ms": 292,
+        "p99Ms": 664,
+        "maxMs": 664
+      },
+      "passed": true
+    },
+    "sql": {
+      "name": "SQL run endpoint",
+      "sampleSize": 24,
+      "allowedStatuses": [
+        200
+      ],
+      "failed": 0,
+      "timedOut": 0,
+      "statuses": {
+        "200": 24
+      },
+      "latency": {
+        "count": 24,
+        "minMs": 4,
+        "avgMs": 19.54,
+        "p50Ms": 8,
+        "p95Ms": 17,
+        "p99Ms": 261,
+        "maxMs": 261
+      },
+      "passed": true
+    }
+  },
+  "containerMemory": {
+    "ok": true,
+    "services": [
+      {
+        "name": "robinhood-backend",
+        "usedMiB": 43,
+        "limitMiB": 7793.66,
+        "usagePercent": 0.55
+      },
+      {
+        "name": "robinhood-frontend",
+        "usedMiB": 62.12,
+        "limitMiB": 7793.66,
+        "usagePercent": 0.8
+      }
+    ]
+  },
+  "frontend": {
+    "ok": true,
+    "routeLoads": [
+      {
+        "route": "/dashboard",
+        "loadMs": 15939
+      },
+      {
+        "route": "/learn",
+        "loadMs": 2018
+      },
+      {
+        "route": "/analytics",
+        "loadMs": 3113
+      },
+      {
+        "route": "/scheduler",
+        "loadMs": 1922
+      }
+    ],
+    "routeLoadSummary": {
+      "count": 4,
+      "minMs": 1922,
+      "avgMs": 5748,
+      "p50Ms": 2018,
+      "p95Ms": 15939,
+      "p99Ms": 15939,
+      "maxMs": 15939
+    },
+    "routeTransitions": [
+      {
+        "route": "/learn",
+        "durationMs": 303
+      },
+      {
+        "route": "/problem/a1",
+        "durationMs": 3092
+      },
+      {
+        "route": "/analytics",
+        "durationMs": 241
+      },
+      {
+        "route": "/scheduler",
+        "durationMs": 191
+      },
+      {
+        "route": "/profile",
+        "durationMs": 535
+      },
+      {
+        "route": "/dashboard",
+        "durationMs": 101
+      }
+    ],
+    "routeTransitionSummary": {
+      "count": 6,
+      "minMs": 101,
+      "avgMs": 743.83,
+      "p50Ms": 241,
+      "p95Ms": 3092,
+      "p99Ms": 3092,
+      "maxMs": 3092
+    },
+    "renderMetrics": [
+      {
+        "label": "dashboard-shell",
+        "route": "/dashboard",
+        "renderMs": 985
+      },
+      {
+        "label": "learn-tree",
+        "route": "/learn",
+        "renderMs": 952
+      },
+      {
+        "label": "analytics-summary",
+        "route": "/analytics",
+        "renderMs": 182
+      },
+      {
+        "label": "scheduler-tasks",
+        "route": "/scheduler",
+        "renderMs": 27
+      }
+    ],
+    "slowRenderComponents": [
+      {
+        "label": "dashboard-shell",
+        "route": "/dashboard",
+        "renderMs": 985
+      },
+      {
+        "label": "learn-tree",
+        "route": "/learn",
+        "renderMs": 952
+      },
+      {
+        "label": "analytics-summary",
+        "route": "/analytics",
+        "renderMs": 182
+      },
+      {
+        "label": "scheduler-tasks",
+        "route": "/scheduler",
+        "renderMs": 27
+      }
+    ],
+    "monaco": {
+      "routeLoadMs": 1562,
+      "editorReadyMs": 30,
+      "runToOutputMs": 209
+    },
+    "bundleAnalysis": {
+      "totalScriptBytes": 70760,
+      "totalScriptMiB": 0.067,
+      "topBundles": [
+        {
+          "url": "https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js",
+          "bytes": 70713,
+          "kiloBytes": 69.06
+        },
+        {
+          "url": "https://unpkg.com/lucide@latest/dist/umd/lucide.js",
+          "bytes": 47,
+          "kiloBytes": 0.05
+        }
+      ]
+    }
+  },
+  "passed": true
+}

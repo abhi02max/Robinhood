@@ -1,0 +1,95 @@
+{
+  "topic_slug": "heaps",
+  "patterns": [
+    {
+      "slug": "top-k-with-heap",
+      "name": "Top-K via Bounded Heap",
+      "order_index": 1,
+      "explanation": "Maintain a min-heap of size K; for each new element, push it and pop the smallest if the heap exceeds K. After the scan, the heap holds the K largest elements. Symmetric for top-K smallest.",
+      "when_to_use": "Kth Largest Element, Top K Frequent Elements, K Closest Points to Origin, Top K Frequent Words. Anywhere you'd otherwise sort all N elements just to keep K.",
+      "intuition": "Sorting is O(N log N); a size-K heap is O(N log K), much better when K ≪ N. The 'opposite polarity' is the trick: to keep top-K largest, use a *min*-heap so the smallest of the K can be evicted in O(log K).",
+      "common_pitfalls": [
+        "Using a max-heap to find top-K largest — works but is O(N log N)",
+        "Pushing then popping in the wrong order, returning K-1 elements",
+        "Custom comparator inverted (most languages default to min-heap)",
+        "Tie-breaking by insertion order incorrectly"
+      ],
+      "complexity_signature": "O(N log K) time, O(K) space"
+    },
+    {
+      "slug": "k-way-merge",
+      "name": "K-Way Merge",
+      "order_index": 2,
+      "explanation": "Merge K sorted streams into one in O(N log K) by maintaining a min-heap of size K, where each entry is the smallest unconsumed element of one stream. Pop the smallest, advance its source, and push the next.",
+      "when_to_use": "Merge K Sorted Lists, Smallest Range Covering K Lists, Find K Pairs with Smallest Sums, Kth Smallest Element in a Sorted Matrix.",
+      "intuition": "If each stream is sorted, the global minimum is one of the K stream-fronts. A heap of K stream-fronts gives the global min in O(log K), then advance that one stream and repeat.",
+      "common_pitfalls": [
+        "Forgetting to push only the next element (not the entire remaining list)",
+        "Storing tuples in the wrong order so the comparator sorts on the wrong field",
+        "Not handling exhausted streams (skip when nothing left)",
+        "Using a flat sort O(N log N) when O(N log K) is required"
+      ],
+      "complexity_signature": "O(N log K) time, O(K) space"
+    },
+    {
+      "slug": "two-heaps-median",
+      "name": "Two Heaps for Running Median",
+      "order_index": 3,
+      "explanation": "Maintain a max-heap (lower half) and a min-heap (upper half) such that their sizes differ by at most 1. The median is the top of the larger heap, or the average of the two tops if equal-sized.",
+      "when_to_use": "Find Median from Data Stream, Sliding Window Median, IPO (sort of), problems where you need 'median of all numbers seen so far' updated as numbers arrive.",
+      "intuition": "Splitting the sorted-so-far data at the median makes both halves accessible in O(log N) per insertion. Rebalancing keeps the median always at the top of one or both heaps.",
+      "common_pitfalls": [
+        "Letting the size invariant drift — must rebalance after every insert",
+        "Forgetting to handle the very first insert (empty heaps)",
+        "Sliding-window median: removing arbitrary elements from a heap requires lazy deletion or a multi-set",
+        "Using one heap (sorted list) and getting O(N log N) per insert"
+      ],
+      "complexity_signature": "O(log N) per insert, O(1) per query"
+    },
+    {
+      "slug": "scheduling-with-heap",
+      "name": "Scheduling / Earliest-Available with Heap",
+      "order_index": 4,
+      "explanation": "Use a min-heap to always pick the next available slot or the resource that becomes free earliest. Captures 'always pick the next earliest event' as a primitive.",
+      "when_to_use": "Meeting Rooms II, Task Scheduler, Reorganize String, Single-Threaded CPU, Process Tasks Using Servers, Minimum Number of Refueling Stops.",
+      "intuition": "When you must process events in a non-trivial order driven by 'next available time' or 'next deadline', a min-heap is the cleanest data structure: it always reveals the next event in O(log N).",
+      "common_pitfalls": [
+        "Forgetting to handle the case where no resource is available (must advance time)",
+        "Mixing 'sort by start time' with 'heap by end time' incorrectly",
+        "Tie-breaking ambiguities (which task wins when two are simultaneously available)",
+        "Inserting future events too eagerly and corrupting the order"
+      ],
+      "complexity_signature": "O(N log N) time, O(N) space"
+    },
+    {
+      "slug": "heap-as-priority-queue",
+      "name": "Generic Priority Queue",
+      "order_index": 5,
+      "explanation": "Heap as a generic priority queue with custom priorities — for problems that need 'process the most/least important item next', without a specific shape like top-K or k-way merge.",
+      "when_to_use": "Connect Sticks with Minimum Cost, Last Stone Weight, Furthest Building You Can Reach, Maximize Capital, Minimum Cost to Hire K Workers, Minimum Number of Operations to Reinitialize a Permutation.",
+      "intuition": "When greedy says 'pick the best item next', and 'best' changes after each operation, a priority queue makes the greedy step efficient. Often combined with a sorted preprocessing step.",
+      "common_pitfalls": [
+        "Forgetting to push back the modified result (e.g., merging two stones returns one new stone)",
+        "Confusing 'priority' direction (min vs. max)",
+        "Storing primitives directly when objects with multiple fields are needed",
+        "Re-heapifying manually instead of using language built-ins"
+      ],
+      "complexity_signature": "O(log N) per op"
+    },
+    {
+      "slug": "heap-dijkstra-shape",
+      "name": "Heap Inside Dijkstra-Shape Algorithms",
+      "order_index": 6,
+      "explanation": "Many graph-shaped problems extract 'minimum-distance unvisited node' repeatedly — a min-heap of `(distance, node)` makes each extraction O(log V). The pattern generalizes beyond shortest path to any best-first search on a weighted graph.",
+      "when_to_use": "Network Delay Time, Cheapest Flights Within K Stops, Path with Minimum Effort, Swim in Rising Water, Minimum Cost to Make at Least One Valid Path. Any 'minimum sum/max/effort path' problem.",
+      "intuition": "Best-first search with a min-heap is Dijkstra's algorithm; pop the closest unvisited node, relax neighbors, push updated distances. Lazy deletion lets you ignore stale entries cheaply.",
+      "common_pitfalls": [
+        "Pushing a fresh entry on every relaxation without skipping stale ones",
+        "Using BFS on weighted graphs",
+        "Negative edges break Dijkstra — use Bellman–Ford instead",
+        "Storing nodes only and recomputing distances on each pop"
+      ],
+      "complexity_signature": "O((V + E) log V) time, O(V) space"
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "topic_slug": "bit-manipulation",
+  "patterns": [
+    {
+      "slug": "basic-bit-ops",
+      "name": "Set / Clear / Toggle / Test",
+      "order_index": 1,
+      "explanation": "The four primitive bit operations on a single bit at position i: set with `x | (1<<i)`, clear with `x & ~(1<<i)`, toggle with `x ^ (1<<i)`, test with `(x >> i) & 1`.",
+      "when_to_use": "Whenever an integer is being used as a vector of boolean flags — feature toggles, bitmap-style sets, masking out fields. Foundation for all the other patterns.",
+      "intuition": "Each integer is a vector in {0,1}^32. Bitwise operations apply element-wise. Shift operations move bits to a known position so a single mask hits the right one.",
+      "common_pitfalls": [
+        "Operator precedence (`&` is lower than `==`, so `x & 1 == 0` is bug-prone)",
+        "Signed shift right (`>>`) vs. logical shift right (`>>>`) in JS/Java",
+        "Forgetting that `1 << 31` overflows in 32-bit signed arithmetic",
+        "Negative numbers under bitwise ops in languages with arbitrary precision"
+      ],
+      "complexity_signature": "O(1) per operation"
+    },
+    {
+      "slug": "xor-properties",
+      "name": "XOR Properties (Single Number)",
+      "order_index": 2,
+      "explanation": "XOR is its own inverse: `a ^ a = 0` and `a ^ 0 = a`. XOR is also commutative and associative. These three facts unlock 'find the unique element' problems in O(N) time and O(1) space.",
+      "when_to_use": "Single Number, Single Number II, Single Number III, missing number in 1..N, finding the duplicate when paired elements should cancel.",
+      "intuition": "Pair-wise duplicates XOR to zero, so XOR-ing the entire array leaves only the unpaired bits. For 'two unique elements', use the lowest set bit of the XOR to partition the array into two groups, each with one unique.",
+      "common_pitfalls": [
+        "Trying to use XOR when elements appear three times (need bit-by-bit mod-3 instead)",
+        "Confusing XOR with OR or AND in derivation",
+        "Not handling the missing number index/value off-by-one",
+        "Overflow when XORing very large 64-bit values without proper types"
+      ],
+      "complexity_signature": "O(N) time, O(1) space"
+    },
+    {
+      "slug": "count-set-bits",
+      "name": "Count Set Bits (Popcount)",
+      "order_index": 3,
+      "explanation": "Count the number of 1-bits in an integer. Multiple techniques: shift-and-test (O(bits)), Brian Kernighan's `n & (n-1)` (O(set-bits)), 32-bit SWAR popcount (O(1)).",
+      "when_to_use": "Counting Bits, Number of 1 Bits, hamming-distance-style problems, subset-size queries when state is a bitmask.",
+      "intuition": "`n & (n-1)` clears the lowest set bit. Iterating until n becomes 0 takes exactly popcount(n) iterations — strictly better than 32 when the integer is sparse.",
+      "common_pitfalls": [
+        "Using language built-ins (`Integer.bitCount`, `__builtin_popcount`) and not understanding what they do",
+        "Negative numbers and unwanted sign extension on right shift",
+        "Building the 'count from 0..n' table without realizing `dp[i] = dp[i>>1] + (i&1)` is O(N)",
+        "Using a 64-bit popcount on 32-bit ints"
+      ],
+      "complexity_signature": "Bounded by number of set bits (Kernighan)"
+    },
+    {
+      "slug": "subset-enumeration-bitmask",
+      "name": "Subset Enumeration via Bitmask",
+      "order_index": 4,
+      "explanation": "Iterate `for (int s = mask; s > 0; s = (s-1) & mask)` to visit each non-empty submask of `mask` exactly once. Total work across all masks is O(3^N).",
+      "when_to_use": "Bitmask DP where the transition iterates over partitions of the current set; problems like 'partition into K subsets', 'minimum cost to assign tasks'.",
+      "intuition": "`(s-1) & mask` strips the lowest set bit of s and replaces it with all-ones below — touching every submask exactly once in decreasing order.",
+      "common_pitfalls": [
+        "Including the empty submask without a separate base case",
+        "Iterating as `s-1` instead of `(s-1) & mask` and visiting non-submasks",
+        "Forgetting that this technique only works on bitmasks — not on arbitrary sets",
+        "Ignoring that 3^N grows fast (N=15 ≈ 14M, N=20 ≈ 3.5B)"
+      ],
+      "complexity_signature": "O(3^N) total over all masks"
+    },
+    {
+      "slug": "bitmask-dp-state",
+      "name": "Bitmask as DP State",
+      "order_index": 5,
+      "explanation": "Encode 'which subset of items have been used' as a bitmask of size N (N ≤ 20). DP state becomes (mask, position) or just (mask), enabling exponential subset DP in 2^N · N or 2^N · 2^N time.",
+      "when_to_use": "Traveling Salesman Problem (Held-Karp), can-I-win, partition into K equal subsets, smallest sufficient team, parallel courses III.",
+      "intuition": "When the 'state' is a set of fewer than 21 boolean flags, you can enumerate all 2^N possibilities and run DP/BFS over them. This is the trick for problems whose generic version is NP-hard.",
+      "common_pitfalls": [
+        "Allocating `dp[2^N][N]` when N is large enough to OOM",
+        "Iterating subsets in the wrong order (must increase mask for forward DP)",
+        "Not memoizing and getting exponential blowup",
+        "Forgetting that 2^N · N is fast only up to N ≈ 20"
+      ],
+      "complexity_signature": "O(2^N · N) time, O(2^N) space typical"
+    },
+    {
+      "slug": "power-of-two-and-tricks",
+      "name": "Power-of-Two Detection & Bit Tricks",
+      "order_index": 6,
+      "explanation": "A miscellany of identities: power of two = `n > 0 && (n & (n-1)) == 0`, isolate lowest set bit = `n & -n`, swap variables via XOR, complement of a number's bits up to its highest bit, Gray code = `i ^ (i >> 1)`.",
+      "when_to_use": "Power of Two / Three / Four (related but distinct), reverse bits, complement of base-10 integer, sum of two integers without `+`, Gray code generation.",
+      "intuition": "Bit tricks are recognizable patterns. Memorize the small dictionary; rederive when in doubt.",
+      "common_pitfalls": [
+        "Using `n & (n-1) == 0` for `n = 0` and getting a false positive",
+        "XOR swap on aliased variables (a and a → 0)",
+        "Sign-extension on right shifts breaking complement tricks",
+        "Believing bit-trick code is 'fast' without measuring (often the compiler already did this)"
+      ],
+      "complexity_signature": "O(1) per operation"
+    }
+  ]
+}

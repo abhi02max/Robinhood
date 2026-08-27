@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Robinhood.Audit</RootNamespace>
+    <AssemblyName>Robinhood.Audit.AuditChecker</AssemblyName>
+    <Description>C# track of the architecture-audit deliverable checker harness. Loads the six Markdown deliverables under .kiro/specs/architecture-audit/ and exposes the shared data model, loader, and parser to the FsCheck-driven test project that hosts the 17 Correctness Properties.</Description>
+    <IsPackable>false</IsPackable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.37.0" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,19 @@
+{
+  "name": "architecture-audit-checker-ts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript track of the architecture-audit deliverable checker harness. Loads the six Markdown deliverables under .kiro/specs/architecture-audit/ and runs the 17 Correctness Properties via fast-check.",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "fast-check": "^3",
+    "remark-gfm": "^4",
+    "remark-parse": "^11",
+    "typescript": "^5",
+    "unified": "^11",
+    "vitest": "^1"
+  }
+}

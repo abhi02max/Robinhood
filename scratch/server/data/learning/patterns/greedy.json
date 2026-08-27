@@ -1,0 +1,95 @@
+{
+  "topic_slug": "greedy",
+  "patterns": [
+    {
+      "slug": "sort-then-greedy",
+      "name": "Sort Then Pick",
+      "order_index": 1,
+      "explanation": "Sort the input by a carefully chosen key, then make local choices in order. The key is what the algorithm depends on — picking the wrong sort key invalidates the proof.",
+      "when_to_use": "Assign Cookies, Two City Scheduling, Boats to Save People, Minimum Number of Arrows to Burst Balloons, Maximum Length of Pair Chain, Queue Reconstruction by Height.",
+      "intuition": "Sorting transforms an unstructured problem into a sequence with monotone structure. Once sorted, the greedy choice is often 'take the next compatible element'.",
+      "common_pitfalls": [
+        "Sorting on the wrong key — algorithm becomes incorrect, not just slow",
+        "Tie-breaking left implicit when it actually matters",
+        "Believing greedy is correct without an exchange-argument proof",
+        "Forgetting that the input might already be sorted in the wrong direction"
+      ],
+      "complexity_signature": "O(N log N) sort, O(N) sweep"
+    },
+    {
+      "slug": "interval-scheduling",
+      "name": "Interval Scheduling",
+      "order_index": 2,
+      "explanation": "To pick the maximum number of non-overlapping intervals, sort by end time and greedily take the interval that ends earliest. Provably optimal by exchange argument.",
+      "when_to_use": "Non-overlapping Intervals, Maximum Number of Events That Can Be Attended, Minimum Number of Arrows to Burst Balloons, Schedule a Workshop / Meeting Selection.",
+      "intuition": "Picking the earliest-ending interval leaves the largest possible 'free time' for future picks. Any other choice can be exchanged with the earliest-ending one without making the schedule worse.",
+      "common_pitfalls": [
+        "Sorting by start time instead of end time",
+        "Counting the *removed* intervals when the question asks for *kept*",
+        "Endpoint conventions: does `[1,3]` overlap `[3,5]`?",
+        "Generalizing without proof to weighted interval scheduling (DP, not greedy)"
+      ],
+      "complexity_signature": "O(N log N) time"
+    },
+    {
+      "slug": "exchange-argument",
+      "name": "Exchange-Argument Proof",
+      "order_index": 3,
+      "explanation": "A meta-pattern: prove that any optimal solution can be transformed into the greedy solution without making it worse, by swapping pairs. The proof technique that justifies a greedy algorithm's correctness.",
+      "when_to_use": "Whenever you suspect a greedy strategy works but need to be sure. The exchange argument either proves correctness or reveals the counterexample.",
+      "intuition": "If swapping any 'wrong' pair in an optimal solution toward greedy never makes it worse, then greedy is optimal. This is the core reasoning for many sort-then-greedy proofs.",
+      "common_pitfalls": [
+        "Hand-waving the proof and missing a real counterexample",
+        "Confusing 'greedy seems right' with 'greedy is optimal'",
+        "Trying exchange arguments on problems with overlapping subproblems (DP territory)",
+        "Forgetting tie-breakers in the exchange step"
+      ],
+      "complexity_signature": "Proof technique — algorithm complexity varies"
+    },
+    {
+      "slug": "gas-station-circular",
+      "name": "Gas Station / Circular Greedy",
+      "order_index": 4,
+      "explanation": "On a circular array with positive and negative deltas, find the unique start point from which the running sum never goes negative. The total sum decides feasibility; a single linear scan finds the start.",
+      "when_to_use": "Gas Station, Can Make Arithmetic Progression From Sequence (sort-then-check variant), Minimum Number of Refueling Stops (heap variant). Circular-array feasibility problems.",
+      "intuition": "If `total_gas - total_cost < 0`, no solution exists. Otherwise, whenever the running tank goes negative at index i, restart from i+1 — every prefix you skip was net-negative, so it cannot serve as a start.",
+      "common_pitfalls": [
+        "Trying every start index (O(N²)) when O(N) is required",
+        "Off-by-one when 'restart from i+1'",
+        "Not realizing the start point is unique when one exists",
+        "Confusing 'tank' with 'fuel needed for current segment'"
+      ],
+      "complexity_signature": "O(N) time, O(1) space"
+    },
+    {
+      "slug": "jump-game-greedy",
+      "name": "Jump Game (Reachability Greedy)",
+      "order_index": 5,
+      "explanation": "Maintain the farthest reachable index as you scan. If the current index ever exceeds the farthest, you're stuck. For 'minimum jumps', track current-jump-end and farthest-this-window — bump the jump count when you exhaust the current window.",
+      "when_to_use": "Jump Game (I, II, III, IV), Video Stitching, Minimum Number of Taps to Open Garden, Hand of Straights (greedy verification).",
+      "intuition": "Greedy reachability extends the frontier whenever possible. For minimum jumps, treat each 'jump' as a layer of BFS — the farthest you can reach in the current layer becomes the next layer's boundary.",
+      "common_pitfalls": [
+        "Confusing 'can reach last index' with 'minimum number of jumps'",
+        "Off-by-one when the array length is 1",
+        "Updating the farthest reach with `i + nums[i]` and forgetting the `+ i`",
+        "Returning the farthest instead of the jump count"
+      ],
+      "complexity_signature": "O(N) time, O(1) space"
+    },
+    {
+      "slug": "huffman-style-merge",
+      "name": "Huffman-Style Repeated Merge",
+      "order_index": 6,
+      "explanation": "Repeatedly merge the two smallest items into one combined item until one remains. Implementable with a min-heap; the total cost is the optimal cost of building the merge tree.",
+      "when_to_use": "Connect Sticks with Minimum Cost, Last Stone Weight, Minimum Cost to Connect Cities (variant), Optimal File Merge Patterns. Recognizable when 'cost of merging A and B' is `A + B` (or similar) and you must minimize total merging cost.",
+      "intuition": "The leaves contributing the most to the total cost are those that get merged latest (deepest in the tree). Merging the smallest two first delays everyone else's contribution, minimizing total cost.",
+      "common_pitfalls": [
+        "Implementing the merge as O(N²) instead of using a heap",
+        "Confusing the input cost with the running total",
+        "Tie-breaking incorrectly when multiple items share the smallest cost",
+        "Trying Huffman where the merge cost is non-additive (then it's a different problem)"
+      ],
+      "complexity_signature": "O(N log N) with a min-heap"
+    }
+  ]
+}

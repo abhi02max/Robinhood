@@ -1,0 +1,301 @@
+{
+  "phase": "sql-security-hardening",
+  "generatedAt": "2026-04-15T08:59:58.339Z",
+  "apiBase": "http://127.0.0.1:3300",
+  "summary": {
+    "total": 13,
+    "passed": 13,
+    "failed": 0,
+    "blockedQueries": [
+      "block_pg_catalog",
+      "block_information_schema",
+      "block_pg_roles",
+      "block_system_function_current_setting",
+      "block_pg_prefixed_function",
+      "block_cross_schema_access",
+      "block_non_allowlisted_table",
+      "block_mutating_statement",
+      "block_multi_statement"
+    ]
+  },
+  "results": [
+    {
+      "name": "allow_basic_select",
+      "pass": true,
+      "expectedSuccess": true,
+      "actualSuccess": true,
+      "status": 200,
+      "durationMs": 78,
+      "error": "",
+      "responsePreview": {
+        "success": true,
+        "output": [
+          {
+            "id": 1,
+            "name": "Engineering"
+          },
+          {
+            "id": 2,
+            "name": "Analytics"
+          },
+          {
+            "id": 3,
+            "name": "Product"
+          }
+        ],
+        "fields": [
+          "id",
+          "name"
+        ],
+        "error": "",
+        "executionTime": 2,
+        "memory": "",
+        "verdict": "Success",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "effective_role_is_sandbox_reader",
+      "pass": true,
+      "expectedSuccess": true,
+      "actualSuccess": true,
+      "status": 200,
+      "durationMs": 10,
+      "error": "",
+      "responsePreview": {
+        "success": true,
+        "output": [
+          {
+            "current_user": "sandbox_reader"
+          }
+        ],
+        "fields": [
+          "current_user"
+        ],
+        "error": "",
+        "executionTime": 1,
+        "memory": "",
+        "verdict": "Success",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "block_pg_catalog",
+      "pass": true,
+      "expectedSuccess": false,
+      "actualSuccess": false,
+      "status": 200,
+      "durationMs": 7,
+      "error": "Query contains restricted system access patterns.",
+      "responsePreview": {
+        "success": false,
+        "output": [],
+        "fields": [],
+        "error": "Query contains restricted system access patterns.",
+        "executionTime": "",
+        "memory": "",
+        "verdict": "Error",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "block_information_schema",
+      "pass": true,
+      "expectedSuccess": false,
+      "actualSuccess": false,
+      "status": 200,
+      "durationMs": 6,
+      "error": "Query contains restricted system access patterns.",
+      "responsePreview": {
+        "success": false,
+        "output": [],
+        "fields": [],
+        "error": "Query contains restricted system access patterns.",
+        "executionTime": "",
+        "memory": "",
+        "verdict": "Error",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "block_pg_roles",
+      "pass": true,
+      "expectedSuccess": false,
+      "actualSuccess": false,
+      "status": 200,
+      "durationMs": 8,
+      "error": "Query contains restricted system access patterns.",
+      "responsePreview": {
+        "success": false,
+        "output": [],
+        "fields": [],
+        "error": "Query contains restricted system access patterns.",
+        "executionTime": "",
+        "memory": "",
+        "verdict": "Error",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "block_system_function_current_setting",
+      "pass": true,
+      "expectedSuccess": false,
+      "actualSuccess": false,
+      "status": 200,
+      "durationMs": 6,
+      "error": "Query contains restricted system access patterns.",
+      "responsePreview": {
+        "success": false,
+        "output": [],
+        "fields": [],
+        "error": "Query contains restricted system access patterns.",
+        "executionTime": "",
+        "memory": "",
+        "verdict": "Error",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "block_pg_prefixed_function",
+      "pass": true,
+      "expectedSuccess": false,
+      "actualSuccess": false,
+      "status": 200,
+      "durationMs": 9,
+      "error": "Query contains restricted system access patterns.",
+      "responsePreview": {
+        "success": false,
+        "output": [],
+        "fields": [],
+        "error": "Query contains restricted system access patterns.",
+        "executionTime": "",
+        "memory": "",
+        "verdict": "Error",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "block_cross_schema_access",
+      "pass": true,
+      "expectedSuccess": false,
+      "actualSuccess": false,
+      "status": 200,
+      "durationMs": 7,
+      "error": "Cross-schema access is blocked. Schema \"public\" is not allowed.",
+      "responsePreview": {
+        "success": false,
+        "output": [],
+        "fields": [],
+        "error": "Cross-schema access is blocked. Schema \"public\" is not allowed.",
+        "executionTime": "",
+        "memory": "",
+        "verdict": "Error",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "block_non_allowlisted_table",
+      "pass": true,
+      "expectedSuccess": false,
+      "actualSuccess": false,
+      "status": 200,
+      "durationMs": 8,
+      "error": "Table \"accounts\" is outside the sandbox allowlist.",
+      "responsePreview": {
+        "success": false,
+        "output": [],
+        "fields": [],
+        "error": "Table \"accounts\" is outside the sandbox allowlist.",
+        "executionTime": "",
+        "memory": "",
+        "verdict": "Error",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "block_mutating_statement",
+      "pass": true,
+      "expectedSuccess": false,
+      "actualSuccess": false,
+      "status": 400,
+      "durationMs": 5,
+      "error": "Only read-only SELECT queries are allowed.",
+      "responsePreview": {
+        "error": "Only read-only SELECT queries are allowed."
+      }
+    },
+    {
+      "name": "block_multi_statement",
+      "pass": true,
+      "expectedSuccess": false,
+      "actualSuccess": false,
+      "status": 400,
+      "durationMs": 6,
+      "error": "Multiple SQL statements are not allowed.",
+      "responsePreview": {
+        "error": "Multiple SQL statements are not allowed."
+      }
+    },
+    {
+      "name": "row_isolation_tenant_a",
+      "pass": true,
+      "expectedSuccess": true,
+      "actualSuccess": true,
+      "status": 200,
+      "durationMs": 15,
+      "error": "",
+      "responsePreview": {
+        "success": true,
+        "output": [
+          {
+            "owner_id": "tenant-a"
+          }
+        ],
+        "fields": [
+          "owner_id"
+        ],
+        "error": "",
+        "executionTime": 5,
+        "memory": "",
+        "verdict": "Success",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    },
+    {
+      "name": "row_isolation_tenant_b",
+      "pass": true,
+      "expectedSuccess": true,
+      "actualSuccess": true,
+      "status": 200,
+      "durationMs": 10,
+      "error": "",
+      "responsePreview": {
+        "success": true,
+        "output": [
+          {
+            "owner_id": "tenant-b"
+          }
+        ],
+        "fields": [
+          "owner_id"
+        ],
+        "error": "",
+        "executionTime": 1,
+        "memory": "",
+        "verdict": "Success",
+        "testCasesPassed": 0,
+        "totalTestCases": 0
+      }
+    }
+  ]
+}

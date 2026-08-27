@@ -1,0 +1,95 @@
+{
+  "topic_slug": "strings",
+  "patterns": [
+    {
+      "slug": "frequency-counter",
+      "name": "Character Frequency Counter",
+      "order_index": 1,
+      "explanation": "Maintain a count of each character (array of size 26 for lowercase ASCII, or a hash map for Unicode). Compare two strings by comparing their counters; detect anagrams, isomorphism, and frequency-bounded substrings.",
+      "when_to_use": "Anagrams, permutations, 'is one a permutation of the other', isomorphic strings, finding all anagrams in a string (paired with sliding window).",
+      "intuition": "Character set is small. A string of length N over alphabet σ has a frequency vector in ℕ^σ. Equality of frequency vectors == anagram. Two strings are isomorphic iff their character→character maps are bijective.",
+      "common_pitfalls": [
+        "Using a hash map when an `int[26]` would do, paying constant-factor overhead",
+        "Forgetting to clear the counter between iterations",
+        "Treating uppercase and lowercase as the same when the problem says they differ",
+        "Using `==` on counter arrays in languages without value-equality"
+      ],
+      "complexity_signature": "O(N + σ) time, O(σ) space"
+    },
+    {
+      "slug": "palindrome-expansion",
+      "name": "Palindrome Expansion",
+      "order_index": 2,
+      "explanation": "For each center (each character and each gap between characters), expand outward while the two sides match. Finds all palindromic substrings in O(N²).",
+      "when_to_use": "Longest palindromic substring, count palindromic substrings, palindrome partitioning. The center-expansion idea is the natural and simplest O(N²) approach.",
+      "intuition": "Every palindrome has a center: either a character (odd length) or a gap (even length). 2N−1 centers; each expansion costs O(N) in the worst case.",
+      "common_pitfalls": [
+        "Handling only odd-length palindromes and missing all even-length ones",
+        "Returning length instead of substring or vice versa",
+        "Using DP where center expansion is simpler",
+        "Off-by-one in expansion bounds"
+      ],
+      "complexity_signature": "O(N²) time, O(1) space"
+    },
+    {
+      "slug": "kmp-failure-function",
+      "name": "KMP & Failure Function",
+      "order_index": 3,
+      "explanation": "Knuth–Morris–Pratt builds a 'failure function' (longest proper prefix that is also a suffix, for each prefix of the pattern) and uses it to skip rechecking matched characters. Substring search in O(N + M).",
+      "when_to_use": "Substring search; longest happy prefix; finding the smallest repeating unit of a string ('repeated substring pattern'). Whenever you see 'find pattern in text' and constraints rule out O(N·M).",
+      "intuition": "After a partial match of length k that fails, you don't restart from scratch — the failure function tells you the longest already-matched suffix that is also a prefix, so you continue from there.",
+      "common_pitfalls": [
+        "Off-by-one in the failure function (it's defined on prefixes, not on indices directly)",
+        "Resetting the matched length naively to 0 instead of using `lps[matched-1]`",
+        "Confusing KMP with Z-function",
+        "Implementing without a clear definition and getting subtle bugs"
+      ],
+      "complexity_signature": "O(N + M) time, O(M) space"
+    },
+    {
+      "slug": "z-algorithm",
+      "name": "Z-Algorithm",
+      "order_index": 4,
+      "explanation": "Compute, for each index i, the longest substring starting at i that matches a prefix of the string. Single linear scan with a 'Z-box' window.",
+      "when_to_use": "Pattern matching (concatenate `pattern + sentinel + text` and look for Z-values equal to pattern length); period detection; lexicographic comparisons of suffixes.",
+      "intuition": "Maintain the rightmost Z-box `[l, r]` seen so far. For index i ≤ r, you can copy a Z-value from earlier and only extend if necessary. Amortized linear.",
+      "common_pitfalls": [
+        "Building Z over `pattern$text` but forgetting the sentinel and getting cross-matches",
+        "Returning the Z-array but not knowing how to read 'pattern occurs at position i'",
+        "Confusing Z-values (suffix matches against prefix) with KMP failures (prefix–suffix overlap)",
+        "Implementing in O(N²) by mistake"
+      ],
+      "complexity_signature": "O(N) time, O(N) space"
+    },
+    {
+      "slug": "rolling-hash-rabin-karp",
+      "name": "Rolling Hash (Rabin–Karp)",
+      "order_index": 5,
+      "explanation": "Hash a string treating its characters as digits in some base (typically 31 or 131) modulo a large prime. Sliding the window updates the hash in O(1).",
+      "when_to_use": "Substring search with multiple patterns; longest duplicate substring; equality testing of many ranges (combine with prefix hashes); plagiarism-style detection.",
+      "intuition": "Polynomial hashing turns string equality into integer equality. Rolling means you can roll the window in O(1). Use double hashing (two hash pairs) to reduce collision probability to ~1/p² for cryptographically uneventful inputs.",
+      "common_pitfalls": [
+        "Using a single weak modulus and getting hash collisions on adversarial inputs",
+        "Negative numbers under `%` (use `((x % M) + M) % M`)",
+        "Not precomputing `base^k mod M` and recomputing it inside the loop",
+        "Forgetting to verify a hash hit with an actual character comparison"
+      ],
+      "complexity_signature": "O(N + M) expected, O(N·M) worst case with bad hash"
+    },
+    {
+      "slug": "manacher-palindromes",
+      "name": "Manacher's Algorithm",
+      "order_index": 6,
+      "explanation": "Compute the longest palindromic substring centered at every position in O(N) using a clever mirror-and-extend strategy with the rightmost palindrome boundary.",
+      "when_to_use": "When O(N²) palindrome expansion is too slow (N ≈ 10^6), or when you need the full palindrome-radius array as a building block for further analysis.",
+      "intuition": "Inside the rightmost-known palindrome, the radius at i mirrors the radius at the symmetric index — bounded by the right edge. Extend only when you go past the edge.",
+      "common_pitfalls": [
+        "Not transforming the string with sentinels (`#a#b#c#`) to unify odd and even cases",
+        "Off-by-one when reading back the original substring from the transformed array",
+        "Forgetting that the mirror radius is *capped* by `r - i`",
+        "Implementing it from memory without verifying on simple cases"
+      ],
+      "complexity_signature": "O(N) time, O(N) space"
+    }
+  ]
+}

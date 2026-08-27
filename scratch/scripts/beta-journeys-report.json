@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-04-16T04:27:36.334Z",
+  "apiBase": "http://127.0.0.1:3000",
+  "totalJourneys": 11,
+  "passed": 11,
+  "failed": 0,
+  "durationMs": 19211,
+  "results": [
+    {
+      "name": "1_signup_new_user",
+      "ok": true,
+      "latencyMs": 726,
+      "status": 201
+    },
+    {
+      "name": "2_login",
+      "ok": true,
+      "latencyMs": 507,
+      "status": 200
+    },
+    {
+      "name": "3_start_learning_os",
+      "ok": true,
+      "latencyMs": 13,
+      "status": 200
+    },
+    {
+      "name": "4_open_pdf",
+      "ok": true,
+      "latencyMs": 128,
+      "status": 200,
+      "hasPdfUrl": true
+    },
+    {
+      "name": "5_watch_youtube_section",
+      "ok": true,
+      "latencyMs": 134,
+      "status": 200,
+      "videoCount": 4
+    },
+    {
+      "name": "6_solve_dsa_problem_lookup",
+      "ok": true,
+      "latencyMs": 27,
+      "status": 200,
+      "problemCount": 30
+    },
+    {
+      "name": "7_run_code_execute",
+      "ok": true,
+      "latencyMs": 135,
+      "status": 200,
+      "verdict": "Accepted"
+    },
+    {
+      "name": "8_run_sql_query",
+      "ok": true,
+      "latencyMs": 92,
+      "status": 200
+    },
+    {
+      "name": "9_ask_ai_mentor",
+      "ok": true,
+      "latencyMs": 16902,
+      "status": 200,
+      "provider": "ollama",
+      "degraded": false
+    },
+    {
+      "name": "10_schedule_revision",
+      "ok": true,
+      "latencyMs": 159,
+      "status": 201
+    },
+    {
+      "name": "11_check_analytics",
+      "ok": true,
+      "latencyMs": 388,
+      "status": 200,
+      "mastery": 0
+    }
+  ]
+}

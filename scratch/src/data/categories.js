@@ -1,0 +1,31 @@
+// ROBINHOOD - Problem Categories Definition
+export const CATEGORIES = [
+  { id: 'arrays', name: 'Arrays & Hashing', icon: 'grid-3x3', color: '#6366f1' },
+  { id: 'two-pointers', name: 'Two Pointers', icon: 'git-compare', color: '#8b5cf6' },
+  { id: 'sliding-window', name: 'Sliding Window', icon: 'panel-right', color: '#a855f7' },
+  { id: 'stack', name: 'Stack', icon: 'layers', color: '#d946ef' },
+  { id: 'queue', name: 'Queue & Deque', icon: 'list-ordered', color: '#ec4899' },
+  { id: 'linked-list', name: 'Linked List', icon: 'link', color: '#f43f5e' },
+  { id: 'binary-search', name: 'Binary Search', icon: 'search', color: '#ef4444' },
+  { id: 'sorting', name: 'Sorting & Searching', icon: 'arrow-up-down', color: '#f97316' },
+  { id: 'matrix', name: 'Matrix', icon: 'table-2', color: '#f59e0b' },
+  { id: 'strings', name: 'Strings', icon: 'text', color: '#eab308' },
+  { id: 'recursion', name: 'Recursion', icon: 'repeat', color: '#84cc16' },
+  { id: 'backtracking', name: 'Backtracking', icon: 'undo-2', color: '#22c55e' },
+  { id: 'binary-tree', name: 'Binary Tree', icon: 'git-branch', color: '#10b981' },
+  { id: 'bst', name: 'Binary Search Tree', icon: 'git-merge', color: '#14b8a6' },
+  { id: 'heap', name: 'Heap / Priority Queue', icon: 'triangle', color: '#06b6d4' },
+  { id: 'graph-bfs-dfs', name: 'Graphs — BFS/DFS', icon: 'share-2', color: '#0ea5e9' },
+  { id: 'graph-advanced', name: 'Graphs — Advanced', icon: 'workflow', color: '#3b82f6' },
+  { id: 'dp-1d', name: 'DP — 1D', icon: 'trending-up', color: '#6366f1' },
+  { id: 'dp-2d', name: 'DP — 2D', icon: 'box', color: '#8b5cf6' },
+  { id: 'dp-advanced', name: 'DP — Advanced', icon: 'brain', color: '#a855f7' },
+  { id: 'greedy', name: 'Greedy', icon: 'zap', color: '#d946ef' },
+  { id: 'trie', name: 'Trie', icon: 'file-text', color: '#ec4899' },
+  { id: 'segment-tree', name: 'Segment Tree / BIT', icon: 'bar-chart-3', color: '#f43f5e' },
+  { id: 'math', name: 'Math & Number Theory', icon: 'calculator', color: '#ef4444' },
+  { id: 'bit-manipulation', name: 'Bit Manipulation', icon: 'binary', color: '#f97316' },
+  { id: 'design', name: 'Design / System Design', icon: 'settings', color: '#f59e0b' },
+];
+
+export default CATEGORIES;

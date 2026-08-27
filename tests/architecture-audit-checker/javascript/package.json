@@ -1,0 +1,17 @@
+{
+  "name": "architecture-audit-checker-js",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "JavaScript track of the architecture-audit deliverable checker harness. Loads the six Markdown deliverables under .kiro/specs/architecture-audit/ and runs the 17 Correctness Properties via fast-check. Pure ESM, no TypeScript compile step.",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "fast-check": "^3",
+    "remark-gfm": "^4",
+    "remark-parse": "^11",
+    "unified": "^11",
+    "vitest": "^1"
+  }
+}

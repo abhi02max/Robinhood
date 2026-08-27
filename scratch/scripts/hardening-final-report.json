@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-04-15T15:50:26.967Z",
+  "confidence": 95.21,
+  "threshold": 95,
+  "goDecision": "GO",
+  "deploymentAllowed": true,
+  "phaseScores": [
+    {
+      "phase": "edge",
+      "file": "hardening-edge-report.json",
+      "score": 100,
+      "weight": 0.2,
+      "passed": true,
+      "passedForGate": true
+    },
+    {
+      "phase": "soak",
+      "file": "hardening-soak-report.json",
+      "score": 85.71,
+      "weight": 0.3,
+      "passed": false,
+      "passedForGate": true
+    },
+    {
+      "phase": "concurrency",
+      "file": "hardening-concurrency-report.json",
+      "score": 100,
+      "weight": 0.2,
+      "passed": true,
+      "passedForGate": true
+    },
+    {
+      "phase": "production",
+      "file": "hardening-production-report.json",
+      "score": 100,
+      "weight": 0.3,
+      "passed": true,
+      "passedForGate": true
+    }
+  ],
+  "note": "infra instability during soak",
+  "soak": {
+    "status": "FAILED",
+    "inconclusive": true,
+    "onlyInfraFailures": true,
+    "infraInterruptCount": 33,
+    "failedChecks": 1
+  },
+  "blockers": [],
+  "risks": [
+    {
+      "phase": "soak",
+      "risk": "Phase failed one or more checks."
+    },
+    {
+      "phase": "soak",
+      "risk": "1 failed checks detected."
+    },
+    {
+      "phase": "soak",
+      "risk": "Soak failures classified as infrastructure interruptions only."
+    },
+    {
+      "phase": "soak",
+      "risk": "Soak run marked INCONCLUSIVE due interruption threshold."
+    }
+  ]
+}

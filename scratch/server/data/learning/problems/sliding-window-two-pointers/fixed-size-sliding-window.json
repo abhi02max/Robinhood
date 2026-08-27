@@ -1,0 +1,427 @@
+{
+  "topic_slug": "sliding-window-two-pointers",
+  "pattern_slug": "fixed-size-sliding-window",
+  "problems": [
+    {
+      "slug": "maximum-average-subarray-i",
+      "title": "Maximum Average Subarray I",
+      "difficulty": "Easy",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "array"],
+      "description": "You are given an integer array `nums` consisting of `n` elements, and an integer `k`.\n\nFind a contiguous subarray whose **length is exactly `k`** that has the **maximum average value** and return this value. Any answer with a calculation error less than `10^-5` will be accepted.",
+      "examples": [
+        { "input": "nums = [1,12,-5,-6,50,3], k = 4", "output": "12.75000", "explanation": "The maximum average is (12 - 5 - 6 + 50) / 4 = 51 / 4 = 12.75." },
+        { "input": "nums = [5], k = 1", "output": "5.00000", "explanation": "The single element is itself the only subarray of length 1." }
+      ],
+      "constraints": ["n == nums.length", "1 <= k <= n <= 10^5", "-10^4 <= nums[i] <= 10^4"],
+      "edge_cases": ["k equals 1", "k equals n (entire array)", "All elements negative", "All elements equal", "Mixed positive and negative summing to zero"],
+      "approach_brute": "For each starting index i in [0, n-k], compute the sum of nums[i..i+k-1] and track the maximum. Time O(N·K), space O(1). Times out when N·K exceeds ~10^7.",
+      "approach_optimal": "Compute the sum of the first window of size k. Slide the window one step at a time: subtract the leaving element and add the entering element. Track the running maximum sum, then divide by k at the end. Time O(N), space O(1).",
+      "starter_code": {
+        "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nfunction findMaxAverage(nums, k) {\n  // Your code here\n}",
+        "python": "from typing import List\n\ndef find_max_average(nums: List[int], k: int) -> float:\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "nums": [1,12,-5,-6,50,3], "k": 4 }, "expected_output": 12.75, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [5], "k": 1 }, "expected_output": 5.0, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [0,1,1,3,3], "k": 4 }, "expected_output": 2.0, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [-1], "k": 1 }, "expected_output": -1.0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [1,2,3,4,5], "k": 5 }, "expected_output": 3.0, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [-3,-2,-1,-4], "k": 2 }, "expected_output": -1.5, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [10,10,10,10], "k": 2 }, "expected_output": 10.0, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [100,-100,100,-100], "k": 2 }, "expected_output": 0.0, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [7,4,2,8,5,1,3,9], "k": 3 }, "expected_output": 5.0, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [-1,-2,-3,-4,-5], "k": 2 }, "expected_output": -1.5, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [5,5,5,5,5,5,5,5,5,5], "k": 4 }, "expected_output": 5.0, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [10000,-10000,10000,-10000,10000], "k": 1 }, "expected_output": 10000.0, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "find-all-anagrams-in-a-string",
+      "title": "Find All Anagrams in a String",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "string", "hash-map"],
+      "description": "Given two strings `s` and `p`, return an array of all the **start indices** of `p`'s anagrams in `s`. You may return the answer in any order.\n\nAn **Anagram** is a word or phrase formed by rearranging the letters of a different word or phrase, typically using all the original letters exactly once.",
+      "examples": [
+        { "input": "s = \"cbaebabacd\", p = \"abc\"", "output": "[0,6]", "explanation": "The substring with start index 0 is \"cba\", which is an anagram of \"abc\". The substring with start index 6 is \"bac\", which is an anagram of \"abc\"." },
+        { "input": "s = \"abab\", p = \"ab\"", "output": "[0,1,2]", "explanation": "Starting at indices 0, 1, and 2 we have \"ab\", \"ba\", \"ab\" — all anagrams of \"ab\"." }
+      ],
+      "constraints": ["1 <= s.length, p.length <= 3 * 10^4", "s and p consist of lowercase English letters"],
+      "edge_cases": ["p longer than s (return [])", "s and p both length 1", "p and s identical", "All characters identical", "No anagram present"],
+      "approach_brute": "For each window of length p.length in s, sort its characters and compare to sorted p. O(N · K log K) where K = p.length. Times out for N = 30000.",
+      "approach_optimal": "Maintain a frequency array of size 26 for p, and a frequency array for the current window. Initialize on the first window of size p.length, then slide one character at a time: increment the entering char, decrement the leaving char. After each slide, compare the two frequency arrays in O(26). Time O(N), space O(σ).",
+      "starter_code": {
+        "javascript": "/**\n * @param {string} s\n * @param {string} p\n * @return {number[]}\n */\nfunction findAnagrams(s, p) {\n  // Your code here\n}",
+        "python": "from typing import List\n\ndef find_anagrams(s: str, p: str) -> List[int]:\n    pass"
+      },
+      "time_complexity": "O(N + M)",
+      "space_complexity": "O(σ) where σ = 26",
+      "test_cases": [
+        { "input_payload": { "s": "cbaebabacd", "p": "abc" }, "expected_output": [0,6], "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "s": "abab", "p": "ab" }, "expected_output": [0,1,2], "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "s": "a", "p": "a" }, "expected_output": [0], "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "s": "a", "p": "ab" }, "expected_output": [], "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "s": "abcdef", "p": "xyz" }, "expected_output": [], "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "s": "aaaaaaaaaa", "p": "aa" }, "expected_output": [0,1,2,3,4,5,6,7,8], "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "s": "ab", "p": "ab" }, "expected_output": [0], "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "s": "abcabcabc", "p": "abc" }, "expected_output": [0,1,2,3,4,5,6], "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "s": "hello", "p": "ll" }, "expected_output": [2], "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "s": "cbaebabacd", "p": "cba" }, "expected_output": [0], "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "s": "aaa", "p": "bbb" }, "expected_output": [], "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "s": "baa", "p": "aa" }, "expected_output": [1], "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "permutation-in-string",
+      "title": "Permutation in String",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "string", "hash-map"],
+      "description": "Given two strings `s1` and `s2`, return `true` if `s2` contains a permutation of `s1`, or `false` otherwise.\n\nIn other words, return `true` if one of `s1`'s permutations is the substring of `s2`.",
+      "examples": [
+        { "input": "s1 = \"ab\", s2 = \"eidbaoo\"", "output": "true", "explanation": "s2 contains one permutation of s1 (\"ba\")." },
+        { "input": "s1 = \"ab\", s2 = \"eidboaoo\"", "output": "false", "explanation": "No permutation of \"ab\" is a substring of \"eidboaoo\"." }
+      ],
+      "constraints": ["1 <= s1.length, s2.length <= 10^4", "s1 and s2 consist of lowercase English letters"],
+      "edge_cases": ["s1 longer than s2 (false)", "s1 == s2", "s1 and s2 are anagrams of each other", "Single character"],
+      "approach_brute": "Generate all permutations of s1 and check each against s2. O(K! · N) — exponential, infeasible for K > 8.",
+      "approach_optimal": "Identical structure to 'Find All Anagrams': frequency-count s1, slide a window of length s1.length over s2, compare frequency vectors after each slide. Time O(N), space O(σ).",
+      "starter_code": {
+        "javascript": "/**\n * @param {string} s1\n * @param {string} s2\n * @return {boolean}\n */\nfunction checkInclusion(s1, s2) {\n  // Your code here\n}",
+        "python": "def check_inclusion(s1: str, s2: str) -> bool:\n    pass"
+      },
+      "time_complexity": "O(N + M)",
+      "space_complexity": "O(σ) where σ = 26",
+      "test_cases": [
+        { "input_payload": { "s1": "ab", "s2": "eidbaoo" }, "expected_output": true, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "s1": "ab", "s2": "eidboaoo" }, "expected_output": false, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "s1": "abc", "s2": "ccccbabc" }, "expected_output": true, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "s1": "a", "s2": "a" }, "expected_output": true, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "s1": "a", "s2": "b" }, "expected_output": false, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "s1": "ab", "s2": "ba" }, "expected_output": true, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "s1": "adc", "s2": "dcda" }, "expected_output": true, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "s1": "hello", "s2": "ooolleoooleh" }, "expected_output": false, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "s1": "abc", "s2": "abc" }, "expected_output": true, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "s1": "ab", "s2": "a" }, "expected_output": false, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "s1": "xyz", "s2": "afdgzyxksldfm" }, "expected_output": true, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "s1": "prosperity", "s2": "properties" }, "expected_output": false, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "maximum-vowels-in-substring-of-given-length",
+      "title": "Maximum Number of Vowels in a Substring of Given Length",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "string"],
+      "description": "Given a string `s` and an integer `k`, return the **maximum number of vowel letters** in any substring of `s` with length `k`.\n\nVowel letters in English are `'a'`, `'e'`, `'i'`, `'o'`, and `'u'`.",
+      "examples": [
+        { "input": "s = \"abciiidef\", k = 3", "output": "3", "explanation": "The substring \"iii\" contains 3 vowel letters." },
+        { "input": "s = \"aeiou\", k = 2", "output": "2", "explanation": "Any substring of length 2 contains 2 vowels." },
+        { "input": "s = \"leetcode\", k = 3", "output": "2", "explanation": "\"lee\", \"eet\", and \"ode\" each contain 2 vowels." }
+      ],
+      "constraints": ["1 <= s.length <= 10^5", "1 <= k <= s.length", "s consists of lowercase English letters"],
+      "edge_cases": ["No vowels present", "All vowels", "k == 1", "k == s.length", "Single character string"],
+      "approach_brute": "For each window of size k, count vowels by scanning. O(N · K). Times out for N = K = 10^5.",
+      "approach_optimal": "Slide a window of size k. Maintain a count of vowels in the window. When entering a vowel, increment; when leaving a vowel, decrement. Track the running max. Time O(N), space O(1).",
+      "starter_code": {
+        "javascript": "/**\n * @param {string} s\n * @param {number} k\n * @return {number}\n */\nfunction maxVowels(s, k) {\n  // Your code here\n}",
+        "python": "def max_vowels(s: str, k: int) -> int:\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "s": "abciiidef", "k": 3 }, "expected_output": 3, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "s": "aeiou", "k": 2 }, "expected_output": 2, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "s": "leetcode", "k": 3 }, "expected_output": 2, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "s": "rhythms", "k": 4 }, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "s": "tryhard", "k": 4 }, "expected_output": 1, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "s": "a", "k": 1 }, "expected_output": 1, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "s": "b", "k": 1 }, "expected_output": 0, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "s": "aaaa", "k": 2 }, "expected_output": 2, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "s": "abcdefgh", "k": 8 }, "expected_output": 2, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "s": "weallloveyou", "k": 7 }, "expected_output": 4, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "s": "iiiiiiiii", "k": 5 }, "expected_output": 5, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "s": "bcbcbcbcbc", "k": 5 }, "expected_output": 0, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "subarrays-of-size-k-with-average-at-least-threshold",
+      "title": "Number of Sub-arrays of Size K With Average ≥ Threshold",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "array"],
+      "description": "Given an array of integers `arr` and two integers `k` and `threshold`, return the number of subarrays of size `k` and average **greater than or equal to** `threshold`.",
+      "examples": [
+        { "input": "arr = [2,2,2,2,5,5,5,8], k = 3, threshold = 4", "output": "3", "explanation": "Subarrays [2,5,5], [5,5,5], [5,5,8] have averages 4, 5, 6 respectively. All are >= 4." },
+        { "input": "arr = [11,13,17,23,29,31,7,5,2,3], k = 3, threshold = 5", "output": "6", "explanation": "All subarrays of size 3 except [7,5,2] and [5,2,3] have averages >= 5." }
+      ],
+      "constraints": ["1 <= arr.length <= 10^5", "1 <= arr[i] <= 10^4", "1 <= k <= arr.length", "0 <= threshold <= 10^4"],
+      "edge_cases": ["k == arr.length", "All values below threshold", "All values above threshold", "k == 1"],
+      "approach_brute": "For each window of size k, compute the sum and compare avg = sum/k against threshold. The naive recomputation is O(N·K).",
+      "approach_optimal": "Avoid floating-point: compare sum >= k * threshold. Slide a window of size k maintaining its sum incrementally. Increment count whenever sum >= k*threshold. Time O(N), space O(1).",
+      "starter_code": {
+        "javascript": "/**\n * @param {number[]} arr\n * @param {number} k\n * @param {number} threshold\n * @return {number}\n */\nfunction numOfSubarrays(arr, k, threshold) {\n  // Your code here\n}",
+        "python": "from typing import List\n\ndef num_of_subarrays(arr: List[int], k: int, threshold: int) -> int:\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "arr": [2,2,2,2,5,5,5,8], "k": 3, "threshold": 4 }, "expected_output": 3, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "arr": [11,13,17,23,29,31,7,5,2,3], "k": 3, "threshold": 5 }, "expected_output": 6, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "arr": [1,1,1,1,1], "k": 1, "threshold": 1 }, "expected_output": 5, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "arr": [1,2,3,4,5], "k": 5, "threshold": 3 }, "expected_output": 1, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "arr": [1,2,3,4,5], "k": 5, "threshold": 4 }, "expected_output": 0, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "arr": [5,5,5,5], "k": 2, "threshold": 5 }, "expected_output": 3, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "arr": [1], "k": 1, "threshold": 1 }, "expected_output": 1, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "arr": [1], "k": 1, "threshold": 2 }, "expected_output": 0, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "arr": [10,10,10,10], "k": 4, "threshold": 10 }, "expected_output": 1, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "arr": [7,7,7,7,7], "k": 3, "threshold": 7 }, "expected_output": 3, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "arr": [4,4,4,4,4,4,4,4,4,4], "k": 5, "threshold": 4 }, "expected_output": 6, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "arr": [10000,10000,10000], "k": 2, "threshold": 0 }, "expected_output": 2, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "defuse-the-bomb",
+      "title": "Defuse the Bomb",
+      "difficulty": "Easy",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "array", "circular"],
+      "description": "You have a bomb to defuse, and your time is running out! Your informer will provide you with a circular array `code` of length `n` and a key `k`.\n\nTo decrypt the code, you must replace every number. All the numbers are replaced **simultaneously**.\n\n- If `k > 0`, replace the i-th number with the **sum of the next k numbers**.\n- If `k < 0`, replace the i-th number with the **sum of the previous |k| numbers**.\n- If `k == 0`, replace the i-th number with `0`.\n\nAs `code` is circular, the next element of `code[n-1]` is `code[0]`, and the previous element of `code[0]` is `code[n-1]`.\n\nGiven the **circular** array `code` and an integer key `k`, return the decrypted code.",
+      "examples": [
+        { "input": "code = [5,7,1,4], k = 3", "output": "[12,10,16,13]", "explanation": "Each number is replaced by the sum of the next 3 numbers. The circular nature wraps around." },
+        { "input": "code = [1,2,3,4], k = 0", "output": "[0,0,0,0]", "explanation": "When k = 0, every number is replaced with 0." },
+        { "input": "code = [2,4,9,3], k = -2", "output": "[12,5,6,13]", "explanation": "Each number is replaced by the sum of the previous 2 numbers." }
+      ],
+      "constraints": ["n == code.length", "1 <= n <= 100", "-(n-1) <= k <= n-1", "1 <= code[i] <= 100"],
+      "edge_cases": ["k == 0 (all zeros)", "n == 1 (only k == 0 valid)", "|k| == n - 1", "Array of size 2"],
+      "approach_brute": "For each i, loop |k| steps in the appropriate direction, summing modulo n. O(N · |k|).",
+      "approach_optimal": "Slide a fixed-size window of width |k| around the circular array. For k > 0, the window for index i covers code[i+1..i+k]. Slide one step at a time updating the sum. For k < 0, mirror the logic. Time O(N), space O(N) for output.",
+      "starter_code": {
+        "javascript": "/**\n * @param {number[]} code\n * @param {number} k\n * @return {number[]}\n */\nfunction decrypt(code, k) {\n  // Your code here\n}",
+        "python": "from typing import List\n\ndef decrypt(code: List[int], k: int) -> List[int]:\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": { "code": [5,7,1,4], "k": 3 }, "expected_output": [12,10,16,13], "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "code": [1,2,3,4], "k": 0 }, "expected_output": [0,0,0,0], "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "code": [2,4,9,3], "k": -2 }, "expected_output": [12,5,6,13], "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "code": [1], "k": 0 }, "expected_output": [0], "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "code": [1,2], "k": 1 }, "expected_output": [2,1], "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "code": [1,2], "k": -1 }, "expected_output": [2,1], "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "code": [5,5,5,5,5], "k": 2 }, "expected_output": [10,10,10,10,10], "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "code": [10,20,30], "k": 2 }, "expected_output": [50,40,30], "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "code": [10,20,30], "k": -1 }, "expected_output": [30,10,20], "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "code": [3,3,3,3], "k": 3 }, "expected_output": [9,9,9,9], "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "code": [1,2,3,4,5,6], "k": 4 }, "expected_output": [14,18,16,14,12,10], "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "code": [7,7,7,7], "k": 0 }, "expected_output": [0,0,0,0], "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "diet-plan-performance",
+      "title": "Diet Plan Performance",
+      "difficulty": "Easy",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "array"],
+      "description": "A dieter consumes `calories[i]` calories on the i-th day.\n\nGiven an integer `k`, for **every consecutive sequence of `k` days** (`calories[i], calories[i+1], ..., calories[i+k-1]` for all `0 <= i <= n-k`), they look at `T`, the total calories consumed during that sequence of `k` days:\n\n- If `T < lower`, they performed poorly and lose `1` point.\n- If `T > upper`, they performed well and gain `1` point.\n- Otherwise, they neither gain nor lose any point.\n\nReturn the **total number of points** the dieter has after dieting for `calories.length` days.\n\nThe total points can be negative.",
+      "examples": [
+        { "input": "calories = [1,2,3,4,5], k = 1, lower = 3, upper = 3", "output": "0", "explanation": "Days 1, 2 are below lower (-1 each); day 3 is in range; days 4, 5 are above upper (+1 each). Total = -2 + 0 + 2 = 0." },
+        { "input": "calories = [3,2], k = 2, lower = 0, upper = 1", "output": "1", "explanation": "Sum = 5 > 1, gain +1." }
+      ],
+      "constraints": ["1 <= k <= calories.length <= 10^5", "0 <= calories[i] <= 20000", "0 <= lower <= upper"],
+      "edge_cases": ["k equals 1", "k equals calories.length", "All zeros", "lower equals upper", "All days score zero"],
+      "approach_brute": "For each window, sum k values from scratch. O(N · K).",
+      "approach_optimal": "Sliding window of size k with running sum. After each slide, classify the window into −1 / 0 / +1. Time O(N), space O(1).",
+      "starter_code": {
+        "javascript": "/**\n * @param {number[]} calories\n * @param {number} k\n * @param {number} lower\n * @param {number} upper\n * @return {number}\n */\nfunction dietPlanPerformance(calories, k, lower, upper) {\n  // Your code here\n}",
+        "python": "from typing import List\n\ndef diet_plan_performance(calories: List[int], k: int, lower: int, upper: int) -> int:\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "calories": [1,2,3,4,5], "k": 1, "lower": 3, "upper": 3 }, "expected_output": 0, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "calories": [3,2], "k": 2, "lower": 0, "upper": 1 }, "expected_output": 1, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "calories": [6,5,0,0], "k": 2, "lower": 1, "upper": 5 }, "expected_output": 0, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "calories": [1,1,1], "k": 3, "lower": 2, "upper": 4 }, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "calories": [10,10,10], "k": 1, "lower": 1, "upper": 5 }, "expected_output": 3, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "calories": [0,0,0], "k": 1, "lower": 1, "upper": 5 }, "expected_output": -3, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "calories": [1], "k": 1, "lower": 1, "upper": 1 }, "expected_output": 0, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "calories": [5,5,5,5,5], "k": 2, "lower": 8, "upper": 12 }, "expected_output": 0, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "calories": [5,5,5,5,5], "k": 2, "lower": 11, "upper": 15 }, "expected_output": -4, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "calories": [3,3,3,3], "k": 4, "lower": 10, "upper": 14 }, "expected_output": 0, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "calories": [1,2,3,4,5,6,7], "k": 3, "lower": 10, "upper": 15 }, "expected_output": -1, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "calories": [100,100,100], "k": 3, "lower": 10, "upper": 50 }, "expected_output": 1, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "grumpy-bookstore-owner",
+      "title": "Grumpy Bookstore Owner",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "array"],
+      "description": "There is a bookstore owner that has a store open for `n` minutes. You are given an integer array `customers` of length `n` where `customers[i]` is the number of customers entering the store at minute `i`, and a binary array `grumpy` where `grumpy[i]` is `1` if the bookstore owner is grumpy during minute `i`, and `0` otherwise.\n\nWhen the bookstore owner is grumpy, the customers of that minute are not satisfied; otherwise, they are satisfied.\n\nThe bookstore owner knows a secret technique to keep themselves not grumpy for `minutes` consecutive minutes, but can only use it once.\n\nReturn the **maximum number of customers** that can be satisfied throughout the day.",
+      "examples": [
+        { "input": "customers = [1,0,1,2,1,1,7,5], grumpy = [0,1,0,1,0,1,0,1], minutes = 3", "output": "16", "explanation": "Use the technique on the last 3 minutes. Naturally satisfied (grumpy=0) = 1+1+1+7=10; gained from technique on minutes 5,6,7 = 1+0+5=6; total = 16." }
+      ],
+      "constraints": ["n == customers.length == grumpy.length", "1 <= minutes <= n <= 2 * 10^4", "0 <= customers[i] <= 1000", "grumpy[i] is 0 or 1"],
+      "edge_cases": ["Owner never grumpy (technique adds 0)", "Owner always grumpy", "minutes == n", "Single customer day"],
+      "approach_brute": "For each window of size `minutes`, compute total satisfied customers if technique is applied there. O(N · minutes).",
+      "approach_optimal": "Compute the base satisfied total (sum of customers[i] where grumpy[i] == 0). Then slide a window of size `minutes` over customers[i]·grumpy[i] tracking the max gain. Answer = base + max_gain. Time O(N), space O(1).",
+      "starter_code": {
+        "javascript": "/**\n * @param {number[]} customers\n * @param {number[]} grumpy\n * @param {number} minutes\n * @return {number}\n */\nfunction maxSatisfied(customers, grumpy, minutes) {\n  // Your code here\n}",
+        "python": "from typing import List\n\ndef max_satisfied(customers: List[int], grumpy: List[int], minutes: int) -> int:\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "customers": [1,0,1,2,1,1,7,5], "grumpy": [0,1,0,1,0,1,0,1], "minutes": 3 }, "expected_output": 16, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "customers": [1], "grumpy": [0], "minutes": 1 }, "expected_output": 1, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "customers": [1], "grumpy": [1], "minutes": 1 }, "expected_output": 1, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "customers": [5,5,5,5,5], "grumpy": [1,1,1,1,1], "minutes": 3 }, "expected_output": 15, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "customers": [5,5,5,5,5], "grumpy": [0,0,0,0,0], "minutes": 3 }, "expected_output": 25, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "customers": [2,2,2,2,2], "grumpy": [1,0,1,0,1], "minutes": 2 }, "expected_output": 6, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "customers": [10,1,1,1,1], "grumpy": [1,0,0,0,0], "minutes": 1 }, "expected_output": 14, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "customers": [3,3,3,3], "grumpy": [1,1,1,1], "minutes": 4 }, "expected_output": 12, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "customers": [1,2,3,4,5,6], "grumpy": [1,1,1,0,0,0], "minutes": 2 }, "expected_output": 20, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "customers": [2,6,6,9], "grumpy": [0,0,1,1], "minutes": 1 }, "expected_output": 17, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "customers": [4,10,10], "grumpy": [1,1,0], "minutes": 2 }, "expected_output": 24, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "customers": [1,1,1,1,1,1,1,1,1,1], "grumpy": [0,0,0,0,1,1,1,1,0,0], "minutes": 4 }, "expected_output": 10, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "k-radius-subarray-averages",
+      "title": "K Radius Subarray Averages",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "array"],
+      "description": "You are given a 0-indexed array `nums` of `n` integers, and an integer `k`.\n\nThe **k-radius average** for a subarray of `nums` centered at some index `i` with the radius `k` is the average of all elements in `nums` between the indices `i - k` and `i + k` (**inclusive**). If there are fewer than `2 * k + 1` elements between these indices, the k-radius average is `-1`.\n\nBuild and return an array `avgs` of length `n` where `avgs[i]` is the k-radius average for the subarray centered at index `i`.\n\nThe **average** of `x` elements is the sum of the `x` elements divided by `x`, using **integer division**. The integer division truncates toward zero.",
+      "examples": [
+        { "input": "nums = [7,4,3,9,1,8,5,2,6], k = 3", "output": "[-1,-1,-1,5,4,4,-1,-1,-1]", "explanation": "Only indices 3, 4, 5 have a full window of size 7. avgs[3] = floor(37/7) = 5, avgs[4] = floor(32/7) = 4, avgs[5] = floor(34/7) = 4." },
+        { "input": "nums = [100000], k = 0", "output": "[100000]", "explanation": "Window size = 1, average is the element itself." }
+      ],
+      "constraints": ["n == nums.length", "1 <= n <= 10^5", "0 <= nums[i], k <= 10^5"],
+      "edge_cases": ["k == 0 (window size 1, every average defined)", "k larger than n", "All elements equal", "n == 1"],
+      "approach_brute": "For each i, sum nums[i-k..i+k] from scratch. O(N · K). Times out when N·K exceeds 10^7.",
+      "approach_optimal": "Window size is `2k+1`. Slide it once across nums. Indices in [k, n-k-1] get a real average; others get -1. Use a 64-bit running sum to avoid overflow on max-value inputs. Time O(N), space O(N) for output.",
+      "starter_code": {
+        "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number[]}\n */\nfunction getAverages(nums, k) {\n  // Your code here\n}",
+        "python": "from typing import List\n\ndef get_averages(nums: List[int], k: int) -> List[int]:\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": { "nums": [7,4,3,9,1,8,5,2,6], "k": 3 }, "expected_output": [-1,-1,-1,5,4,4,-1,-1,-1], "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [100000], "k": 0 }, "expected_output": [100000], "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [8], "k": 10000 }, "expected_output": [-1], "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [1,2,3,4,5], "k": 0 }, "expected_output": [1,2,3,4,5], "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [1,2,3,4,5], "k": 1 }, "expected_output": [-1,2,3,4,-1], "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [1,1,1,1,1], "k": 2 }, "expected_output": [-1,-1,1,-1,-1], "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [10,10,10], "k": 0 }, "expected_output": [10,10,10], "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [10,20,30,40,50], "k": 2 }, "expected_output": [-1,-1,30,-1,-1], "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [0,0,0,0,0], "k": 1 }, "expected_output": [-1,0,0,0,-1], "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [2,2,2,2,2], "k": 1 }, "expected_output": [-1,2,2,2,-1], "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [1,2,3], "k": 10 }, "expected_output": [-1,-1,-1], "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [8,3,3,5,1,9], "k": 1 }, "expected_output": [-1,4,3,3,5,-1], "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "maximum-points-from-cards",
+      "title": "Maximum Points You Can Obtain from Cards",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "array"],
+      "description": "There are several cards arranged in a row, and each card has an associated number of points. The points are given in the integer array `cardPoints`.\n\nIn one step, you can take **one card from the beginning or from the end of the row**. You have to take exactly `k` cards.\n\nYour score is the sum of the points of the cards you have taken.\n\nGiven the integer array `cardPoints` and the integer `k`, return the **maximum score** you can obtain.",
+      "examples": [
+        { "input": "cardPoints = [1,2,3,4,5,6,1], k = 3", "output": "12", "explanation": "Take the last three cards (6,1) and one more from the front gives best: 1+6+5=12 by taking front 1, then 6 and 5 from the back? Actually take from back: 1, 6, 5 → sum = 12." },
+        { "input": "cardPoints = [2,2,2], k = 2", "output": "4", "explanation": "Regardless of which two cards you choose, the score is 4." }
+      ],
+      "constraints": ["1 <= cardPoints.length <= 10^5", "1 <= cardPoints[i] <= 10^4", "1 <= k <= cardPoints.length"],
+      "edge_cases": ["k == 1", "k == cardPoints.length (sum entire array)", "All same value", "Highly skewed values at one end"],
+      "approach_brute": "Try every split: take i from the front and k-i from the back, compute total, track max. O(K) overall but cleanly correct. Note: this *is* the canonical approach since K can be up to N.",
+      "approach_optimal": "Equivalent reformulation: minimize the sum of the (n-k) contiguous cards left in the middle. Slide a window of size n-k and find its minimum sum. Answer = total_sum - min_window_sum. Both approaches are O(N).",
+      "starter_code": {
+        "javascript": "/**\n * @param {number[]} cardPoints\n * @param {number} k\n * @return {number}\n */\nfunction maxScore(cardPoints, k) {\n  // Your code here\n}",
+        "python": "from typing import List\n\ndef max_score(card_points: List[int], k: int) -> int:\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "cardPoints": [1,2,3,4,5,6,1], "k": 3 }, "expected_output": 12, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "cardPoints": [2,2,2], "k": 2 }, "expected_output": 4, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "cardPoints": [9,7,7,9,7,7,9], "k": 7 }, "expected_output": 55, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "cardPoints": [1,1000,1], "k": 1 }, "expected_output": 1, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "cardPoints": [1,79,80,1,1,1,200,1], "k": 3 }, "expected_output": 202, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "cardPoints": [5], "k": 1 }, "expected_output": 5, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "cardPoints": [1,2,3], "k": 3 }, "expected_output": 6, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "cardPoints": [100,40,17,9,73,75], "k": 3 }, "expected_output": 248, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "cardPoints": [10,10,10,10], "k": 2 }, "expected_output": 20, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "cardPoints": [1,1,1,1,1], "k": 5 }, "expected_output": 5, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "cardPoints": [7,7,7,7,7], "k": 3 }, "expected_output": 21, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "cardPoints": [3,2,1,2,3], "k": 3 }, "expected_output": 8, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "substrings-of-size-three-with-distinct-characters",
+      "title": "Substrings of Size Three with Distinct Characters",
+      "difficulty": "Easy",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "string"],
+      "description": "A string is **good** if there are no repeated characters.\n\nGiven a string `s`, return the number of **good substrings of length three** in `s`.\n\nNote that if there are multiple occurrences of the same substring, every occurrence should be counted.\n\nA **substring** is a contiguous sequence of characters in a string.",
+      "examples": [
+        { "input": "s = \"xyzzaz\"", "output": "1", "explanation": "Substrings of length 3: \"xyz\", \"yzz\", \"zza\", \"zaz\". Only \"xyz\" has all distinct characters." },
+        { "input": "s = \"aababcabc\"", "output": "4", "explanation": "Good substrings: \"abc\", \"bca\", \"cab\", \"abc\" — 4 in total." }
+      ],
+      "constraints": ["1 <= s.length <= 100", "s consists of lowercase English letters"],
+      "edge_cases": ["Length < 3", "All same letter", "All distinct characters", "Length exactly 3"],
+      "approach_brute": "For each window of size 3, check that the 3 characters are pairwise distinct. O(N) trivially.",
+      "approach_optimal": "Same as brute since the window is a fixed tiny size — three pairwise comparisons per window. Time O(N), space O(1).",
+      "starter_code": {
+        "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nfunction countGoodSubstrings(s) {\n  // Your code here\n}",
+        "python": "def count_good_substrings(s: str) -> int:\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "s": "xyzzaz" }, "expected_output": 1, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "s": "aababcabc" }, "expected_output": 4, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "s": "abc" }, "expected_output": 1, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "s": "aaa" }, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "s": "ab" }, "expected_output": 0, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "s": "" }, "expected_output": 0, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "s": "aabbcc" }, "expected_output": 0, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "s": "abcdef" }, "expected_output": 4, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "s": "abcabcabc" }, "expected_output": 7, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "s": "z" }, "expected_output": 0, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "s": "aabba" }, "expected_output": 0, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "s": "abcabc" }, "expected_output": 4, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "minimum-difference-between-highest-and-lowest-of-k-scores",
+      "title": "Minimum Difference Between Highest and Lowest of K Scores",
+      "difficulty": "Easy",
+      "tags": ["sliding-window-two-pointers", "fixed-size-sliding-window", "array", "sorting"],
+      "description": "You are given a 0-indexed integer array `nums`, where `nums[i]` represents the score of the i-th student. You are also given an integer `k`.\n\nPick the scores of any `k` students from the array so that the **difference between the highest and the lowest** of the `k` scores is **minimized**.\n\nReturn the **minimum possible difference**.",
+      "examples": [
+        { "input": "nums = [90], k = 1", "output": "0", "explanation": "Pick the only score; difference is 0." },
+        { "input": "nums = [9,4,1,7], k = 2", "output": "2", "explanation": "Sorted: [1,4,7,9]. Closest pair is (7,9) with difference 2." }
+      ],
+      "constraints": ["1 <= k <= nums.length <= 1000", "0 <= nums[i] <= 10^5"],
+      "edge_cases": ["k == 1 (always 0)", "k == n (max - min)", "All values equal", "Already sorted input"],
+      "approach_brute": "Try all C(n, k) subsets; track min(max - min). Exponential, infeasible.",
+      "approach_optimal": "Sort the array. The optimal k-subset is a *contiguous* segment of the sorted array (any non-contiguous choice has a strictly worse spread). Slide a window of size k and minimize sorted[i+k-1] − sorted[i]. Time O(N log N), space O(1).",
+      "starter_code": {
+        "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nfunction minimumDifference(nums, k) {\n  // Your code here\n}",
+        "python": "from typing import List\n\ndef minimum_difference(nums: List[int], k: int) -> int:\n    pass"
+      },
+      "time_complexity": "O(N log N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "nums": [90], "k": 1 }, "expected_output": 0, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [9,4,1,7], "k": 2 }, "expected_output": 2, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [1,2,3,4,5], "k": 3 }, "expected_output": 2, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [5,5,5,5], "k": 2 }, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [100,1,1000,1,1], "k": 4 }, "expected_output": 99, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [1,2,3,4,5,6,7,8,9,10], "k": 10 }, "expected_output": 9, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [10,20], "k": 1 }, "expected_output": 0, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [7,3,1,9,5,4], "k": 3 }, "expected_output": 2, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [0,0,0,0,0], "k": 3 }, "expected_output": 0, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [1,1000000], "k": 2 }, "expected_output": 999999, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [1,2,3,4,5,6,7], "k": 4 }, "expected_output": 3, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [10,10,10,10,1,1,1,1], "k": 4 }, "expected_output": 0, "is_hidden": true, "order_index": 12 }
+      ]
+    }
+  ]
+}

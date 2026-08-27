@@ -1,0 +1,27 @@
+node_modules/
+.env
+.env.*
+!.env.example
+.next/
+build/
+dist/
+playwright-report/
+test-results/
+*.log
+*.tsbuildinfo
+coverage/
+
+# Local editor and agent workspaces
+.vscode/
+.agents/
+.kiro/
+
+# Generated research and browser-session artifacts
+brain/
+browser_recordings/
+conversations/
+context_state/
+html_artifacts/
+implicit/
+knowledge/
+prompting/

@@ -1,0 +1,269 @@
+{
+  "phase": "production-check",
+  "startedAt": "2026-04-16T04:25:05.366Z",
+  "finishedAt": "2026-04-16T04:25:26.391Z",
+  "apiBase": "http://127.0.0.1:3000",
+  "webBase": "http://127.0.0.1:5173",
+  "envFilesRead": [
+    ".env",
+    ".env.example"
+  ],
+  "totals": {
+    "checksTotal": 16,
+    "passedChecks": 16,
+    "failedChecks": 0,
+    "failedBlocking": 0
+  },
+  "checks": [
+    {
+      "name": "Environment has database configuration",
+      "passed": true,
+      "details": {
+        "hasDatabaseUrl": true
+      },
+      "blocking": true
+    },
+    {
+      "name": "Environment has Redis configuration",
+      "passed": true,
+      "details": {
+        "hasRedisUrl": true
+      },
+      "blocking": true
+    },
+    {
+      "name": "Environment has Judge0 configuration",
+      "passed": true,
+      "details": {
+        "hasJudge0Url": true,
+        "hasJudge0ApiUrl": true
+      },
+      "blocking": true
+    },
+    {
+      "name": "Environment has AI provider configuration",
+      "passed": true,
+      "details": {
+        "hasGeminiKey": true,
+        "hasOpenRouterKey": true,
+        "hasOllamaUrl": true
+      },
+      "blocking": true
+    },
+    {
+      "name": "Health endpoint is alive",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "status": "ok",
+          "message": "Robinhood API Backend Active",
+          "uptimeSeconds": 193,
+          "timestamp": "2026-04-16T04:25:05.441Z",
+          "requestId": "3fe14b7e-9596-49bd-9b9c-f06af442d528"
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "Liveness endpoint is healthy",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "status": "ok",
+          "pid": 8604,
+          "uptimeSeconds": 193,
+          "timestamp": "2026-04-16T04:25:05.460Z",
+          "requestId": "3e62e93c-4b76-4403-9516-a823511fa046"
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "Readiness confirms Postgres and Redis connectivity",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "status": "ok",
+          "checks": {
+            "postgres": "ok",
+            "redis": "ok"
+          },
+          "timestamp": "2026-04-16T04:25:05.465Z",
+          "requestId": "7720bc72-340c-4b2f-8ab6-402f6e7f6001"
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "AI gateway health endpoint is healthy",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "status": "ok",
+          "gateway": "healthy",
+          "providers": {
+            "gemini": "configured",
+            "openrouter": "configured",
+            "ollama": "configured (custom URL)"
+          },
+          "redis": "healthy",
+          "timestamp": "2026-04-16T04:25:05.474Z",
+          "requestId": "8c8cbaed-c938-49cf-ab0e-35a460917cfb"
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "Execution run endpoint works in production mode",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "success": true,
+          "output": "2\n",
+          "error": "",
+          "executionTime": "",
+          "memory": 7556000,
+          "verdict": "Success",
+          "testCasesPassed": 0,
+          "totalTestCases": 0
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "SQL execution endpoint works in production mode",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "success": true,
+          "output": [
+            {
+              "ok": 1
+            }
+          ],
+          "fields": [
+            "ok"
+          ],
+          "error": "",
+          "executionTime": 1,
+          "memory": "",
+          "verdict": "Success",
+          "testCasesPassed": 0,
+          "totalTestCases": 0
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "Judge0 connectivity verified through submit endpoint",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "success": false,
+          "output": "",
+          "error": "Cannot write /sys/fs/cgroup/memory/box-2243/tasks: No such file or directory\n",
+          "executionTime": "0.0",
+          "memory": "",
+          "verdict": "Internal Error",
+          "testCasesPassed": 0,
+          "totalTestCases": 0
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "AI learning endpoint responds with production-safe contract",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "reply": "### Interview Questions for Load Balancing in Production\n\n#### Easy Level (Beginner-Friendly)\n\n1. **What is Load Balancing?**\n   - Expected Talking Points:\n     - Definition of load balancing.\n     - Purpose of load balancing.\n     - Basic principles of how it works.\n   - Red Flags:\n     - Lack of understanding what load balancing does.\n\n2. **Why Use Load Balancing?**\n   - Expected Talking Points:\n     - Scalability benefits (adding more servers without downtime).\n     - Performance optimization by distributing traffic evenly.\n     - Failover and redundancy in case one server fails.\n   - Red Flags:\n     - Misunderstanding the reasons for load balancing.\n\n3. **Types of Load Balancing Algorithms**\n   - Expected Talking Points:\n     - Round Robin\n     - Least Connections\n     - IP Hashing\n     - Weighted Round Robin\n     - Least Time\n   - Red Flags:\n     - Confusion about which algorithm is best suited for different scenarios.\n\n4. **What are the Key Metrics in Load Balancing?**\n   - Expected Talking Points:\n     - Response time\n     - Throughput\n     - Error rate\n     - Availability\n   - Red Flags:\n     - Lack of familiarity with these metrics and their importance.\n\n5. **How Does Load Balancing Work in a Network?**\n   - Expected Talking Points:\n     - Overview of how packets are routed through the network.\n     - How load balancers determine which server to send traffic to.\n   - Red Flags:\n     - Confusion about the role of firewalls and routers in the process.\n\n#### Medium Level (Intermediate)\n\n6. **Implementing Load Balancing with a Simple Script**\n   - Expected Talking Points:\n     - Writing a basic script to distribute requests evenly among servers.\n     - Using Python or Bash for this task.\n   - Red Flags:\n     - Errors in the script, lack of understanding of network programming concepts.\n\n7. **Load Balancing with DNS and Round Robin**\n   - Expected Talking Points:\n     - How DNS works and how it can be used to distribute requests.\n     - Setting up a simple load balancer using DNS records.\n   - Red Flags:\n     - Misconfiguration of DNS records, lack of understanding of DNS caching.\n\n8. **Load Balancing with a Load Balancer Service (e.g., AWS ELB)**\n   - Expected Talking Points:\n     - Overview of how services like AWS Elastic Load Balancing work.\n     - Setting up an ELB and configuring it to distribute traffic evenly.\n   - Red Flags:\n     - Errors in setting up the load balancer, lack of understanding of security configurations.\n\n#### Hard Level (Advanced)\n\n9. **Implementing a Custom Load Balancing System with Multiple Servers**\n   - Expected Talking Points:\n     - Designing a custom load balancing system using multiple servers and protocols.\n     - Using TCP/IP for communication between servers and clients.\n   - Red Flags:\n     - Complexity in designing the system, lack of understanding of network protocols.\n\n10. **Load Balancing in a Cloud Environment (e.g., Kubernetes)**\n    - Expected Talking Points:\n      - Overview of how load balancing is handled in cloud environments like Kubernetes.\n      - Setting up a Kubernetes cluster with multiple nodes and configuring services for load balancing.\n    - Red Flags:\n      - Errors in setting up the Kubernetes environment, lack of understanding of service discovery and networking.\n\n### General Questions\n\n11. **What",
+          "cached": false,
+          "provider": "ollama",
+          "model": "qwen2.5-coder:3b"
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "Scheduler service is reachable",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "userId": "2642a95d-04b2-41b2-aa9b-cf6b54918df1",
+          "date": "2026-04-16",
+          "tasks": [],
+          "summary": {
+            "total": 0,
+            "pending": 0,
+            "completed": 0
+          }
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "Analytics service is reachable",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "userId": "2642a95d-04b2-41b2-aa9b-cf6b54918df1",
+          "mastery": 0,
+          "streak": 0,
+          "solvedCount": 0,
+          "attemptedCount": 0,
+          "updatedAt": null
+        }
+      },
+      "blocking": true
+    },
+    {
+      "name": "Frontend production server is reachable",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "durationMs": 37
+      },
+      "blocking": true
+    },
+    {
+      "name": "Ollama endpoint connectivity is verified",
+      "passed": true,
+      "details": {
+        "status": 200,
+        "response": {
+          "models": [
+            {
+              "name": "qwen2.5-coder:3b",
+              "model": "qwen2.5-coder:3b",
+              "modified_at": "2026-04-05T15:10:57.7106021+05:30",
+              "size": 1929912626,
+              "digest": "f72c60cabf6237b07f6e632b2c48d533cef25eda2efbd34bed21c5e9c01e6225",
+              "details": {
+                "parent_model": "",
+                "format": "gguf",
+                "family": "qwen2",
+                "families": [
+                  "qwen2"
+                ],
+                "parameter_size": "3.1B",
+                "quantization_level": "Q4_K_M"
+              }
+            }
+          ]
+        }
+      },
+      "blocking": false
+    }
+  ],
+  "passed": true
+}

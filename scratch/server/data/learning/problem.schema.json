@@ -1,0 +1,206 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://robinhood.dev/schemas/problem.schema.json",
+  "title": "Robinhood Problem Bundle (v2.0)",
+  "description": "Production-grade problem definition. One bundle file per (topic, pattern) tuple, containing one or more problems. See PROBLEM_SCHEMA.md for the human-readable spec.",
+  "type": "object",
+  "required": ["schema_version", "topic_slug", "pattern_slug", "problems"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "Editor hint pointing at this very schema. Optional; only present so IDEs can resolve the schema for autocomplete."
+    },
+    "schema_version": {
+      "const": "2.0",
+      "description": "Marks this file as v2-strict. Files without this field are treated as legacy v1."
+    },
+    "topic_slug": { "$ref": "#/$defs/slug", "description": "FK to topics.slug." },
+    "pattern_slug": { "$ref": "#/$defs/slug", "description": "FK to patterns.slug under the same topic." },
+    "problems": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/problem" }
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "minLength": 2,
+      "maxLength": 80
+    },
+    "difficulty": { "enum": ["Easy", "Medium", "Hard"] },
+    "complexity": {
+      "type": "string",
+      "pattern": "^O\\(.+\\)$",
+      "description": "Big-O notation, e.g. 'O(N)', 'O(N log N)', 'O(2^N)'."
+    },
+    "language_code": { "type": "string", "minLength": 10 },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input", "output", "explanation"],
+      "properties": {
+        "input": { "type": "string", "minLength": 1 },
+        "output": { "type": "string", "minLength": 1 },
+        "explanation": { "type": "string", "minLength": 1 }
+      }
+    },
+    "approach": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "summary", "intuition", "steps", "code", "time_complexity", "space_complexity"],
+      "properties": {
+        "name": { "type": "string", "minLength": 2 },
+        "summary": { "type": "string", "minLength": 10 },
+        "intuition": { "type": "string", "minLength": 40 },
+        "steps": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "minLength": 4 }
+        },
+        "code": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["javascript", "python"],
+          "properties": {
+            "javascript": { "$ref": "#/$defs/language_code" },
+            "python": { "$ref": "#/$defs/language_code" }
+          }
+        },
+        "time_complexity": { "$ref": "#/$defs/complexity" },
+        "space_complexity": { "$ref": "#/$defs/complexity" }
+      }
+    },
+    "test_case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_payload", "expected_output", "is_hidden", "order_index"],
+      "properties": {
+        "input_payload": {
+          "description": "Named-argument object. Keys must match the formal parameter names of the starter_code function."
+        },
+        "expected_output": {
+          "description": "Literal JSON value (number | string | bool | array | object | null) that the user's function should return."
+        },
+        "is_hidden": { "type": "boolean" },
+        "order_index": { "type": "integer", "minimum": 1 },
+        "label": { "type": "string", "minLength": 2 }
+      }
+    },
+    "related_problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slug", "title", "difficulty"],
+      "properties": {
+        "slug": { "$ref": "#/$defs/slug" },
+        "title": { "type": "string", "minLength": 3 },
+        "difficulty": { "$ref": "#/$defs/difficulty" }
+      }
+    },
+    "problem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug", "title", "difficulty", "tags",
+        "description", "real_world_analogy",
+        "examples", "constraints", "edge_cases", "hints",
+        "approaches", "starter_code",
+        "time_complexity", "space_complexity",
+        "test_cases"
+      ],
+      "properties": {
+        "slug": { "$ref": "#/$defs/slug" },
+        "title": { "type": "string", "minLength": 3, "maxLength": 120 },
+        "difficulty": { "$ref": "#/$defs/difficulty" },
+        "tags": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "companies": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 2 }
+        },
+        "description": { "type": "string", "minLength": 80 },
+        "real_world_analogy": { "type": "string", "minLength": 30 },
+        "examples": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 5,
+          "items": { "$ref": "#/$defs/example" }
+        },
+        "constraints": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string", "minLength": 4 }
+        },
+        "edge_cases": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "type": "string", "minLength": 4 }
+        },
+        "hints": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 5,
+          "items": { "type": "string", "minLength": 20 }
+        },
+        "approaches": {
+          "type": "array",
+          "minItems": 2,
+          "items": { "$ref": "#/$defs/approach" }
+        },
+        "starter_code": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["javascript", "python"],
+          "properties": {
+            "javascript": { "$ref": "#/$defs/language_code" },
+            "python": { "$ref": "#/$defs/language_code" }
+          }
+        },
+        "cpp_signature": {
+          "type": "object",
+          "description": "Optional. Opts the problem into the C++ harness. Without this, C++ submissions for this problem return 'C++ not supported'.",
+          "additionalProperties": false,
+          "required": ["fn", "args", "ret"],
+          "properties": {
+            "fn":    { "type": "string", "minLength": 1 },
+            "class": { "type": "string", "minLength": 1 },
+            "args": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["name", "type"],
+                "properties": {
+                  "name": { "type": "string", "minLength": 1 },
+                  "type": { "$ref": "#/$defs/cpp_type" }
+                }
+              }
+            },
+            "ret": { "$ref": "#/$defs/cpp_type" }
+          }
+        },
+        "time_complexity": { "$ref": "#/$defs/complexity" },
+        "space_complexity": { "$ref": "#/$defs/complexity" },
+        "test_cases": {
+          "type": "array",
+          "minItems": 10,
+          "maxItems": 25,
+          "items": { "$ref": "#/$defs/test_case" }
+        },
+        "related_problems": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/related_problem" }
+        },
+        "video_url": {
+          "type": "string",
+          "pattern": "^https?://"
+        }
+      }
+    }
+  }
+}

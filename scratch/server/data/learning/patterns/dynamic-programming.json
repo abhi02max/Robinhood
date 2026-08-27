@@ -1,0 +1,125 @@
+{
+  "topic_slug": "dynamic-programming",
+  "patterns": [
+    {
+      "slug": "1d-state",
+      "name": "1D State DP",
+      "order_index": 1,
+      "explanation": "Define `dp[i]` = answer for the prefix ending at i (or for some 1-dimensional sub-problem indexed by i). Transition computes `dp[i]` from `dp[i-1]`, `dp[i-2]`, etc. Often optimizable to O(1) space with rolling variables.",
+      "when_to_use": "Climbing Stairs, House Robber, Maximum Subarray (DP form of Kadane), Minimum Cost Climbing Stairs, Decode Ways, Word Break, Longest Increasing Subsequence (O(N²) DP form).",
+      "intuition": "When the optimal answer at index i depends only on a small number of earlier indices, scan forward and accumulate. The state must capture *everything* a future transition could need.",
+      "common_pitfalls": [
+        "Insufficient state — `dp[i]` doesn't carry enough info for the transition",
+        "Off-by-one between 'index i' and 'first i elements'",
+        "Initializing dp[0] / dp[1] incorrectly",
+        "Forgetting that 'maximum subarray' can be negative if all elements are negative"
+      ],
+      "complexity_signature": "O(N) time, O(N) → O(1) space"
+    },
+    {
+      "slug": "2d-grid",
+      "name": "2D Grid DP",
+      "order_index": 2,
+      "explanation": "DP on an R × C grid where `dp[r][c]` depends on neighbors (typically up and left). Common transitions: sum of paths, minimum/maximum path, count of unique paths, Cherry Pickup (bidirectional).",
+      "when_to_use": "Unique Paths (I, II, III), Minimum Path Sum, Triangle, Cherry Pickup, Dungeon Game, Maximum Square. Whenever the problem is on a grid and the answer at (r, c) depends on a few neighbors.",
+      "intuition": "Each cell is a subproblem; the grid order ensures dependencies are computed first. Often you can collapse to a single row when only the previous row is needed.",
+      "common_pitfalls": [
+        "Iterating in the wrong order so dependencies aren't yet computed",
+        "Initializing the boundary row/column incorrectly",
+        "Using O(R·C) space when O(C) suffices",
+        "Confusing 'count paths' (additive) with 'min path' (min)"
+      ],
+      "complexity_signature": "O(R·C) time, O(C) space optimized"
+    },
+    {
+      "slug": "0-1-knapsack",
+      "name": "0/1 Knapsack",
+      "order_index": 3,
+      "explanation": "Each item can be taken at most once. `dp[i][w]` = best value using first i items with total weight ≤ w. Transition: take or skip. Optimizable to 1D by iterating weights *backward*.",
+      "when_to_use": "Partition Equal Subset Sum, Target Sum, Last Stone Weight II, Ones and Zeroes, Profitable Schemes. Recognizable when each item has 'choose / don't choose' and a capacity constraint.",
+      "intuition": "Backwards iteration on the 1D form prevents re-using the same item by accident. Forward iteration would let item i contribute to multiple positions in one sweep — that's unbounded knapsack.",
+      "common_pitfalls": [
+        "Forward iteration on 1D when 0/1 was required → effectively unbounded knapsack",
+        "Using boolean DP when integer counts are needed",
+        "Forgetting the empty-knapsack base case",
+        "Capacity dimension too large for memory (use offset / sum-difference reformulation)"
+      ],
+      "complexity_signature": "O(N · W) time, O(W) space"
+    },
+    {
+      "slug": "unbounded-knapsack",
+      "name": "Unbounded Knapsack & Coin Change",
+      "order_index": 4,
+      "explanation": "Each item can be taken any number of times. 1D DP, iterate weights *forward* so each item contributes to higher capacities multiple times in one sweep.",
+      "when_to_use": "Coin Change (min coins, count ways), Combination Sum IV, Perfect Squares, Word Break (DP form), Integer Break.",
+      "intuition": "Items are reusable, so when computing `dp[w]`, building from `dp[w − item]` (already updated this round) is correct.",
+      "common_pitfalls": [
+        "Confusing 'count ways' (combinations vs. permutations) — outer loop order matters",
+        "Backwards iteration when forward was needed (becomes 0/1)",
+        "Initializing 'min coins' to 0 instead of +∞",
+        "Returning -1 vs. throwing for 'impossible' cases"
+      ],
+      "complexity_signature": "O(N · W) time, O(W) space"
+    },
+    {
+      "slug": "lis-and-lcs",
+      "name": "LIS & LCS",
+      "order_index": 5,
+      "explanation": "Longest Increasing Subsequence: O(N²) DP, or O(N log N) with patience-sort + binary search. Longest Common Subsequence: 2D DP `dp[i][j]` = LCS of prefixes.",
+      "when_to_use": "LIS, Russian Doll Envelopes, Number of LIS, Longest Common Subsequence, Edit Distance, Distinct Subsequences, Shortest Common Supersequence.",
+      "intuition": "LIS-O(NlogN) maintains 'patience piles' — the i-th pile's top is the smallest tail of an LIS of length i+1. Binary search for placement gives O(log N) per element.",
+      "common_pitfalls": [
+        "Using O(N²) when N = 10^5 (TLE)",
+        "Confusing 'subsequence' with 'substring'",
+        "Patience sort: confusing the pile tops with an actual LIS (it isn't — it just gives the length)",
+        "Off-by-one in the 2D LCS DP base row/column"
+      ],
+      "complexity_signature": "LIS: O(N log N). LCS: O(N · M)."
+    },
+    {
+      "slug": "edit-distance-and-alignment",
+      "name": "Edit Distance & String Alignment",
+      "order_index": 6,
+      "explanation": "Levenshtein distance: insertions, deletions, substitutions. `dp[i][j]` = edit distance between prefixes. Generalizes to weighted operations and alignment scoring.",
+      "when_to_use": "Edit Distance, One Edit Distance, Delete Operation for Two Strings, Minimum ASCII Delete Sum, Wildcard Matching, Regular Expression Matching.",
+      "intuition": "Three operations correspond to three predecessors in the DP table. Match: take diagonal directly; mismatch: take min(diagonal, up, left) + 1.",
+      "common_pitfalls": [
+        "Allowing simultaneous insert+delete that double-counts",
+        "Wildcard `*` matching — careful about empty matches and greedy expansion",
+        "Forgetting to initialize the first row/column with the trivial costs",
+        "Mishandling case sensitivity"
+      ],
+      "complexity_signature": "O(N · M) time, O(min(N, M)) space"
+    },
+    {
+      "slug": "interval-and-partition-dp",
+      "name": "Interval & Partition DP",
+      "order_index": 7,
+      "explanation": "DP on intervals `[i, j]` where the transition picks a split point `k` inside the interval. `dp[i][j] = best over k of f(dp[i][k], dp[k+1][j])`. Classic O(N³) shape.",
+      "when_to_use": "Burst Balloons, Matrix Chain Multiplication, Minimum Cost to Cut a Stick, Stone Game II / III / VII, Strange Printer, Palindrome Partitioning II.",
+      "intuition": "When solutions are built by combining results of two adjacent sub-intervals, iterate by increasing interval length so smaller subproblems are solved first.",
+      "common_pitfalls": [
+        "Iterating by `i, j` without ordering by length → using uncomputed states",
+        "Burst Balloons: thinking forward (which to burst first) instead of backward (which to burst LAST)",
+        "Confusing partition DP with prefix DP",
+        "O(N³) is fast for N ≤ 500; for larger N, look for Knuth optimization"
+      ],
+      "complexity_signature": "O(N³) typical"
+    },
+    {
+      "slug": "bitmask-and-tree-dp",
+      "name": "Bitmask DP & Tree DP",
+      "order_index": 8,
+      "explanation": "Bitmask DP: state = subset of N items (N ≤ 20). Tree DP: state = subtree, transitions combine children. Both extend the basic DP framework to non-linear structures.",
+      "when_to_use": "Bitmask: TSP (Held-Karp), Smallest Sufficient Team, Partition to K Equal Sum Subsets, Maximum Compatibility Score Sum. Tree: House Robber III, Diameter, Binary Tree Cameras, Counting Subtrees.",
+      "intuition": "Bitmask DP enumerates subsets explicitly (only feasible for N ≤ 20). Tree DP computes per-subtree answers postorder; each node combines children's answers based on whether the node itself is 'taken' or 'free'.",
+      "common_pitfalls": [
+        "Bitmask state too large (2^N · N = 2^25 already 33M — borderline)",
+        "Tree DP returning a single number when the parent needs two (e.g., 'with/without current')",
+        "Iterating bitmasks in the wrong order so transitions use uncomputed states",
+        "Trying tree DP on graphs with cycles"
+      ],
+      "complexity_signature": "Bitmask: O(2^N · N). Tree: O(N)."
+    }
+  ]
+}

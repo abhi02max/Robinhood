@@ -1,0 +1,110 @@
+{
+  "topic_slug": "arrays",
+  "patterns": [
+    {
+      "slug": "prefix-sum",
+      "name": "Prefix Sum",
+      "order_index": 1,
+      "explanation": "Precompute `prefix[i] = a[0] + a[1] + ... + a[i-1]`. Then any range sum `a[l..r]` is `prefix[r+1] - prefix[l]` in O(1). Generalizes to any associative operation: max, XOR, count, mod-sum.",
+      "when_to_use": "When the problem asks repeatedly about subarray sums, when 'count subarrays with sum K' appears (combine with hashmap of prefixes), or whenever you'd otherwise nest two loops to recompute the same partial sum.",
+      "intuition": "Range queries become differences of two precomputed values. The hashmap-of-prefix-sums trick converts 'count subarrays with sum K' into 'for each i, how many j < i have prefix[j] = prefix[i] - K' — pure O(N).",
+      "common_pitfalls": [
+        "Off-by-one between size-N and size-(N+1) prefix arrays",
+        "Initializing the hashmap without `{0: 1}` for the empty prefix",
+        "Using prefix sum on a 2D array without realizing the inclusion–exclusion formula",
+        "Building a fresh prefix on each query inside a loop"
+      ],
+      "complexity_signature": "O(N) build, O(1) query"
+    },
+    {
+      "slug": "difference-array",
+      "name": "Difference Array (Range Updates)",
+      "order_index": 2,
+      "explanation": "The dual of prefix sum: to add `v` to every element in `[l, r]`, do `diff[l] += v; diff[r+1] -= v`. After all updates, prefix-summing `diff` recovers the final array in O(N).",
+      "when_to_use": "When many range-add updates must be applied before any query — booking systems, paint-the-fence problems, 'maximum number of overlapping intervals'. Also as a primitive inside sweep-line algorithms.",
+      "intuition": "A range add is the integral of a step function: +v at l, −v at r+1. Reconstructing the array is just integrating again (prefix sum).",
+      "common_pitfalls": [
+        "Off-by-one at `r+1` (forgetting to size `diff` as N+1)",
+        "Mixing range-add and point-query without rebuilding prefix",
+        "Using when updates and queries interleave (then you need a Fenwick/segment tree instead)",
+        "Forgetting that the technique only handles *additive* range updates"
+      ],
+      "complexity_signature": "O(1) per update, O(N) one-time finalization"
+    },
+    {
+      "slug": "kadane-maximum-subarray",
+      "name": "Kadane's Algorithm (Max Subarray)",
+      "order_index": 3,
+      "explanation": "Maintain `current = max(a[i], current + a[i])` while scanning, and track the running max. Solves maximum subarray sum in O(N) and generalizes to product, circular, 2D, and min variants.",
+      "when_to_use": "Whenever the problem asks for 'maximum/minimum sum of a contiguous subarray' or anything that decomposes into 'best segment ending at index i'. The 2D variant solves 'maximum sum rectangle' in O(R²·C).",
+      "intuition": "At each index, either the best segment ending here extends the previous best, or it restarts at the current element. That binary decision is the entire algorithm.",
+      "common_pitfalls": [
+        "Initializing `current` and `best` to 0 instead of `-Infinity` — fails on all-negative arrays",
+        "Confusing 'max sum' with 'max length' — the algorithm tracks sum",
+        "Trying to recover the indices without saving them at the moment `best` was updated",
+        "Applying naive Kadane to circular arrays (must combine with min-subarray trick)"
+      ],
+      "complexity_signature": "O(N) time, O(1) space"
+    },
+    {
+      "slug": "in-place-rearrangement",
+      "name": "In-Place Rearrangement",
+      "order_index": 4,
+      "explanation": "Rearrange an array using only O(1) extra space by swapping elements into target positions. Includes 'rotate by k', 'next permutation', and 'set every cell to itself transformed by neighbors'.",
+      "when_to_use": "When the problem says 'do it in O(1) space' or 'modify the array in place'. Common in interview problems specifically designed to trip up candidates who reach for an auxiliary array.",
+      "intuition": "Most rearrangements decompose into a sequence of swaps or reverses. 'Rotate by k' = reverse(0..n−1) + reverse(0..k−1) + reverse(k..n−1). 'Next permutation' = find pivot, find swap target, reverse suffix.",
+      "common_pitfalls": [
+        "Using O(N) extra storage 'just to be safe' and missing the constraint",
+        "Off-by-one in three-reverse rotation (especially when `k > n`)",
+        "Swapping with the wrong index when chasing a cycle",
+        "Mutating the array while iterating with stale indices"
+      ],
+      "complexity_signature": "O(N) time, O(1) space"
+    },
+    {
+      "slug": "cyclic-sort",
+      "name": "Cyclic Sort",
+      "order_index": 5,
+      "explanation": "When the array contains numbers from a known small range (typically 1..N or 0..N), place each number at index `value` in O(N) total swaps. After cyclic sort, missing/duplicate numbers are immediately readable.",
+      "when_to_use": "Problems involving 'find the missing number in 1..N', 'find all duplicates in 1..N', 'find the smallest missing positive'. The constraint that values are bounded by the array length is the giveaway.",
+      "intuition": "Each value has a 'home' index. If `a[i] != a[a[i]−1]`, swap them. Each swap places at least one element home, so total swaps ≤ N.",
+      "common_pitfalls": [
+        "Comparing `a[i] != i+1` instead of `a[i] != a[a[i]−1]` — fails when there are duplicates",
+        "Infinite loop when the wrong invariant is used",
+        "Forgetting to handle out-of-range values (e.g., negatives in 'first missing positive')",
+        "0-indexed vs. 1-indexed value conventions"
+      ],
+      "complexity_signature": "O(N) time, O(1) space"
+    },
+    {
+      "slug": "dutch-national-flag",
+      "name": "Dutch National Flag (3-Way Partition)",
+      "order_index": 6,
+      "explanation": "Partition an array into three sections (less than / equal to / greater than a pivot) in a single pass with three pointers `low, mid, high`. Generalizes 2-way partition to k-way category sorts.",
+      "when_to_use": "Sort 0s/1s/2s, sort colors, partition around a pivot for quickselect-3, or any time the value space is small and discrete.",
+      "intuition": "`mid` walks through unsorted elements: equal-to-pivot stays put, less-than-pivot swaps with `low`, greater-than-pivot swaps with `high` (and `mid` does NOT advance because the swapped-in value hasn't been examined).",
+      "common_pitfalls": [
+        "Advancing `mid` after swapping with `high` — re-examines an unknown value? No: it moves an *unexamined* value to mid, so `mid` must stay",
+        "Off-by-one on the loop bound (`mid <= high`, not `<`)",
+        "Implementing as two passes (correct but misses the elegance and is slower)",
+        "Not generalizing to k-way when k > 3"
+      ],
+      "complexity_signature": "O(N) time, O(1) space, single pass"
+    },
+    {
+      "slug": "intervals",
+      "name": "Interval Manipulation",
+      "order_index": 7,
+      "explanation": "Sort by start (or end), then sweep: merge overlapping intervals, find intersections, count maximum overlap, schedule rooms. The sort + linear sweep is the universal template.",
+      "when_to_use": "Calendar problems, meeting rooms, merge intervals, insert interval, employee free time, minimum platforms — anything where the input is a list of `[start, end]` ranges.",
+      "intuition": "After sorting by start, two intervals overlap iff `current.end >= next.start`. For 'maximum overlap', a sweep over start/end events with a +1/−1 counter gives the answer in O(N log N).",
+      "common_pitfalls": [
+        "Touching endpoints: is `[1,3]` overlapping `[3,5]`? Specification-dependent",
+        "Sorting by end when you should sort by start (or vice versa) — wrong invariant",
+        "Modifying the input while sweeping",
+        "Failing to handle empty input"
+      ],
+      "complexity_signature": "O(N log N) time, O(N) or O(1) extra space"
+    }
+  ]
+}

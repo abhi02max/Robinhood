@@ -1,0 +1,145 @@
+{
+  "phase": "edge-cases",
+  "startedAt": "2026-04-15T17:02:57.272Z",
+  "finishedAt": "2026-04-15T17:03:00.883Z",
+  "apiBase": "http://127.0.0.1:3000",
+  "webBase": "http://127.0.0.1:5173",
+  "totals": {
+    "total": 14,
+    "passed": 14,
+    "failed": 0,
+    "failedBlocking": 0
+  },
+  "passed": true,
+  "results": [
+    {
+      "name": "Empty execution payload returns validation error",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "status": 400,
+        "response": "{\"ok\":false,\"errorType\":\"REQUEST_ERROR\",\"reason\":\"Unsupported language \\\"undefined\\\".\",\"supportedLanguages\":[\"javascript\",\"python\",\"cpp\",\"java\",\"c\",\"csharp\"]}"
+      }
+    },
+    {
+      "name": "Null code payload is rejected safely",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "status": 400,
+        "response": "{\"ok\":false,\"errorType\":\"REQUEST_ERROR\",\"reason\":\"Code snippet is empty or not executable for this language in current runtime.\"}"
+      }
+    },
+    {
+      "name": "Unsupported language returns explicit guidance",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "status": 400,
+        "response": "{\"ok\":false,\"errorType\":\"REQUEST_ERROR\",\"reason\":\"Unsupported language \\\"ruby\\\".\",\"supportedLanguages\":[\"javascript\",\"python\",\"cpp\",\"java\",\"c\",\"csharp\"]}"
+      }
+    },
+    {
+      "name": "Invalid learning auth token is rejected",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "status": 401,
+        "response": "{\"errorType\":\"AUTH_ERROR\",\"reason\":\"Invalid or expired learning session token.\"}"
+      }
+    },
+    {
+      "name": "Expired learning auth token is rejected",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "status": 401,
+        "response": "{\"errorType\":\"AUTH_ERROR\",\"reason\":\"Invalid or expired learning session token.\"}"
+      }
+    },
+    {
+      "name": "Network timeout path is handled by client harness",
+      "passed": true,
+      "blocking": false,
+      "details": {
+        "timeoutObserved": true,
+        "status": 0,
+        "timedOut": true,
+        "error": "This operation was aborted"
+      }
+    },
+    {
+      "name": "AI timeout or fallback path is graceful",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "status": 200,
+        "response": "{\"reply\":\"### Frequently Asked Questions (FAQ) on Operating System Scheduling - Hard Edge Cases\\n\\n#### 1. **What is the Shortest Job First (SJF) Algorithm?**\\n   - **Misconception...",
+        "mode": "structured-response"
+      }
+    },
+    {
+      "name": "Judge0 timeout/failure path returns controlled response",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "status": 200,
+        "response": "{\"success\":false,\"output\":\"\",\"error\":\"Cannot write /sys/fs/cgroup/memory/box-2240/tasks: No such file or directory\\n\",\"executionTime\":\"0.0\",\"memory\":\"\",\"verdict\":\"Internal Error\",\"..."
+      }
+    },
+    {
+      "name": "SQL invalid statements are blocked with structured error details",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "status": 400,
+        "response": "{\"error\":\"Only read-only SELECT queries are allowed.\"}"
+      }
+    },
+    {
+      "name": "Restricted system SQL functions are blocked without server crash",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "status": 200,
+        "durationMs": 4,
+        "response": "{\"success\":false,\"output\":[],\"fields\":[],\"error\":\"Query contains restricted system access patterns.\",\"executionTime\":\"\",\"memory\":\"\",\"verdict\":\"Error\",\"testCasesPassed\":0,\"totalTest..."
+      }
+    },
+    {
+      "name": "Browser handles empty execution response payload gracefully",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "outputPreview": "Execution Successful\nMode: run\nVerdict: Executed\nInput: input = [1, 2, 3]\nExpected: Expected output for sample input\nOUTPUT\n(no output)"
+      }
+    },
+    {
+      "name": "Browser shows graceful AI timeout message",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "responsePreview": "Oops! Failed to fetch\n\n💡 Tip: Check your internet connection or try a different question."
+      }
+    },
+    {
+      "name": "Analytics page survives null API fields",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "textLength": 435,
+        "hasMasteryNode": true
+      }
+    },
+    {
+      "name": "Injected edge-case scenarios do not crash runtime",
+      "passed": true,
+      "blocking": true,
+      "details": {
+        "pageErrors": [],
+        "consoleErrorCount": 1,
+        "listenerDuplicates": 0
+      }
+    }
+  ]
+}

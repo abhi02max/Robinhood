@@ -1,0 +1,37 @@
+{
+  "name": "antigravity",
+  "private": true,
+  "version": "0.0.0",
+  "workspaces": [
+    "scratch"
+  ],
+  "scripts": {
+    "dev": "npm --workspace scratch run dev:all",
+    "dev:web": "npm --workspace scratch run dev",
+    "server": "npm --workspace scratch run server",
+    "start": "npm --workspace scratch run start",
+    "dev:all": "npm --workspace scratch run dev:all",
+    "smoke:routes": "npm --workspace scratch run smoke:routes",
+    "smoke:api": "npm --workspace scratch run smoke:api",
+    "hardening:edge": "npm --workspace scratch run hardening:edge",
+    "hardening:soak": "npm --workspace scratch run hardening:soak",
+    "hardening:load": "npm --workspace scratch run hardening:load",
+    "hardening:prod": "npm --workspace scratch run hardening:prod",
+    "hardening:final": "npm --workspace scratch run hardening:final",
+    "compose:up": "docker compose up -d --build",
+    "compose:up:minimal": "docker compose -f docker-compose.minimal.yml up -d --build",
+    "compose:up:cpu": "docker compose -f docker-compose.yml -f docker-compose.cpu.yml up -d --build",
+    "compose:down": "docker compose down",
+    "compose:logs": "docker compose logs -f --tail=200",
+    "compose:logs:ai": "docker compose logs -f backend | findstr \"AI Gateway\"",
+    "compose:ps": "docker compose ps",
+    "compose:health": "curl -s http://localhost:3000/api/ai/health",
+    "predeploy-check": "node scripts/predeploy-check.mjs",
+    "ollama:pull": "docker exec robinhood-ollama ollama pull qwen2.5-coder:7b",
+    "build": "npm --workspace scratch run build",
+    "preview": "npm --workspace scratch run preview"
+  },
+  "dependencies": {
+    "@monaco-editor/react": "^4.7.0"
+  }
+}

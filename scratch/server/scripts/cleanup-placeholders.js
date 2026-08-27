@@ -1,0 +1,12 @@
+import pkg from 'pg';
+import dotenv from 'dotenv';
+dotenv.config({ path: '.env' });
+dotenv.config({ path: '.env.local', override: true });
+const { Pool } = pkg;
+const pool = new Pool({ connectionString: process.env.DATABASE_URL || 'postgresql://robinhood:robinhood@127.0.0.1:5433/robinhood' });
+const c = await pool.connect();
+const r = await c.query("DELETE FROM problems WHERE title ~ 'Pattern [0-9]+ Problem [0-9]+'");
+console.log('Deleted', r.rowCount, 'placeholder problems');
+const r2 = await c.query("DELETE FROM patterns WHERE name ~ 'Pattern [0-9]+$'");
+console.log('Deleted', r2.rowCount, 'placeholder patterns');
+c.release(); await pool.end();

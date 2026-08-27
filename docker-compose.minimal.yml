@@ -1,0 +1,76 @@
+# Minimal Docker Compose - without Ollama local AI
+# Use this if you only want Gemini + OpenRouter (no local fallback):
+# docker compose -f docker-compose.minimal.yml up -d --build
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: robinhood-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-robinhood}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-robinhood}
+      POSTGRES_DB: ${POSTGRES_DB:-robinhood}
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U robinhood -d robinhood"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    container_name: robinhood-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    build:
+      context: ./scratch
+      dockerfile: Dockerfile.backend
+    container_name: robinhood-backend
+    restart: unless-stopped
+    env_file:
+      - ./scratch/.env
+    environment:
+      PORT: ${BACKEND_PORT:-3000}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-robinhood}:${POSTGRES_PASSWORD:-robinhood}@postgres:5432/${POSTGRES_DB:-robinhood}
+      REDIS_URL: redis://redis:6379
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  frontend:
+    build:
+      context: ./scratch
+      dockerfile: Dockerfile.frontend
+    container_name: robinhood-frontend
+    restart: unless-stopped
+    environment:
+      BACKEND_INTERNAL_URL: http://backend:3000
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-5173}:5173"
+
+volumes:
+  postgres_data:

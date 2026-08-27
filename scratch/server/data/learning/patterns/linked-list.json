@@ -1,0 +1,95 @@
+{
+  "topic_slug": "linked-list",
+  "patterns": [
+    {
+      "slug": "dummy-node",
+      "name": "Dummy / Sentinel Node",
+      "order_index": 1,
+      "explanation": "Insert a dummy node before the head so that head-insertion, head-deletion, and 'return new head' all become uniform operations on a non-null `prev` pointer. Eliminates 90% of linked-list edge-case bugs.",
+      "when_to_use": "Whenever you build a new list, merge lists, remove nodes by value, or partition a list. If your code starts with `if (!head) return null;` and then has special handling for the head, use a dummy.",
+      "intuition": "The dummy is a never-returned cell whose `next` is the real head. You can splice in front of the 'real' head without changing your code path.",
+      "common_pitfalls": [
+        "Returning the dummy itself instead of `dummy.next`",
+        "Forgetting to detach the dummy in languages without GC (memory leak)",
+        "Allocating two dummies when one suffices",
+        "Using a dummy's `value` field accidentally"
+      ],
+      "complexity_signature": "O(1) extra space"
+    },
+    {
+      "slug": "in-place-reversal",
+      "name": "In-Place Reversal",
+      "order_index": 2,
+      "explanation": "Reverse a singly linked list (or a segment of it) by walking through and re-pointing each `next` to the previously visited node. Three pointers: `prev, curr, next`.",
+      "when_to_use": "Reverse linked list, reverse linked list II (a sub-range), reverse nodes in k-group, palindrome linked list (reverse second half then compare).",
+      "intuition": "At each step, save `curr.next` before overwriting it. Keep `prev` lagging behind and advance both pointers. After the loop, `prev` is the new head.",
+      "common_pitfalls": [
+        "Losing the rest of the list by overwriting `curr.next` before saving it",
+        "Returning `curr` (which is null at the end) instead of `prev`",
+        "Off-by-one when reversing a sub-range and forgetting to re-stitch the boundaries",
+        "Implementing recursively and blowing the stack on long lists"
+      ],
+      "complexity_signature": "O(N) time, O(1) space iterative"
+    },
+    {
+      "slug": "fast-slow-pointer",
+      "name": "Fast & Slow Pointer",
+      "order_index": 3,
+      "explanation": "Two pointers traverse the list at different speeds (typically slow advances 1, fast advances 2). When fast reaches the end, slow is at the middle; if there's a cycle, fast eventually catches slow.",
+      "when_to_use": "Finding the middle of a list, detecting a cycle, finding the k-th node from the end (with a fixed gap), splitting a list in half for merge sort.",
+      "intuition": "Speed differential creates structural relationships you can exploit. With fast moving at 2× slow, after t steps fast has covered 2t and slow t — so when fast hits the end at length L, slow is at L/2.",
+      "common_pitfalls": [
+        "Bounds checks: must check `fast && fast.next` before advancing fast by 2",
+        "Choosing the wrong middle convention (left-middle vs. right-middle of even-length list)",
+        "Trying to use fast/slow on doubly linked lists (just go to length/2)",
+        "Not handling lists of length 0 or 1"
+      ],
+      "complexity_signature": "O(N) time, O(1) space"
+    },
+    {
+      "slug": "cycle-detection-floyd",
+      "name": "Cycle Detection (Floyd's Tortoise & Hare)",
+      "order_index": 4,
+      "explanation": "Use fast/slow pointers to detect a cycle, then a second-phase walk to find the cycle's start node. Famously O(N) time, O(1) space.",
+      "when_to_use": "Linked List Cycle, Linked List Cycle II, Find the Duplicate Number (treat array as a function and cycle-detect).",
+      "intuition": "If there's a cycle, fast (2 steps/turn) and slow (1 step/turn) must meet inside the cycle. The distance from head to cycle-start equals the distance from meeting-point to cycle-start (mod cycle length), so resetting one pointer to head and walking both at speed 1 finds the start.",
+      "common_pitfalls": [
+        "Returning the meeting point as the cycle start (it is not, in general)",
+        "Not handling the no-cycle case (terminates at null)",
+        "Off-by-one in advancement (advance both then check, vs. check then advance)",
+        "Using a hash set 'because it's simpler' when constraints demand O(1) space"
+      ],
+      "complexity_signature": "O(N) time, O(1) space"
+    },
+    {
+      "slug": "merge-and-split",
+      "name": "Merge & Split",
+      "order_index": 5,
+      "explanation": "Merge two sorted lists by repeatedly attaching the smaller head to a result tail; split a list into halves using fast/slow. Building blocks for merge sort on linked lists and for k-way merges.",
+      "when_to_use": "Merge Two Sorted Lists, Merge K Sorted Lists, Sort List (merge-sort a linked list in O(N log N) without extra arrays).",
+      "intuition": "Linked lists merge with no extra memory because the splice changes only `next` pointers. The dummy-node pattern keeps the merge code uniform.",
+      "common_pitfalls": [
+        "Forgetting to attach the remaining tail when one list is exhausted",
+        "Sorting by repeatedly inserting (O(N²)) instead of merge-sorting",
+        "Mutating one input list and surprising the caller",
+        "Using O(N) extra arrays defeating the point"
+      ],
+      "complexity_signature": "O(N + M) merge, O(N log N) sort, O(1) extra"
+    },
+    {
+      "slug": "kth-node-and-rearrangement",
+      "name": "K-th Node & Rearrangement",
+      "order_index": 6,
+      "explanation": "Use a fixed-gap two-pointer technique to find the k-th node from the end in one pass. Generalizes to rearrangements like reorder-list, swap pairs, rotate-by-k.",
+      "when_to_use": "Remove N-th node from end, swap nodes in pairs, reorder list (`L0→Ln→L1→Ln-1→…`), rotate list, partition list around a value.",
+      "intuition": "Move pointer A k steps ahead, then advance both A and B together. When A hits null, B is at the k-th-from-end node. With splice operations, complex rearrangements become bookkeeping.",
+      "common_pitfalls": [
+        "Off-by-one when k is 1 or k equals list length",
+        "Forgetting to use a dummy when the head is removed",
+        "Re-traversing the list to count length (correct but a lazy O(N) when one pass would do)",
+        "Stitching pointers in the wrong order in reorder-list and creating cycles"
+      ],
+      "complexity_signature": "O(N) time, O(1) space"
+    }
+  ]
+}

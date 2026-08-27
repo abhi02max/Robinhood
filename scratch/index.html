@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robinhood — DSA Learning & Interview Prep Platform</title>
+  <meta name="description" content="Master DSA with 450+ curated problems, 80+ company databases, and a built-in coding workspace. Robinhood For Good." />
+  <meta name="keywords" content="DSA, Data Structures, Algorithms, Interview Preparation, LeetCode, Coding" />
+  <meta property="og:title" content="Robinhood — Master DSA. Crack Any Interview." />
+  <meta property="og:description" content="450+ curated problems, company-wise prep, and a built-in VS Code editor." />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts: preconnect for speed -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <!-- Monaco Editor Loader -->
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.min.js"></script>
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+</head>
+<body>
+  <div id="app">
+    <div id="loading-screen" class="loading-screen">
+      <div class="loading-logo">
+        <div class="loading-mark">
+          <span style="font-size:var(--text-sm);font-weight:700;letter-spacing:0.04em;">RH</span>
+        </div>
+        <h1 class="loading-title">Robinhood</h1>
+        <p class="loading-tagline">For Good</p>
+        <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+      </div>
+    </div>
+    <aside id="sidebar" class="sidebar hidden"></aside>
+    <main id="main-content" class="main-content"></main>
+    <div id="timer-widget" class="timer-widget hidden"></div>
+    <div id="notification-container" class="notification-container"></div>
+  </div>
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>

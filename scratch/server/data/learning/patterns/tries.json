@@ -1,0 +1,80 @@
+{
+  "topic_slug": "tries",
+  "patterns": [
+    {
+      "slug": "character-trie-basics",
+      "name": "Character Trie Basics (Insert / Search / StartsWith)",
+      "order_index": 1,
+      "explanation": "A 26-way (or σ-way) tree where each path from root spells a string. Insert walks down, creating nodes as needed; search walks down until mismatch or terminal. `startsWith` is the same as search but doesn't require terminal.",
+      "when_to_use": "Implement Trie (Prefix Tree), Add and Search Word with `.` wildcards, Replace Words, Longest Word in Dictionary. Whenever you maintain a dictionary that supports prefix queries.",
+      "intuition": "A trie shares prefixes among words: 'car', 'cart', 'card' all share the same first 3 nodes. Insertion / search / prefix lookup are O(L) where L is the word length, independent of dictionary size.",
+      "common_pitfalls": [
+        "Forgetting the 'is end of word' boolean — `startsWith` and `search` collapse",
+        "Allocating an array of 26 children per node when most are unused (Map of children is leaner for sparse alphabets)",
+        "Not handling deletion correctly (need to free unused subtrees)",
+        "Using a trie for a small dictionary where a hashmap would dominate"
+      ],
+      "complexity_signature": "O(L) per op"
+    },
+    {
+      "slug": "prefix-and-autocomplete",
+      "name": "Prefix Counting & Autocomplete",
+      "order_index": 2,
+      "explanation": "Augment each trie node with a count of words passing through it. Enables O(L) prefix-count queries and O(L + K) autocomplete (collect K words under a prefix).",
+      "when_to_use": "Design Search Autocomplete System, Stream of Characters, Top K Frequent Words with prefix bias, Maximum XOR With an Element From Array (variant). Whenever you need 'count of words starting with X' fast.",
+      "intuition": "If each node knows how many inserted strings pass through it, a prefix query reads that count from the node at the end of the prefix.",
+      "common_pitfalls": [
+        "Decrementing count incorrectly on delete (or forgetting deletion entirely)",
+        "Storing top-K at every node and exploding memory",
+        "Mixing 'count of prefixes' with 'count of complete words'",
+        "Returning autocomplete results unsorted when ranking is required"
+      ],
+      "complexity_signature": "O(L) prefix count, O(L + K · L) autocomplete"
+    },
+    {
+      "slug": "word-search-with-trie",
+      "name": "Word Search with Trie + DFS Pruning",
+      "order_index": 3,
+      "explanation": "Insert all dictionary words into a trie, then DFS the board / sequence carrying the current trie node. Prune when the trie has no children for the next character — turns O(N · M · 4^L · K) into O(N · M · 4^L) where K = dictionary size.",
+      "when_to_use": "Word Search II, Boggle-style problems, Concatenated Words, Stream of Characters. Multi-word search where a single trie tracks all candidate prefixes simultaneously.",
+      "intuition": "Without a trie, you'd repeat the prefix search for every dictionary word independently. With a trie, all words share the same prefix-tracking state — DFS once, find all matches.",
+      "common_pitfalls": [
+        "Marking visited but not unmarking on backtrack",
+        "Not deleting matched words from the trie to avoid duplicate reports",
+        "Allocating a trie node per character without sharing",
+        "Confusing DFS direction in the recursion"
+      ],
+      "complexity_signature": "O(N · M · 4^L) time"
+    },
+    {
+      "slug": "binary-trie-xor",
+      "name": "Binary Trie for Maximum XOR",
+      "order_index": 4,
+      "explanation": "Insert each integer's 32-bit (or 64-bit) representation as a path in a 2-way trie. To maximize XOR with a query x, at each bit greedily descend the *opposite* branch if it exists.",
+      "when_to_use": "Maximum XOR of Two Numbers in an Array, Maximum XOR With an Element From Array, Count Pairs With XOR in a Range. Whenever you must maximize/range-query XOR over a set.",
+      "intuition": "XOR is maximized bit-by-bit from the most significant bit. At each step, choose the bit that flips x's bit (i.e., the opposite) if available; otherwise take what's there.",
+      "common_pitfalls": [
+        "Inserting from least-significant bit first — destroys the greedy property",
+        "Not handling 0 correctly (path of all zeros)",
+        "Forgetting to clean up trie nodes after deletion in 'with-element-from-array' variants",
+        "Off-by-one between 30-bit and 32-bit assumptions"
+      ],
+      "complexity_signature": "O(N · 32) insert and query"
+    },
+    {
+      "slug": "trie-with-counts-and-deletion",
+      "name": "Trie with Counts & Deletion",
+      "order_index": 5,
+      "explanation": "Augment every node with a 'pass-through count' and an 'end-of-word count'. Insertion increments counts on the path; deletion decrements and removes nodes whose count hits zero.",
+      "when_to_use": "When the dictionary changes over time: 'add word', 'remove word', 'count of words with prefix X', 'count of exact word X'. Also a building block for online analytical queries on a stream of strings.",
+      "intuition": "Insertion and deletion are mirror images. Removing nodes whose pass-through count becomes 0 prevents memory growth but adds complexity.",
+      "common_pitfalls": [
+        "Decrementing past zero (would corrupt structure)",
+        "Removing nodes still referenced by other words",
+        "Confusing 'count of prefixes' with 'count of words ending here'",
+        "Not handling 'word never inserted' on delete"
+      ],
+      "complexity_signature": "O(L) per op"
+    }
+  ]
+}

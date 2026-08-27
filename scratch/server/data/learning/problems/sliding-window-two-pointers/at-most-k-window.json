@@ -1,0 +1,426 @@
+{
+  "topic_slug": "sliding-window-two-pointers",
+  "pattern_slug": "at-most-k-window",
+  "problems": [
+    {
+      "slug": "subarrays-with-k-different-integers",
+      "title": "Subarrays with K Different Integers",
+      "difficulty": "Hard",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "array", "hash-map"],
+      "description": "Given an integer array `nums` and an integer `k`, return the number of **good subarrays** of `nums`.\n\nA **good array** is an array where the number of **different integers** in that array is **exactly** `k`.",
+      "examples": [
+        { "input": "nums = [1,2,1,2,3], k = 2", "output": "7" },
+        { "input": "nums = [1,2,1,3,4], k = 3", "output": "3" }
+      ],
+      "constraints": ["1 <= nums.length <= 2 * 10^4", "1 <= nums[i], k <= nums.length"],
+      "edge_cases": ["k > number of distinct elements", "All identical", "k == nums.length", "Single element"],
+      "approach_brute": "Enumerate all subarrays and count distinct with a set. O(N^2) or O(N^3).",
+      "approach_optimal": "exactlyK = atMost(K) − atMost(K−1). The atMost helper uses a sliding window with a hashmap of frequencies. Time O(N), space O(K).",
+      "starter_code": {
+        "javascript": "function subarraysWithKDistinct(nums, k) {\n  // Your code here\n}",
+        "python": "def subarrays_with_k_distinct(nums, k):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(K)",
+      "test_cases": [
+        { "input_payload": { "nums": [1,2,1,2,3], "k": 2 }, "expected_output": 7, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [1,2,1,3,4], "k": 3 }, "expected_output": 3, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [1,1,1,1], "k": 1 }, "expected_output": 10, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [1,1,1,1], "k": 2 }, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [1], "k": 1 }, "expected_output": 1, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [1,2,3], "k": 2 }, "expected_output": 2, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [1,2,3,4,5], "k": 3 }, "expected_output": 3, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [2,2,2], "k": 1 }, "expected_output": 6, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [1], "k": 2 }, "expected_output": 0, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [1,1,2,2,3], "k": 2 }, "expected_output": 6, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [1,2], "k": 2 }, "expected_output": 1, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [1,2], "k": 1 }, "expected_output": 2, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "count-number-of-nice-subarrays",
+      "title": "Count Number of Nice Subarrays",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "array"],
+      "description": "Given an array of integers `nums` and an integer `k`. A subarray is called **nice** if there are exactly `k` odd numbers on it. Return the number of nice subarrays.",
+      "examples": [
+        { "input": "nums = [1,1,2,1,1], k = 3", "output": "2" },
+        { "input": "nums = [2,4,6], k = 1", "output": "0" }
+      ],
+      "constraints": ["1 <= nums.length <= 5 * 10^4", "1 <= nums[i] <= 10^5", "1 <= k <= nums.length"],
+      "edge_cases": ["No odds", "All odds", "k > odd count", "k == 1"],
+      "approach_brute": "Enumerate every subarray, count odds. O(N^2).",
+      "approach_optimal": "Reduce odds=1, evens=0. Count subarrays with sum exactly K via atMost(K) − atMost(K−1). Time O(N), space O(1).",
+      "starter_code": {
+        "javascript": "function numberOfSubarrays(nums, k) {\n  // Your code here\n}",
+        "python": "def number_of_subarrays(nums, k):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "nums": [1,1,2,1,1], "k": 3 }, "expected_output": 2, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [2,4,6], "k": 1 }, "expected_output": 0, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [2,2,2,1,2,2,1,2,2,2], "k": 2 }, "expected_output": 16, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [1,2,3], "k": 1 }, "expected_output": 4, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [1,1,2,1,1], "k": 4 }, "expected_output": 1, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [1], "k": 1 }, "expected_output": 1, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [2], "k": 1 }, "expected_output": 0, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [1,1,1], "k": 3 }, "expected_output": 1, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [1,1,1], "k": 2 }, "expected_output": 2, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [1,3,5,7], "k": 2 }, "expected_output": 3, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [2,2,2,2,1,1,1,1], "k": 2 }, "expected_output": 9, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [1,2,1,2,1,2,1], "k": 3 }, "expected_output": 5, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "binary-subarrays-with-sum",
+      "title": "Binary Subarrays With Sum",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "array", "prefix-sum"],
+      "description": "Given a binary array `nums` and an integer `goal`, return the number of non-empty subarrays with a sum equal to `goal`.",
+      "examples": [
+        { "input": "nums = [1,0,1,0,1], goal = 2", "output": "4" },
+        { "input": "nums = [0,0,0,0,0], goal = 0", "output": "15" }
+      ],
+      "constraints": ["1 <= nums.length <= 3 * 10^4", "nums[i] is 0 or 1", "0 <= goal <= nums.length"],
+      "edge_cases": ["goal == 0", "All ones", "All zeros", "goal greater than total ones"],
+      "approach_brute": "Two nested loops over all subarrays. O(N^2).",
+      "approach_optimal": "atMost(goal) − atMost(goal-1) via sliding window, OR prefix-sum hashmap. O(N).",
+      "starter_code": {
+        "javascript": "function numSubarraysWithSum(nums, goal) {\n  // Your code here\n}",
+        "python": "def num_subarrays_with_sum(nums, goal):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "nums": [1,0,1,0,1], "goal": 2 }, "expected_output": 4, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [0,0,0,0,0], "goal": 0 }, "expected_output": 15, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [1,1,1,1], "goal": 2 }, "expected_output": 3, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [1,0], "goal": 1 }, "expected_output": 2, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [0,1], "goal": 1 }, "expected_output": 2, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [0,0,1,0,0], "goal": 0 }, "expected_output": 6, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [0], "goal": 0 }, "expected_output": 1, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [1], "goal": 0 }, "expected_output": 0, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [1,1,1,1,1], "goal": 3 }, "expected_output": 3, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [0,1,0,1,0,1], "goal": 2 }, "expected_output": 6, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [1,0,1], "goal": 2 }, "expected_output": 1, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [0,0,0], "goal": 1 }, "expected_output": 0, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "get-equal-substrings-within-budget",
+      "title": "Get Equal Substrings Within Budget",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "string"],
+      "description": "Given strings `s` and `t` of equal length and an integer `maxCost`. Changing the i-th char of s to t[i] costs `|s[i] - t[i]|`. Return the maximum length of a substring of `s` that can be changed to be the same as the corresponding substring of `t` with total cost <= `maxCost`.",
+      "examples": [
+        { "input": "s = \"abcd\", t = \"bcdf\", maxCost = 3", "output": "3" },
+        { "input": "s = \"abcd\", t = \"cdef\", maxCost = 3", "output": "1" }
+      ],
+      "constraints": ["1 <= s.length == t.length <= 10^5", "0 <= maxCost <= 10^6"],
+      "edge_cases": ["s == t", "maxCost == 0", "maxCost very large", "Single character"],
+      "approach_brute": "Check every substring with O(N) cost sum. O(N^3).",
+      "approach_optimal": "Compute c[i] = |s[i]-t[i]|. Find longest subarray of c with sum <= maxCost via sliding window. O(N).",
+      "starter_code": {
+        "javascript": "function equalSubstring(s, t, maxCost) {\n  // Your code here\n}",
+        "python": "def equal_substring(s, t, max_cost):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "s": "abcd", "t": "bcdf", "maxCost": 3 }, "expected_output": 3, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "s": "abcd", "t": "cdef", "maxCost": 3 }, "expected_output": 1, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "s": "abcd", "t": "acde", "maxCost": 0 }, "expected_output": 1, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "s": "krrgw", "t": "zjxss", "maxCost": 19 }, "expected_output": 2, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "s": "abc", "t": "abc", "maxCost": 0 }, "expected_output": 3, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "s": "a", "t": "b", "maxCost": 0 }, "expected_output": 0, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "s": "a", "t": "a", "maxCost": 0 }, "expected_output": 1, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "s": "ab", "t": "cd", "maxCost": 4 }, "expected_output": 2, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "s": "ab", "t": "cd", "maxCost": 3 }, "expected_output": 1, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "s": "abc", "t": "def", "maxCost": 5 }, "expected_output": 1, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "s": "abc", "t": "abz", "maxCost": 25 }, "expected_output": 3, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "s": "aa", "t": "bb", "maxCost": 2 }, "expected_output": 2, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "frequency-of-most-frequent-element",
+      "title": "Frequency of the Most Frequent Element",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "array", "sorting"],
+      "description": "Given array `nums` and integer `k`. In one operation, increment any element by 1. Return the maximum possible frequency of an element after at most `k` operations.",
+      "examples": [
+        { "input": "nums = [1,2,4], k = 5", "output": "3" },
+        { "input": "nums = [1,4,8,13], k = 5", "output": "2" }
+      ],
+      "constraints": ["1 <= nums.length <= 10^5", "1 <= nums[i] <= 10^5", "1 <= k <= 10^5"],
+      "edge_cases": ["All equal", "k == 0", "Single element", "k very large"],
+      "approach_brute": "For each candidate target, count reachable elements. O(N · max_val).",
+      "approach_optimal": "Sort. Window [l..r] with target nums[r] needs cost = nums[r]·(r-l+1) - sum. Slide r forward, advance l when cost > k. O(N log N).",
+      "starter_code": {
+        "javascript": "function maxFrequency(nums, k) {\n  // Your code here\n}",
+        "python": "def max_frequency(nums, k):\n    pass"
+      },
+      "time_complexity": "O(N log N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "nums": [1,2,4], "k": 5 }, "expected_output": 3, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [1,4,8,13], "k": 5 }, "expected_output": 2, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [3,9,6], "k": 2 }, "expected_output": 1, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [5], "k": 10 }, "expected_output": 1, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [1,1,1], "k": 0 }, "expected_output": 3, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [1,2,3,4], "k": 0 }, "expected_output": 1, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [1,1,1,1], "k": 5 }, "expected_output": 4, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [1,2,3,4], "k": 6 }, "expected_output": 4, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [1,2,3], "k": 100 }, "expected_output": 3, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [3,5,3], "k": 2 }, "expected_output": 2, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [10000,10000], "k": 10000 }, "expected_output": 2, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [1,1,1,2,2,2,2], "k": 2 }, "expected_output": 6, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "maximum-erasure-value",
+      "title": "Maximum Erasure Value",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "array", "hash-set"],
+      "description": "You are given an array of positive integers `nums`. Erase exactly one subarray containing only **unique** elements. The score is the sum of erased elements. Return the maximum score.",
+      "examples": [
+        { "input": "nums = [4,2,4,5,6]", "output": "17" },
+        { "input": "nums = [5,2,1,2,5,2,1,2,5]", "output": "8" }
+      ],
+      "constraints": ["1 <= nums.length <= 10^5", "1 <= nums[i] <= 10^4"],
+      "edge_cases": ["All equal", "All distinct", "Single element", "Large duplicates"],
+      "approach_brute": "Enumerate all subarrays, check uniqueness with set. O(N^3).",
+      "approach_optimal": "Sliding window with a hash set + running sum. On duplicate, advance left removing values until duplicate is gone. Track max sum. O(N).",
+      "starter_code": {
+        "javascript": "function maximumUniqueSubarray(nums) {\n  // Your code here\n}",
+        "python": "def maximum_unique_subarray(nums):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": { "nums": [4,2,4,5,6] }, "expected_output": 17, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [5,2,1,2,5,2,1,2,5] }, "expected_output": 8, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [1] }, "expected_output": 1, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [1,2,3,4,5] }, "expected_output": 15, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [1,1,1,1] }, "expected_output": 1, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [10,5,3] }, "expected_output": 18, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [1,2,3,1,2,3] }, "expected_output": 6, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [10000,1,1,1,1] }, "expected_output": 10001, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [1,2,1,2,1] }, "expected_output": 3, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [5,2,3,2,1] }, "expected_output": 10, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [7,3,4,7] }, "expected_output": 14, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [1,2,3,4,5,1] }, "expected_output": 15, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "continuous-subarrays",
+      "title": "Continuous Subarrays",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "array", "monotonic-deque"],
+      "description": "Given a 0-indexed integer array `nums`. A subarray is **continuous** if for every pair of indices i1 < i2 in it, `|nums[i1] - nums[i2]| <= 2`. Return the total number of continuous subarrays.",
+      "examples": [
+        { "input": "nums = [5,4,2,4]", "output": "8" }
+      ],
+      "constraints": ["1 <= nums.length <= 10^5", "1 <= nums[i] <= 10^9"],
+      "edge_cases": ["All equal", "Strictly increasing > 2", "Single element", "All within range 2"],
+      "approach_brute": "For each l, expand r until max - min > 2. O(N^2).",
+      "approach_optimal": "Sliding window with invariant max - min <= 2. Track max/min via two monotonic deques. For each r, count = r - l + 1. O(N).",
+      "starter_code": {
+        "javascript": "function continuousSubarrays(nums) {\n  // Your code here\n}",
+        "python": "def continuous_subarrays(nums):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": { "nums": [5,4,2,4] }, "expected_output": 8, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [1,2,3] }, "expected_output": 6, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [1,1,1] }, "expected_output": 6, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [1,4] }, "expected_output": 2, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [1,2,3,4] }, "expected_output": 9, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [5] }, "expected_output": 1, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [5,5,5,5] }, "expected_output": 10, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [1,2,5,6,3,4] }, "expected_output": 9, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [10,10,10,10,10] }, "expected_output": 15, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [1,3,5,7,9] }, "expected_output": 9, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [1,1,1,1,1,1] }, "expected_output": 21, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [100,99,98,97] }, "expected_output": 9, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "count-subarrays-where-max-element-appears-at-least-k-times",
+      "title": "Count Subarrays Where Max Element Appears at Least K Times",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "array"],
+      "description": "Given an integer array `nums` and an integer `k`. Return the number of subarrays where the **maximum element** of `nums` appears **at least** `k` times in that subarray.",
+      "examples": [
+        { "input": "nums = [1,3,2,3,3], k = 2", "output": "6" },
+        { "input": "nums = [1,4,2,1], k = 3", "output": "0" }
+      ],
+      "constraints": ["1 <= nums.length <= 10^5", "1 <= nums[i] <= 10^6", "1 <= k <= 10^5"],
+      "edge_cases": ["Max appears < k times", "All equal to max", "Single element", "k == 1"],
+      "approach_brute": "For each subarray, count occurrences of the max. O(N^3).",
+      "approach_optimal": "Find max. Sliding window: maintain count of max in [l..r]. When count >= k, all subarrays starting from any index <= l contribute (n - r) extensions; advance l forward to keep count = k - 1, repeat. O(N).",
+      "starter_code": {
+        "javascript": "function countSubarrays(nums, k) {\n  // Your code here\n}",
+        "python": "def count_subarrays(nums, k):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "nums": [1,3,2,3,3], "k": 2 }, "expected_output": 6, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [1,4,2,1], "k": 3 }, "expected_output": 0, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [1,1,1,1], "k": 2 }, "expected_output": 6, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [5], "k": 1 }, "expected_output": 1, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [5], "k": 2 }, "expected_output": 0, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [1,2,3,4,5], "k": 1 }, "expected_output": 5, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [5,5,5,5,5], "k": 3 }, "expected_output": 6, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [3,3,3], "k": 1 }, "expected_output": 6, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [2,1,2,1,2], "k": 2 }, "expected_output": 4, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [10,10], "k": 2 }, "expected_output": 1, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [10,10], "k": 1 }, "expected_output": 3, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [1,2,2,2,1], "k": 2 }, "expected_output": 6, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "number-of-substrings-with-only-1s",
+      "title": "Number of Substrings With Only 1s",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "string", "math"],
+      "description": "Given a binary string `s`, return the **number of substrings with only 1's** in it. Since the answer may be too large, return it modulo `10^9 + 7`.",
+      "examples": [
+        { "input": "s = \"0110111\"", "output": "9" },
+        { "input": "s = \"101\"", "output": "2" }
+      ],
+      "constraints": ["1 <= s.length <= 10^5", "s[i] is '0' or '1'"],
+      "edge_cases": ["All zeros", "All ones", "Empty string", "Alternating 0s and 1s"],
+      "approach_brute": "For each starting position, count consecutive 1s. O(N^2).",
+      "approach_optimal": "Each maximal run of L consecutive 1s contributes L*(L+1)/2 substrings. Single linear scan tracking current run length. O(N).",
+      "starter_code": {
+        "javascript": "function numSub(s) {\n  // Your code here\n}",
+        "python": "def num_sub(s):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "s": "0110111" }, "expected_output": 9, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "s": "101" }, "expected_output": 2, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "s": "111111" }, "expected_output": 21, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "s": "000" }, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "s": "1" }, "expected_output": 1, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "s": "0" }, "expected_output": 0, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "s": "11011" }, "expected_output": 6, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "s": "10101010" }, "expected_output": 4, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "s": "11111" }, "expected_output": 15, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "s": "0001000" }, "expected_output": 1, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "s": "11000111000111" }, "expected_output": 15, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "s": "0000000000" }, "expected_output": 0, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "count-vowel-substrings-of-a-string",
+      "title": "Count Vowel Substrings of a String",
+      "difficulty": "Easy",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "string"],
+      "description": "A substring is a **vowel substring** if it consists **only of vowels** (`a`,`e`,`i`,`o`,`u`) and contains **all five vowels**. Given string `word`, return the number of vowel substrings.",
+      "examples": [
+        { "input": "word = \"aeiouu\"", "output": "2" },
+        { "input": "word = \"unicornarihan\"", "output": "0" },
+        { "input": "word = \"cuaieuouac\"", "output": "7" }
+      ],
+      "constraints": ["1 <= word.length <= 100", "word consists of lowercase English letters"],
+      "edge_cases": ["No vowels", "All vowels but missing one", "All five vowels in order", "Vowels separated by consonants"],
+      "approach_brute": "Enumerate all substrings; filter to those with only vowels and all 5 distinct. O(N^3).",
+      "approach_optimal": "For each maximal vowel-only segment, count substrings containing all 5 vowels via at-most-K (K=5) decomposition: atMost(5) − atMost(4). O(N).",
+      "starter_code": {
+        "javascript": "function countVowelSubstrings(word) {\n  // Your code here\n}",
+        "python": "def count_vowel_substrings(word):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "word": "aeiouu" }, "expected_output": 2, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "word": "unicornarihan" }, "expected_output": 0, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "word": "cuaieuouac" }, "expected_output": 7, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "word": "aeiou" }, "expected_output": 1, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "word": "abcdefghijklmnopqrstuvwxyz" }, "expected_output": 0, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "word": "aaaeeeiiiooouuu" }, "expected_output": 9, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "word": "aei" }, "expected_output": 0, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "word": "aeiouaeiou" }, "expected_output": 21, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "word": "oaeu" }, "expected_output": 0, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "word": "abcd" }, "expected_output": 0, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "word": "uaeio" }, "expected_output": 1, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "word": "iouae" }, "expected_output": 1, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "find-substrings-of-size-k-with-no-repeats",
+      "title": "Find K-Length Substrings With No Repeated Characters",
+      "difficulty": "Medium",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "string"],
+      "description": "Given a string `s` and an integer `k`, return the number of substrings in `s` of length `k` with no repeated characters.",
+      "examples": [
+        { "input": "s = \"havefunonleetcode\", k = 5", "output": "6" },
+        { "input": "s = \"home\", k = 5", "output": "0" }
+      ],
+      "constraints": ["1 <= s.length <= 10^4", "s consists of lowercase English letters", "1 <= k <= 10^4"],
+      "edge_cases": ["k > s.length", "k == 1", "k == s.length", "All same character"],
+      "approach_brute": "For each window of size k, check distinctness via set in O(k). O(N · k).",
+      "approach_optimal": "Sliding window of size k with frequency map. When map size == k after update, count++. On slide, increment incoming and decrement outgoing. O(N).",
+      "starter_code": {
+        "javascript": "function numKLenSubstrNoRepeats(s, k) {\n  // Your code here\n}",
+        "python": "def num_k_len_substr_no_repeats(s, k):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(σ)",
+      "test_cases": [
+        { "input_payload": { "s": "havefunonleetcode", "k": 5 }, "expected_output": 6, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "s": "home", "k": 5 }, "expected_output": 0, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "s": "abcabc", "k": 3 }, "expected_output": 4, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "s": "aaa", "k": 2 }, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "s": "abc", "k": 3 }, "expected_output": 1, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "s": "abcd", "k": 2 }, "expected_output": 3, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "s": "", "k": 1 }, "expected_output": 0, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "s": "a", "k": 1 }, "expected_output": 1, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "s": "aa", "k": 1 }, "expected_output": 2, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "s": "abcdef", "k": 6 }, "expected_output": 1, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "s": "abab", "k": 2 }, "expected_output": 3, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "s": "abcabcabc", "k": 4 }, "expected_output": 0, "is_hidden": true, "order_index": 12 }
+      ]
+    },
+    {
+      "slug": "count-subarrays-with-score-less-than-k",
+      "title": "Count Subarrays With Score Less Than K",
+      "difficulty": "Hard",
+      "tags": ["sliding-window-two-pointers", "at-most-k-window", "array"],
+      "description": "The score of an array is defined as the **product** of its **sum** and its **length**. Given a positive integer array `nums` and an integer `k`, return the number of non-empty subarrays of `nums` whose score is **strictly less than** `k`.",
+      "examples": [
+        { "input": "nums = [2,1,4,3,5], k = 10", "output": "6" },
+        { "input": "nums = [1,1,1], k = 5", "output": "5" }
+      ],
+      "constraints": ["1 <= nums.length <= 10^5", "1 <= nums[i] <= 10^5", "1 <= k <= 10^15"],
+      "edge_cases": ["k smaller than smallest single element", "k larger than full sum * n", "All ones", "Single element"],
+      "approach_brute": "Enumerate all subarrays computing sum*length. O(N^2).",
+      "approach_optimal": "Sliding window. For each right, advance left while score >= k. The longest valid window ending at right gives `right - left + 1` valid subarrays ending at right. Sum these contributions. O(N).",
+      "starter_code": {
+        "javascript": "function countSubarrays(nums, k) {\n  // Your code here\n}",
+        "python": "def count_subarrays(nums, k):\n    pass"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": { "nums": [2,1,4,3,5], "k": 10 }, "expected_output": 6, "is_hidden": false, "order_index": 1 },
+        { "input_payload": { "nums": [1,1,1], "k": 5 }, "expected_output": 5, "is_hidden": false, "order_index": 2 },
+        { "input_payload": { "nums": [1], "k": 2 }, "expected_output": 1, "is_hidden": false, "order_index": 3 },
+        { "input_payload": { "nums": [1], "k": 1 }, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": { "nums": [1,1,1,1], "k": 10 }, "expected_output": 9, "is_hidden": false, "order_index": 5 },
+        { "input_payload": { "nums": [5,5,5], "k": 5 }, "expected_output": 0, "is_hidden": true, "order_index": 6 },
+        { "input_payload": { "nums": [1,2,3], "k": 20 }, "expected_output": 6, "is_hidden": true, "order_index": 7 },
+        { "input_payload": { "nums": [1,2,3], "k": 10 }, "expected_output": 4, "is_hidden": true, "order_index": 8 },
+        { "input_payload": { "nums": [10], "k": 11 }, "expected_output": 1, "is_hidden": true, "order_index": 9 },
+        { "input_payload": { "nums": [10], "k": 10 }, "expected_output": 0, "is_hidden": true, "order_index": 10 },
+        { "input_payload": { "nums": [1,2], "k": 4 }, "expected_output": 2, "is_hidden": true, "order_index": 11 },
+        { "input_payload": { "nums": [1,2], "k": 7 }, "expected_output": 3, "is_hidden": true, "order_index": 12 }
+      ]
+    }
+  ]
+}

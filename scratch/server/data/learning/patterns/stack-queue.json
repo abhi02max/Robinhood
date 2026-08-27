@@ -1,0 +1,110 @@
+{
+  "topic_slug": "stack-queue",
+  "patterns": [
+    {
+      "slug": "parenthesis-matching",
+      "name": "Parenthesis & Bracket Matching",
+      "order_index": 1,
+      "explanation": "Push opening brackets onto a stack; on each closing bracket, pop and verify the match. The stack is empty iff the input is balanced.",
+      "when_to_use": "Valid Parentheses, Minimum Add to Make Parentheses Valid, Remove Invalid Parentheses, Score of Parentheses, Decode String. Anywhere brackets need balancing.",
+      "intuition": "A stack mirrors the nested structure of bracketed expressions exactly. Each unmatched opener stays on the stack until its closer arrives.",
+      "common_pitfalls": [
+        "Returning early on a single mismatch but not on a leftover-on-stack at the end",
+        "Confusing 'balanced' with 'all same kind'",
+        "Forgetting to pop on the wrong character type",
+        "Using indexes instead of characters when the question asks for characters (or vice versa)"
+      ],
+      "complexity_signature": "O(N) time, O(N) space"
+    },
+    {
+      "slug": "monotonic-stack",
+      "name": "Monotonic Stack",
+      "order_index": 2,
+      "explanation": "Maintain a stack whose elements are monotonically increasing or decreasing. Each element is pushed and popped at most once, giving amortized O(N) for next-greater / next-smaller / histogram-style problems.",
+      "when_to_use": "Next Greater Element (I, II), Daily Temperatures, Largest Rectangle in Histogram, Maximal Rectangle, Sum of Subarray Minimums, Trapping Rain Water (stack variant), Remove K Digits.",
+      "intuition": "When you see a value that breaks the monotone, every element it pops 'owes' you an answer (it just found its next-greater). The stack tells you who's still waiting.",
+      "common_pitfalls": [
+        "Confusing strict vs. non-strict monotonicity (affects ties)",
+        "Storing values instead of indices when indices are needed",
+        "Forgetting to flush remaining elements after the loop",
+        "Using next-greater when next-smaller was needed (or vice versa)"
+      ],
+      "complexity_signature": "Amortized O(N) — each element pushed/popped once"
+    },
+    {
+      "slug": "monotonic-deque",
+      "name": "Monotonic Deque (Sliding Window Max)",
+      "order_index": 3,
+      "explanation": "A deque whose values are monotonically decreasing (for max) or increasing (for min), and from which expired indices are removed at the front. The front is always the answer for the current window.",
+      "when_to_use": "Sliding Window Maximum, Shortest Subarray with Sum at Least K, Constrained Subsequence Sum, Jump Game VI. Whenever you need range-max/min on a sliding window in O(N).",
+      "intuition": "The deque keeps only indices whose values 'might still be the max/min' as the window slides. Smaller back-of-deque values are dominated by a newcomer and discarded.",
+      "common_pitfalls": [
+        "Forgetting to evict from the front when an index drops out of the window",
+        "Storing values instead of indices",
+        "Using a heap when a deque would give true O(N) instead of O(N log K)",
+        "Off-by-one when defining 'window of size K'"
+      ],
+      "complexity_signature": "O(N) time, O(K) space"
+    },
+    {
+      "slug": "expression-evaluation",
+      "name": "Expression Evaluation (Infix / Postfix)",
+      "order_index": 4,
+      "explanation": "Convert infix → postfix using the shunting-yard algorithm, then evaluate postfix with a single stack. Or evaluate infix directly with two stacks (operands and operators) respecting precedence and associativity.",
+      "when_to_use": "Basic Calculator (I, II, III), Evaluate Reverse Polish Notation, Different Ways to Add Parentheses (D&C variant). Whenever you have to parse/evaluate arithmetic expressions.",
+      "intuition": "Operator precedence dictates when an operator can be applied vs. when it must wait. The stack defers low-precedence operators until their operands are ready.",
+      "common_pitfalls": [
+        "Right-associativity of `^` not handled by left-associative shunting-yard",
+        "Multi-digit numbers parsed as single digits",
+        "Unary minus / parenthesized negatives mishandled",
+        "Forgetting to flush remaining operators at end"
+      ],
+      "complexity_signature": "O(N) time, O(N) space"
+    },
+    {
+      "slug": "stack-with-aggregate",
+      "name": "Augmented Stack (Min/Max Stack)",
+      "order_index": 5,
+      "explanation": "A stack that also supports `getMin()` (or `getMax()`) in O(1) by storing the running min alongside each element, or by maintaining an auxiliary monotone stack of mins.",
+      "when_to_use": "Min Stack, Max Stack, problems where the stack needs both LIFO access and a running aggregate (e.g., the maximum-frequency stack uses a similar augmentation).",
+      "intuition": "On every push, the new minimum is `min(value, current min)`. Storing this alongside the value keeps min lookups in O(1). Auxiliary-stack version saves memory when many pushes share the same min.",
+      "common_pitfalls": [
+        "Auxiliary min-stack: pushing only on strict decrease, but popping rules then need 'pop from aux iff aux.top == main.top'",
+        "Returning incorrect min after a pop because the aux-stack rule was wrong",
+        "Using O(N) per `getMin` because of a misimplemented aux stack",
+        "Mixing min stack and max stack semantics"
+      ],
+      "complexity_signature": "O(1) per op"
+    },
+    {
+      "slug": "queue-from-stacks",
+      "name": "Queue from Stacks (and Vice Versa)",
+      "order_index": 6,
+      "explanation": "Implement a FIFO queue using two LIFO stacks (or vice versa). The 'lazy transfer' trick gives amortized O(1) per operation despite the worst-case O(N).",
+      "when_to_use": "Implement Queue using Stacks, Implement Stack using Queues, problems that ask you to demonstrate amortized analysis intuitively. Also a common warm-up question.",
+      "intuition": "Push goes into stack A. Pop reverses A into B (only if B is empty), then pops from B. Each element is moved between A and B at most twice in its lifetime — amortized O(1).",
+      "common_pitfalls": [
+        "Transferring on every operation (O(N) per call)",
+        "Implementing stack-from-queues with single queue inefficiently (the 'rotate after every push' trick is the cleanest)",
+        "Not understanding why amortized O(1) ≠ O(1) worst case",
+        "Returning the wrong end (front vs. back)"
+      ],
+      "complexity_signature": "Amortized O(1) per push/pop"
+    },
+    {
+      "slug": "bfs-on-state",
+      "name": "BFS via Queue (Level-by-Level State Search)",
+      "order_index": 7,
+      "explanation": "Use a FIFO queue to perform breadth-first search over a state graph: shortest paths in an unweighted graph, level-by-level traversals, multi-source spreading. The queue is the BFS frontier.",
+      "when_to_use": "Shortest path in unweighted graph, word ladder, rotting oranges, walls and gates, 01-matrix, sliding puzzle, open-the-lock. Anywhere distance is measured in 'steps'.",
+      "intuition": "BFS visits states in order of distance from the source. The first time you reach a state, you have the shortest path to it. The queue holds the current frontier; the visited set prevents revisits.",
+      "common_pitfalls": [
+        "Forgetting the visited set and re-enqueuing the same state forever",
+        "Incrementing distance per element instead of per level when level matters",
+        "Using DFS for shortest path on unweighted graphs (wrong)",
+        "Encoding state in a way that doesn't deduplicate (lists vs. tuples)"
+      ],
+      "complexity_signature": "O(V + E) time, O(V) space"
+    }
+  ]
+}

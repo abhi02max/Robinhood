@@ -1,0 +1,85 @@
+{
+  "phase": "final-release-gate",
+  "startedAt": "2026-07-22T16:51:07.188Z",
+  "finishedAt": "2026-07-22T16:53:47.278Z",
+  "apiBase": "http://127.0.0.1:3000",
+  "verdict": "NO_GO",
+  "confidenceScore": 0,
+  "checks": [
+    {
+      "name": "Routes + API + provider latency + execution matrix + beta journeys",
+      "passed": false,
+      "details": "regression shield failed (exit code 1)",
+      "critical": true
+    },
+    {
+      "name": "Production build verification",
+      "passed": false,
+      "details": "next build failed (exit code 1)",
+      "critical": true
+    },
+    {
+      "name": "Health endpoint liveness",
+      "passed": false,
+      "details": "status=0 body.status=unknown",
+      "critical": true
+    },
+    {
+      "name": "Health live process check",
+      "passed": false,
+      "details": "status=0 body.status=unknown",
+      "critical": true
+    },
+    {
+      "name": "Overall dependency readiness",
+      "passed": false,
+      "details": "status=0 ready=unknown",
+      "critical": true
+    },
+    {
+      "name": "Piston availability",
+      "passed": false,
+      "details": "status=unknown",
+      "critical": true
+    },
+    {
+      "name": "Judge0 availability",
+      "passed": false,
+      "details": "status=unknown",
+      "critical": true
+    },
+    {
+      "name": "Postgres connectivity",
+      "passed": false,
+      "details": "status=unknown",
+      "critical": true
+    },
+    {
+      "name": "Redis session backend",
+      "passed": false,
+      "details": "status=unknown",
+      "critical": true
+    },
+    {
+      "name": "AI provider readiness",
+      "passed": false,
+      "details": "health=0 aiHealth=unknown startup=unknown",
+      "critical": true
+    }
+  ],
+  "warnings": [],
+  "blockers": [
+    "Routes + API + provider latency + execution matrix + beta journeys: regression shield failed (exit code 1)",
+    "Production build verification: next build failed (exit code 1)",
+    "Health endpoint liveness: status=0 body.status=unknown",
+    "Health live process check: status=0 body.status=unknown",
+    "Overall dependency readiness: status=0 ready=unknown",
+    "Piston availability: status=unknown",
+    "Judge0 availability: status=unknown",
+    "Postgres connectivity: status=unknown",
+    "Redis session backend: status=unknown",
+    "AI provider readiness: health=0 aiHealth=unknown startup=unknown"
+  ],
+  "readiness": {},
+  "aiHealth": {}
+}

@@ -1,0 +1,229 @@
+{
+  "version": "1.0.0",
+  "generated_at": "2026-04-29",
+  "topics": [
+    {
+      "slug": "basics",
+      "name": "Basics",
+      "order_index": 1,
+      "description": "Foundations of algorithmic thinking. Big-O analysis, primitive math operations, modular arithmetic, overflow safety, simulation, and the iterative control-flow patterns every later topic depends on. If you cannot reason precisely about an `O(N)` loop here, no later topic will work for you.",
+      "prerequisites": [],
+      "learning_outcomes": [
+        "Compute time and space complexity from first principles, including amortized analysis",
+        "Translate prose problem statements into clean iterative simulations",
+        "Apply integer math, modular arithmetic, GCD/LCM, prime sieve, and overflow-safe operations",
+        "Identify when a naive simulation is provably correct and when it must be optimized"
+      ]
+    },
+    {
+      "slug": "sorting",
+      "name": "Sorting",
+      "order_index": 2,
+      "description": "Comparison and non-comparison sorting algorithms, their invariants, and when each one is the right tool. Sorting is rarely the question itself — it's the preprocessing step that unlocks two-pointer, greedy, binary-search, and interval techniques across the rest of the curriculum.",
+      "prerequisites": ["basics"],
+      "learning_outcomes": [
+        "Implement merge sort, quicksort, heapsort, and counting sort from scratch",
+        "Pick the right sort given constraints (stability, in-place, integer-bounded keys)",
+        "Use custom comparators to encode multi-key ordering and tie-breaking",
+        "Solve k-th-element problems via partial sorts and quickselect"
+      ]
+    },
+    {
+      "slug": "arrays",
+      "name": "Arrays",
+      "order_index": 3,
+      "description": "The most common interview surface. Prefix sums, difference arrays, in-place rearrangement, cyclic sort, Kadane's algorithm, and interval manipulation. Every problem here teaches you to exploit contiguous memory and index arithmetic.",
+      "prerequisites": ["basics", "sorting"],
+      "learning_outcomes": [
+        "Build prefix-sum and difference-array structures and recognize when they apply",
+        "Apply Kadane's algorithm and its 2D and circular variants",
+        "Rearrange arrays in-place using cyclic sort and Dutch National Flag",
+        "Merge, intersect, and reason about intervals"
+      ]
+    },
+    {
+      "slug": "binary-search",
+      "name": "Binary Search",
+      "order_index": 4,
+      "description": "Halving the search space — on sorted arrays, on rotated arrays, on 2D matrices, and crucially on the *answer space* itself (parametric search). The skill being trained is identifying a monotonic predicate, not memorizing a template.",
+      "prerequisites": ["basics", "sorting"],
+      "learning_outcomes": [
+        "Implement bug-free `lower_bound` / `upper_bound` and stop confusing them",
+        "Search on rotated and bitonic arrays",
+        "Apply binary search on the answer space (e.g., minimum capacity, maximum value)",
+        "Use binary search inside larger algorithms (LIS, median of two arrays)"
+      ]
+    },
+    {
+      "slug": "strings",
+      "name": "Strings",
+      "order_index": 5,
+      "description": "Strings are arrays with extra structure: character frequency, alphabets, prefixes/suffixes, palindromes. Covers frequency-counter techniques, palindrome expansion, KMP, Z-algorithm, and rolling hashes (Rabin–Karp).",
+      "prerequisites": ["arrays", "sliding-window-two-pointers"],
+      "learning_outcomes": [
+        "Solve anagram and frequency-comparison problems with O(σ) extra space",
+        "Find palindromic substrings via expansion and Manacher's algorithm",
+        "Implement KMP failure function and Z-array, and use them for substring search",
+        "Apply rolling hashes for fast equality checks on substrings"
+      ]
+    },
+    {
+      "slug": "linked-list",
+      "name": "Linked List",
+      "order_index": 6,
+      "description": "Pointer manipulation under constraint: no random access, only `next`. Trains you in dummy-node techniques, in-place reversal, fast/slow pointers, and rigorous null-handling. The patterns here transfer directly to graph traversal.",
+      "prerequisites": ["basics"],
+      "learning_outcomes": [
+        "Reverse, split, and merge linked lists in O(1) extra space",
+        "Detect and locate cycles using Floyd's tortoise-and-hare",
+        "Use dummy/sentinel nodes to simplify edge cases",
+        "Manipulate doubly-linked lists for LRU-style structures"
+      ]
+    },
+    {
+      "slug": "recursion",
+      "name": "Recursion",
+      "order_index": 7,
+      "description": "Recursion as a first-class problem-solving tool: subset/permutation generation, decision-tree exploration, divide-and-conquer, and the foundation for backtracking, tree, and DP problems. Trains the mental discipline of trusting the recursion.",
+      "prerequisites": ["basics"],
+      "learning_outcomes": [
+        "Write recursive solutions by trusting subproblem return contracts",
+        "Generate subsets, permutations, and combinations via choose/skip and swap-based recursion",
+        "Apply backtracking with proper state restoration",
+        "Distinguish divide-and-conquer from naive recursion via complexity analysis"
+      ]
+    },
+    {
+      "slug": "bit-manipulation",
+      "name": "Bit Manipulation",
+      "order_index": 8,
+      "description": "Working with bits: XOR identities, masks, single-number variants, counting set bits, bitmask DP, and subset enumeration via `sub = (sub - 1) & mask`. Teaches you to think of integers as 32-bit vectors.",
+      "prerequisites": ["basics"],
+      "learning_outcomes": [
+        "Use XOR properties to find missing/duplicate elements without extra space",
+        "Manipulate individual bits with set/clear/toggle/test operations",
+        "Enumerate all submasks of a bitmask in O(3^N) total",
+        "Encode small-N state with bitmasks for DP"
+      ]
+    },
+    {
+      "slug": "stack-queue",
+      "name": "Stack & Queue",
+      "order_index": 9,
+      "description": "LIFO and FIFO structures, monotonic stacks, monotonic deques, parenthesis-style validation, expression evaluation, and the queue/stack trick (implementing one with the other). The monotonic-stack family alone solves a huge class of next-greater / histogram problems.",
+      "prerequisites": ["arrays"],
+      "learning_outcomes": [
+        "Recognize and apply the monotonic stack pattern (next-greater / next-smaller)",
+        "Use monotonic deques for sliding-window max/min in O(N)",
+        "Validate and evaluate bracketed and infix/postfix expressions",
+        "Implement stack-with-min, queue-from-stacks, and similar augmented structures"
+      ]
+    },
+    {
+      "slug": "sliding-window-two-pointers",
+      "name": "Sliding Window & Two Pointers",
+      "order_index": 10,
+      "description": "Two of the most powerful linear-time techniques. Sliding window converts O(N·K) and O(N²) brute-force scans into O(N) by maintaining a running aggregate over a moving range. Two pointers exploit sorted or monotonic structure to converge or scan in lockstep. Together they cover hundreds of interview problems.",
+      "prerequisites": ["arrays"],
+      "learning_outcomes": [
+        "Apply fixed-size sliding window to aggregate-over-range problems",
+        "Apply variable-size sliding window with shrink-on-violation",
+        "Use the at-most-K trick to count exactly-K subarrays in O(N)",
+        "Use converging and same-direction two pointers on sorted inputs",
+        "Recognize the structural signal that allows the linear-time technique"
+      ]
+    },
+    {
+      "slug": "heaps",
+      "name": "Heaps",
+      "order_index": 11,
+      "description": "Priority queues for top-K, k-way merge, scheduling, and the two-heap median trick. Also the supporting structure for Dijkstra and Prim. You learn to think of 'always pick the smallest/largest pending item' as a primitive.",
+      "prerequisites": ["arrays", "sorting"],
+      "learning_outcomes": [
+        "Implement a binary heap by hand and reason about its O(log N) ops",
+        "Solve top-K problems with a size-K heap of opposite polarity",
+        "Merge K sorted streams in O(N log K)",
+        "Maintain a running median with two balanced heaps"
+      ]
+    },
+    {
+      "slug": "greedy",
+      "name": "Greedy",
+      "order_index": 12,
+      "description": "Local choices that provably give global optima. Covers the exchange-argument proof technique, interval scheduling, and the classic sort-then-pick patterns. The hard part is not implementation — it's *proving* the greedy choice is safe.",
+      "prerequisites": ["sorting", "arrays"],
+      "learning_outcomes": [
+        "State and verify the greedy-choice property for a candidate algorithm",
+        "Solve interval scheduling, jump-game, and gas-station problems",
+        "Use sort-then-greedy with custom comparators",
+        "Distinguish problems that need DP from those where greedy is provably correct"
+      ]
+    },
+    {
+      "slug": "binary-trees",
+      "name": "Binary Trees",
+      "order_index": 13,
+      "description": "Recursive structures par excellence. DFS variants (pre/in/post-order), level-order BFS, height/diameter/path-sum recursion, ancestor problems, and serialization. Most tree problems are recursion problems with a particular state shape.",
+      "prerequisites": ["recursion"],
+      "learning_outcomes": [
+        "Implement all four traversal orders, both recursively and iteratively",
+        "Solve recursion-on-tree problems by defining a clean return contract",
+        "Find LCA, diameter, and root-to-leaf paths",
+        "Serialize and deserialize a binary tree"
+      ]
+    },
+    {
+      "slug": "bst",
+      "name": "BST",
+      "order_index": 14,
+      "description": "Binary Search Trees: the in-order property, validation, ordered insertion/deletion, k-th smallest, and range queries. The skill is *exploiting* the BST invariant rather than treating the BST as a generic tree.",
+      "prerequisites": ["binary-trees"],
+      "learning_outcomes": [
+        "Validate a BST in a single traversal with bounded ranges",
+        "Insert and delete nodes while preserving the BST invariant",
+        "Find k-th smallest/largest via in-order with early termination",
+        "Solve range-sum and range-count problems on BSTs"
+      ]
+    },
+    {
+      "slug": "graphs",
+      "name": "Graphs",
+      "order_index": 15,
+      "description": "The most general structure. BFS shortest-path on unweighted graphs, DFS for connectivity and topo-sort, Union-Find for dynamic connectivity, Dijkstra and Bellman-Ford for weighted shortest paths, MST (Prim/Kruskal), bipartite checking, and SCC (Tarjan/Kosaraju). The capstone of classical algorithms.",
+      "prerequisites": ["binary-trees", "heaps", "stack-queue"],
+      "learning_outcomes": [
+        "Represent graphs with adjacency lists and matrices and choose between them",
+        "Run BFS, DFS, topological sort, and Union-Find on real problems",
+        "Implement Dijkstra and Bellman-Ford and know when each applies",
+        "Find MSTs and SCCs",
+        "Detect cycles in directed and undirected graphs"
+      ]
+    },
+    {
+      "slug": "dynamic-programming",
+      "name": "Dynamic Programming",
+      "order_index": 16,
+      "description": "Memoization and tabulation for problems with overlapping subproblems and optimal substructure. Covers 1D / 2D / grid DP, knapsack variants, LIS, LCS, edit distance, partition DP, interval DP, bitmask DP, and tree DP. The largest topic; the most universally tested.",
+      "prerequisites": ["recursion", "arrays"],
+      "learning_outcomes": [
+        "Define a DP state precisely and prove its correctness",
+        "Convert top-down memoization to bottom-up tabulation",
+        "Optimize space from O(N·M) to O(N) or O(1) via rolling arrays",
+        "Solve knapsack-family, sequence-alignment, partition, interval, bitmask, and tree DPs"
+      ]
+    },
+    {
+      "slug": "tries",
+      "name": "Tries",
+      "order_index": 17,
+      "description": "Prefix trees for word/prefix lookup, autocomplete, word-search, and XOR-on-bits problems. A specialized but high-leverage structure: a single trie can replace dozens of hash-map operations.",
+      "prerequisites": ["binary-trees"],
+      "learning_outcomes": [
+        "Implement insert/search/startsWith on a character trie",
+        "Solve word-search-II by trie + DFS pruning",
+        "Use a binary trie of bit-strings to maximize XOR queries",
+        "Reason about trie space cost vs. hash-map alternatives"
+      ]
+    }
+  ]
+}

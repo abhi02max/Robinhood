@@ -1,0 +1,186 @@
+{
+  "phase": "concurrency-load",
+  "startedAt": "2026-04-15T16:54:19.588Z",
+  "finishedAt": "2026-04-15T16:54:58.154Z",
+  "apiBase": "http://127.0.0.1:3000",
+  "totals": {
+    "checksTotal": 7,
+    "passedChecks": 7,
+    "failedChecks": 0
+  },
+  "checks": [
+    {
+      "name": "Parallel AI requests",
+      "passed": true,
+      "details": {
+        "total": 24,
+        "statusCounts": {
+          "200": 5,
+          "429": 19
+        },
+        "timedOut": 0,
+        "exceptionCount": 0,
+        "avgDurationMs": 5827.63,
+        "minDurationMs": 13,
+        "maxDurationMs": 31623,
+        "p50DurationMs": 37,
+        "p95DurationMs": 31592,
+        "p99DurationMs": 31623,
+        "unexpectedStatuses": 0,
+        "structuredResponses": 24
+      }
+    },
+    {
+      "name": "Parallel code execution requests",
+      "passed": true,
+      "details": {
+        "total": 40,
+        "statusCounts": {
+          "200": 40
+        },
+        "timedOut": 0,
+        "exceptionCount": 0,
+        "avgDurationMs": 382.05,
+        "minDurationMs": 174,
+        "maxDurationMs": 659,
+        "p50DurationMs": 338,
+        "p95DurationMs": 644,
+        "p99DurationMs": 659,
+        "unexpectedStatuses": 0
+      }
+    },
+    {
+      "name": "Parallel SQL execution requests",
+      "passed": true,
+      "details": {
+        "total": 25,
+        "statusCounts": {
+          "200": 25
+        },
+        "timedOut": 0,
+        "exceptionCount": 0,
+        "avgDurationMs": 49.8,
+        "minDurationMs": 8,
+        "maxDurationMs": 112,
+        "p50DurationMs": 11,
+        "p95DurationMs": 111,
+        "p99DurationMs": 112,
+        "unexpectedStatuses": 0
+      }
+    },
+    {
+      "name": "Parallel debugger requests",
+      "passed": true,
+      "details": {
+        "total": 20,
+        "statusCounts": {
+          "200": 20
+        },
+        "timedOut": 0,
+        "exceptionCount": 0,
+        "avgDurationMs": 215.7,
+        "minDurationMs": 137,
+        "maxDurationMs": 278,
+        "p50DurationMs": 219,
+        "p95DurationMs": 273,
+        "p99DurationMs": 278,
+        "unexpectedStatuses": 0
+      }
+    },
+    {
+      "name": "Scheduler and analytics polling load",
+      "passed": true,
+      "details": {
+        "total": 80,
+        "statusCounts": {
+          "200": 80
+        },
+        "timedOut": 0,
+        "exceptionCount": 0,
+        "avgDurationMs": 255.9,
+        "minDurationMs": 19,
+        "maxDurationMs": 527,
+        "p50DurationMs": 265,
+        "p95DurationMs": 454,
+        "p99DurationMs": 527,
+        "unexpectedStatuses": 0,
+        "tokenPresent": true
+      }
+    },
+    {
+      "name": "Rate-limit behavior and retry semantics",
+      "passed": true,
+      "details": {
+        "initialBurst": {
+          "total": 140,
+          "statusCounts": {
+            "200": 15,
+            "429": 125
+          },
+          "timedOut": 0,
+          "exceptionCount": 0,
+          "avgDurationMs": 98.59,
+          "minDurationMs": 27,
+          "maxDurationMs": 398,
+          "p50DurationMs": 72,
+          "p95DurationMs": 353,
+          "p99DurationMs": 394
+        },
+        "rateLimitedCount": 125,
+        "retryWaitMs": 3000,
+        "retries": {
+          "total": 5,
+          "statusCounts": {
+            "429": 5
+          },
+          "timedOut": 0,
+          "exceptionCount": 0,
+          "avgDurationMs": 1.2,
+          "minDurationMs": 0,
+          "maxDurationMs": 2,
+          "p50DurationMs": 1,
+          "p95DurationMs": 2,
+          "p99DurationMs": 2
+        },
+        "retryUnexpected": 0
+      }
+    },
+    {
+      "name": "No request deadlocks or timeout spikes under concurrency",
+      "passed": true,
+      "details": [
+        {
+          "name": "Parallel AI requests",
+          "timedOut": 0,
+          "maxDurationMs": 31623
+        },
+        {
+          "name": "Parallel code execution requests",
+          "timedOut": 0,
+          "maxDurationMs": 659
+        },
+        {
+          "name": "Parallel SQL execution requests",
+          "timedOut": 0,
+          "maxDurationMs": 112
+        },
+        {
+          "name": "Parallel debugger requests",
+          "timedOut": 0,
+          "maxDurationMs": 278
+        },
+        {
+          "name": "Scheduler and analytics polling load",
+          "timedOut": 0,
+          "maxDurationMs": 527
+        },
+        {
+          "name": "Rate-limit behavior and retry semantics",
+          "timedOut": 0,
+          "maxDurationMs": 0
+        }
+      ]
+    }
+  ],
+  "passed": true
+}
