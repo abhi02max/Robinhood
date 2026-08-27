@@ -108,3 +108,18 @@ CREATE INDEX IF NOT EXISTS idx_test_cases_problem   ON test_cases(problem_id);
 CREATE INDEX IF NOT EXISTS idx_submissions_user     ON submissions(user_id);
 CREATE INDEX IF NOT EXISTS idx_submissions_problem  ON submissions(problem_id);
 CREATE INDEX IF NOT EXISTS idx_user_progress_user   ON user_progress(user_id);
+
+-- =========================================================================
+-- ADDITIVE COLUMN PATCHES
+-- =========================================================================
+-- C++ harness opt-in. This column is declared in schema-master.sql, but no
+-- code path ever applies that file (bootstrap-domain-schema.js applies only
+-- schema-leetcode.sql and schema-admin.sql). Meanwhile seed-learning.js
+-- INSERTs cpp_signature and learning-repository.js SELECTs it, so without
+-- this the seeder dies with:
+--   column "cpp_signature" of relation "problems" does not exist
+-- CREATE TABLE IF NOT EXISTS cannot add a column to an existing table, hence
+-- an explicit idempotent ALTER. Do not "fix" this by applying
+-- schema-master.sql instead: that variant is stale and lacks
+-- patterns.explanation/when_to_use/intuition and problems.starter_code/tags.
+ALTER TABLE problems ADD COLUMN IF NOT EXISTS cpp_signature JSONB;
