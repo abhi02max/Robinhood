@@ -16,11 +16,39 @@ Robinhood is an AI-assisted DSA and interview-preparation platform. The reposito
 ## Prerequisites
 
 - Node.js 20 or newer and npm
-- PostgreSQL 16 and Redis 7, or Docker with Compose
-- Piston/Judge0 for code execution
+- A PostgreSQL 16 database. **Required** — the backend exits if it cannot connect.
+  This can be a managed instance (Neon, Supabase, RDS); nothing needs to run locally.
+- Redis 7 — optional. Sessions fall back to in-memory storage when it is absent.
+- Piston/Judge0 — optional. Needed only for real code execution; `EXECUTION_PROVIDER=mock`
+  runs without them.
+- Docker with Compose — optional, and only for the full topology below.
 - Optional AI provider credentials, or Ollama for local AI
 
-Do not run production builds from a cloud-synchronized directory on Windows. OneDrive can deny webpack's atomic writes to `.next`; use a normal local checkout or build inside Docker.
+Do not run production builds from a cloud-synchronized directory on Windows. OneDrive can deny webpack's atomic writes to `.next`; use a normal local checkout or build inside Docker. The same applies to `node_modules`: continuous sync of ~25,000 small files makes every install and dev-server start noticeably slower.
+
+### Minimal local setup (no Docker, no local services)
+
+PostgreSQL is the only dependency you must supply. Point `DATABASE_URL` in
+`scratch/.env.local` at any Postgres instance and start the app:
+
+```ini
+DATABASE_URL=postgresql://USER:PASS@HOST/DB?sslmode=require
+OPTIONAL_DEPENDENCIES=redis,piston,judge0
+PORT=3000
+```
+
+`?sslmode=require` is what supplies TLS: `pg` parses it out of the connection
+string and it overrides any explicit `ssl` pool option, so no code change is
+needed for a managed provider.
+
+`OPTIONAL_DEPENDENCIES` downgrades the named readiness checks from blockers to
+warnings. Without it, `/api/health/ready` returns 503 permanently because every
+dependency check defaults to critical. The checks still run and still report
+their real status either way.
+
+In this configuration expect `/api/health/ready` to return 200 with status
+`degraded`, listing Redis/Piston/Judge0 as warnings. Code execution uses the mock
+provider, and the SQL sandbox is unavailable.
 
 ## Configuration
 
@@ -102,6 +130,12 @@ The release gate (`npm --workspace scratch run gate:release`) is a live-system g
 - Implemented: curriculum/problem browsing, learning engine APIs, editor UI, custom auth APIs, progress/analytics schemas, AI gateway, isolated execution adapters, Docker topology
 - Partial/infrastructure-dependent: email delivery, password-reset delivery, AI answers, code execution, SQL sandbox, full dashboard persistence, production readiness probes
 - Local-only today: the Problems-page quick status cache is device-local until its UI is migrated to the authenticated progress API
-- Not verified without infrastructure: signup/login round trip, migrations against a live database, Redis session restoration, Piston/Judge0 correctness, AI provider responses, and Playwright journeys
+- Verified against a live managed PostgreSQL instance (2026-08-27): schema bootstrap
+  (learning, auth, domain — 14 tables), curriculum seeding (17 topics, 108 patterns,
+  63 problems, 764 test cases), the signup → login → session → logout round trip on
+  the in-memory session fallback, and problem browsing/detail through the Next.js
+  API proxy
+- Not verified: Redis session restoration, Piston/Judge0 correctness, AI provider
+  responses, SQL sandbox, and Playwright journeys
 
 See [`scratch/docs/repository-audit-2026-07-22.md`](scratch/docs/repository-audit-2026-07-22.md) for the evidence-based repair log and verification record.
