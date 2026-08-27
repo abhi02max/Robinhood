@@ -237,16 +237,32 @@ const JUDGE0_BASE_URL = process.env.JUDGE0_URL || process.env.JUDGE0_API_URL || 
 let httpServer = null;
 let shuttingDown = false;
 
+// Dependencies this deployment deliberately runs without. Named checks become
+// non-critical: they still report their real status, but they surface as
+// `warnings` instead of `blockers`, so /api/health/ready reports 'degraded' and
+// 200 rather than 'error' and 503. Postgres is intentionally exempt — it is an
+// unconditional blocker at the /api/health/ready call site regardless of this
+// list, because nothing works without it.
+// Example: OPTIONAL_DEPENDENCIES=redis,piston,judge0
+const OPTIONAL_DEPENDENCIES = new Set(
+  String(process.env.OPTIONAL_DEPENDENCIES || '')
+    .split(',')
+    .map((name) => name.trim().toLowerCase())
+    .filter((name) => name && name !== 'postgres')
+);
+
+const isCriticalDependency = (name) => !OPTIONAL_DEPENDENCIES.has(name.toLowerCase());
+
 const startupDependencyState = {
   checkedAt: null,
   strictMode: STARTUP_STRICT_MODE,
   status: 'unknown',
   checks: {
     postgres: { critical: true, status: 'unknown', reason: '', details: {} },
-    redis: { critical: true, status: 'unknown', reason: '', details: {} },
-    piston: { critical: true, status: 'unknown', reason: '', details: {} },
-    judge0: { critical: true, status: 'unknown', reason: '', details: {} },
-    aiProviders: { critical: true, status: 'unknown', reason: '', details: {} },
+    redis: { critical: isCriticalDependency('redis'), status: 'unknown', reason: '', details: {} },
+    piston: { critical: isCriticalDependency('piston'), status: 'unknown', reason: '', details: {} },
+    judge0: { critical: isCriticalDependency('judge0'), status: 'unknown', reason: '', details: {} },
+    aiProviders: { critical: isCriticalDependency('aiProviders'), status: 'unknown', reason: '', details: {} },
   },
   warnings: [],
   blockers: [],
