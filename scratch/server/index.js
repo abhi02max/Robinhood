@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { createHash, randomUUID } from 'crypto';
+import { writeSync } from 'fs';
 import { spawn } from 'child_process';
 import { fileURLToPath } from 'url';
 import { Pool } from 'pg';
@@ -3203,6 +3204,17 @@ process.on('unhandledRejection', (reason) => {
 });
 
 process.on('uncaughtException', (error) => {
+  // Write to fd 2 synchronously BEFORE anything async. When stdout/stderr is a
+  // pipe rather than a TTY -- which it is under `npm run dev` via concurrently --
+  // console/logger writes are asynchronous, and the process.exit(1) below
+  // discards whatever is still buffered, so the stack trace can be lost
+  // entirely. writeSync always lands, which is the difference between "exited
+  // with code 1" and an actionable diagnosis.
+  try {
+    writeSync(2, `[Robinhood] FATAL uncaughtException: ${String(error?.stack || error?.message || error)}\n`);
+  } catch {
+    // If even fd 2 is gone there is nothing useful left to do.
+  }
   appLogger.error('process.uncaught_exception', {
     message: String(error?.message || error),
     stack: String(error?.stack || ''),

@@ -1,11 +1,23 @@
 import express from 'express';
-import { Pool } from 'pg';
+import db from '../learning-engine/db.js';
 
 const router = express.Router();
 
-const db = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/robinhood'
-});
+// Uses the shared lazy pool from learning-engine/db.js rather than building a
+// second one here. That pool attaches an 'error' listener and sets
+// idleTimeoutMillis; a bare `new Pool()` has neither.
+//
+// This is a latent bug, not an observed one: this router is currently not
+// mounted anywhere, so its pool was never constructed. It matters if anyone
+// mounts it. pg emits 'error' on a Pool on behalf of any idle client whose
+// connection the server drops, and an unhandled 'error' event terminates the
+// process. Managed Postgres (Neon, Supabase, RDS proxies) closes idle
+// connections routinely, so a bare pool here would take down the API minutes
+// after the last request. A local Postgres rarely reaps idle connections, which
+// is why this shape of bug stays invisible under Docker.
+//
+// The old hardcoded fallback (postgres:postgres@localhost:5432) was also wrong
+// for this repo; db.js resolves the connection string correctly.
 
 // Dummy auth
 const requireAuth = (req, res, next) => {

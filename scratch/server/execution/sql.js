@@ -73,6 +73,21 @@ const adminPool = new Pool({
   application_name: 'robinhood-sql-sandbox-admin',
 });
 
+// pg emits 'error' on a Pool on behalf of idle clients whose connection the
+// server drops. An unhandled 'error' event terminates the process, so these
+// listeners are what keep a reaped sandbox connection from taking down the
+// whole API. These pools cannot use learning-engine/db.js: they target a
+// separate sandbox database with a restricted reader role.
+for (const [pool, label] of [[readerPool, 'reader'], [adminPool, 'admin']]) {
+  pool.on('error', (error) => {
+    console.error('[SQL Sandbox] Idle client error', JSON.stringify({
+      pool: label,
+      code: String(error?.code || ''),
+      message: String(error?.message || error),
+    }));
+  });
+}
+
 function getQueryPreview(args = []) {
   const queryText = typeof args[0] === 'string'
     ? args[0]

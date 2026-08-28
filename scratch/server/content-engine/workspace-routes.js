@@ -1,12 +1,13 @@
 import express from 'express';
-import { Pool } from 'pg';
+import pool from '../learning-engine/db.js';
 
 const router = express.Router();
 
-// Initialize Postgres Pool (in production, use centralized db.js)
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://postgres:postgres@localhost:5432/robinhood'
-});
+// Uses the centralized pool, as the previous comment here recommended. The
+// shared pool attaches an 'error' listener and sets idleTimeoutMillis; a bare
+// `new Pool()` has neither, and an unhandled Pool 'error' event -- which pg
+// raises when the server drops an idle client -- terminates the process. See
+// the longer note in domain-engine/learning-routes.js.
 
 /**
  * @route GET /api/workspace/:problemId
