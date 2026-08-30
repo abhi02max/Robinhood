@@ -15,6 +15,7 @@ coverage/
 .vscode/
 .agents/
 .kiro/
+.claude/
 
 # Generated research and browser-session artifacts
 brain/
