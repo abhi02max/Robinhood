@@ -1,7 +1,7 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
 import type { LanguageId, SubmissionResult, RecommendationData } from '../types';
-import { postSubmission, fetchRecommendation } from '../api';
+import { postRun, postSubmission, fetchRecommendation } from '../api';
 import type { ProblemDetail } from '../LeftPane';
 
 function describeError(e: unknown): string {
@@ -22,13 +22,22 @@ export function useSubmission(
   const [recommendation, setRecommendation] = useState<RecommendationData | null>(null);
   const [recommendationError, setRecommendationError] = useState<string | null>(null);
 
+  // Run is a scratchpad: visible cases only, nothing written down.
+  //
+  // It used to call postSubmission, which is what Submit calls. That meant every
+  // exploratory Run persisted an attempt row -- inflating attempt counts, per-user
+  // accuracy, problems_attempted, avg_attempts and the community solve rate -- and
+  // graded the code against hidden cases while the UI said "test against visible
+  // cases". It also cost a full submission in provider requests, which on Paiza is
+  // ~65 HTTP calls for a 13-case C++ problem instead of the intended 4 cases.
+  //
+  // Deliberately does NOT call refreshAttempts: there is no new attempt to fetch.
   const handleRun = useCallback(async () => {
     if (!problem || running || submitting) return;
     setRunning(true); setRunResult(null);
     try {
-      const r = await postSubmission({ problemId: problem.id, code, language });
+      const r = await postRun({ problemId: problem.id, code, language });
       setRunResult(r);
-      refreshAttempts(problem.id);
     } catch (e) {
       setRunResult({
         submission_id: '', status: 'Runtime Error', passed: false,
@@ -37,7 +46,7 @@ export function useSubmission(
         runtime_ms: 0, memory_bytes: 0, language, created_at: new Date().toISOString(),
       });
     } finally { setRunning(false); }
-  }, [problem, code, language, running, submitting, refreshAttempts]);
+  }, [problem, code, language, running, submitting]);
 
   const handleSubmit = useCallback(async () => {
     if (!problem || running || submitting) return;
