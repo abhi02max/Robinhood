@@ -263,6 +263,7 @@ const startupDependencyState = {
     redis: { critical: isCriticalDependency('redis'), status: 'unknown', reason: '', details: {} },
     piston: { critical: isCriticalDependency('piston'), status: 'unknown', reason: '', details: {} },
     judge0: { critical: isCriticalDependency('judge0'), status: 'unknown', reason: '', details: {} },
+    paiza: { critical: isCriticalDependency('paiza'), status: 'unknown', reason: '', details: {} },
     aiProviders: { critical: isCriticalDependency('aiProviders'), status: 'unknown', reason: '', details: {} },
   },
   warnings: [],
@@ -445,7 +446,11 @@ function summarizeStartupDependencyState() {
   const blockers = [];
 
   for (const [name, check] of Object.entries(startupDependencyState.checks)) {
-    if (!check || check.status === 'ok') continue;
+    // 'skipped' means the check does not apply to this deployment (e.g. the
+    // execution providers EXECUTION_PROVIDER did not select). Reporting those as
+    // warnings made readiness say 'degraded' for services nothing was going to
+    // call, which trains people to ignore the warnings that matter.
+    if (!check || check.status === 'ok' || check.status === 'skipped') continue;
     const detail = check.reason || `${name} is not healthy`;
     const message = `${name}: ${detail}`;
     if (check.status === 'error' && check.critical) {
@@ -493,14 +498,14 @@ function resolveJudge0HealthUrl() {
   return `${base}/languages`;
 }
 
-async function fetchJsonWithTimeout(url, timeoutMs = STARTUP_CHECK_TIMEOUT_MS) {
+async function fetchJsonWithTimeout(url, timeoutMs = STARTUP_CHECK_TIMEOUT_MS, extraHeaders = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
     const response = await fetch(url, {
       method: 'GET',
-      headers: { Accept: 'application/json' },
+      headers: { Accept: 'application/json', ...extraHeaders },
       signal: controller.signal,
     });
 
@@ -529,25 +534,122 @@ async function fetchJsonWithTimeout(url, timeoutMs = STARTUP_CHECK_TIMEOUT_MS) {
   }
 }
 
+/**
+ * Paiza has no health or /languages endpoint, so the only honest probe is to
+ * create a real (trivial) run and check an id comes back. That costs one request,
+ * and it verifies the thing that actually matters: that creates are being
+ * accepted. The run itself is left to expire rather than polled.
+ *
+ * `api_key` is a form parameter on this API, not a header, so it must be kept out
+ * of the returned reason -- which ends up in /api/health/ready.
+ */
+async function probePaiza() {
+  const base = String(process.env.PAIZA_URL || 'https://api.paiza.io').replace(/\/$/, '');
+  const key = process.env.PAIZA_API_KEY || 'guest';
+  const url = `${base}/runners/create`;
+  const redact = (s) => (key && key !== 'guest' ? String(s).split(key).join('[redacted]') : String(s));
+
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), STARTUP_CHECK_TIMEOUT_MS);
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded', Accept: 'application/json' },
+      body: new URLSearchParams({
+        source_code: 'print(1)',
+        language: 'python3',
+        input: '',
+        api_key: key,
+      }),
+      signal: controller.signal,
+    });
+
+    let payload = null;
+    try { payload = await response.json(); } catch { payload = null; }
+
+    if (!response.ok) {
+      return { ok: false, status: response.status, url, reason: `HTTP ${response.status}` };
+    }
+    if (!payload || !payload.id) {
+      return {
+        ok: false,
+        status: response.status,
+        url,
+        reason: `no run id in response: ${redact(JSON.stringify(payload)).slice(0, 120)}`,
+      };
+    }
+    return { ok: true, status: response.status, url, reason: '' };
+  } catch (error) {
+    return { ok: false, status: 0, url, reason: redact(error?.message || error) };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function runStartupDependencyChecks({ postgresReady, redisReady }) {
   setStartupCheck('postgres', postgresReady ? 'ok' : 'error', postgresReady ? '' : 'PostgreSQL connectivity check failed.');
   setStartupCheck('redis', redisReady ? 'ok' : 'error', redisReady ? '' : 'Redis is unavailable.');
 
-  const pistonProbe = await fetchJsonWithTimeout(resolvePistonHealthUrl());
-  setStartupCheck(
-    'piston',
-    pistonProbe.ok ? 'ok' : 'error',
-    pistonProbe.ok ? '' : `Piston probe failed: ${pistonProbe.reason}`,
-    { status: pistonProbe.status, url: resolvePistonHealthUrl() },
-  );
+  // Only probe the execution provider this deployment actually uses. Probing all
+  // of them meant a working Paiza deployment still reported Piston and Judge0 as
+  // failing, which is noise that hides a real outage. The others are recorded as
+  // 'skipped' so the reason is visible rather than silently absent.
+  const executionProvider = String(process.env.EXECUTION_PROVIDER || 'piston').toLowerCase();
+  const skipReason = (name) => `Not probed: EXECUTION_PROVIDER is "${executionProvider}", not ${name}.`;
 
-  const judge0Probe = await fetchJsonWithTimeout(resolveJudge0HealthUrl());
-  setStartupCheck(
-    'judge0',
-    judge0Probe.ok ? 'ok' : 'error',
-    judge0Probe.ok ? '' : `Judge0 probe failed: ${judge0Probe.reason}`,
-    { status: judge0Probe.status, url: resolveJudge0HealthUrl() },
-  );
+  if (executionProvider === 'piston') {
+    const pistonProbe = await fetchJsonWithTimeout(resolvePistonHealthUrl());
+    setStartupCheck(
+      'piston',
+      pistonProbe.ok ? 'ok' : 'error',
+      pistonProbe.ok ? '' : `Piston probe failed: ${pistonProbe.reason}`,
+      { status: pistonProbe.status, url: resolvePistonHealthUrl() },
+    );
+  } else {
+    setStartupCheck('piston', 'skipped', skipReason('piston'));
+  }
+
+  if (executionProvider === 'judge0') {
+    // A hosted Judge0 (RapidAPI) rejects unauthenticated requests, so without
+    // these headers the probe always reported Judge0 as broken while submissions
+    // were working fine. The key is read from the environment and only ever sent
+    // as a request header -- it is never logged, and `details` below records the
+    // URL and status only.
+    const judge0ProbeHeaders = {};
+    if (process.env.JUDGE0_API_KEY) {
+      judge0ProbeHeaders['X-RapidAPI-Key'] = process.env.JUDGE0_API_KEY;
+      judge0ProbeHeaders['X-RapidAPI-Host'] = process.env.JUDGE0_API_HOST
+        || 'judge0-ce.p.rapidapi.com';
+    }
+    const judge0Probe = await fetchJsonWithTimeout(
+      resolveJudge0HealthUrl(),
+      STARTUP_CHECK_TIMEOUT_MS,
+      judge0ProbeHeaders,
+    );
+    setStartupCheck(
+      'judge0',
+      judge0Probe.ok ? 'ok' : 'error',
+      judge0Probe.ok ? '' : `Judge0 probe failed: ${judge0Probe.reason}`,
+      { status: judge0Probe.status, url: resolveJudge0HealthUrl() },
+    );
+  } else {
+    setStartupCheck('judge0', 'skipped', skipReason('judge0'));
+  }
+
+  if (executionProvider === 'paiza') {
+    // Paiza has no health endpoint, so probe the real thing: create a trivial run
+    // and confirm an id comes back. `api_key` is a form parameter here rather than
+    // a header; it is never logged, and `details` records the URL and status only.
+    const paizaProbe = await probePaiza();
+    setStartupCheck(
+      'paiza',
+      paizaProbe.ok ? 'ok' : 'error',
+      paizaProbe.ok ? '' : `Paiza probe failed: ${paizaProbe.reason}`,
+      { status: paizaProbe.status, url: paizaProbe.url },
+    );
+  } else {
+    setStartupCheck('paiza', 'skipped', skipReason('paiza'));
+  }
 
   try {
     const aiHealth = await checkAIHealth(redisClient);
@@ -3058,6 +3160,7 @@ app.get('/api/health/ready', async (req, res) => {
       redis: startup.checks.redis,
       piston: startup.checks.piston,
       judge0: startup.checks.judge0,
+      paiza: startup.checks.paiza,
       aiProviders: startup.checks.aiProviders,
     },
     warnings: startup.warnings,

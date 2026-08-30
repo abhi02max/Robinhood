@@ -189,7 +189,18 @@ export async function submitSolution({ userId, problemId, code, language }) {
   }
 
   // -- run real code executor (Piston / Judge0) ----------------------------
-  const exec = await runExecution({ language, code, testCases });
+  // cpp_signature MUST be forwarded. The typed-language harnesses (C++, and
+  // later Java/C#/C) take their entire function shape from it -- there is no
+  // way to recover parameter types from the submitted source. Omitting it made
+  // every C++ submission fail with "no cpp_signature configured" even for
+  // problems that have one. getProblemForSubmission already selects the column
+  // (learning-repository.js:322); it was simply being dropped here.
+  const exec = await runExecution({
+    language,
+    code,
+    testCases,
+    cpp_signature: problem.cpp_signature || null,
+  });
 
   // Status: prefer Accepted; if any case errored at runtime/compile/TLE,
   // surface that distinctly from a plain Wrong Answer.

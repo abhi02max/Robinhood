@@ -5,10 +5,14 @@
  *
  * Pluggable backends (selected at runtime via EXECUTION_PROVIDER env var):
  *
- *     "piston"  (default) — https://emkc.org/api/v2/piston   (no auth, free)
+ *     "paiza"             — https://api.paiza.io  (free, api_key=guest, all six
+ *                            languages; 1-second CPU cap we cannot raise)
  *     "judge0"            — https://judge0-ce.p.rapidapi.com (auth via RapidAPI
- *                            or self-hosted)
- *     "mock"              — falls back to ./execution-mock.js (offline / CI)
+ *                            or self-hosted; paid on the hosted plans)
+ *     "piston"  (default) — https://emkc.org/api/v2/piston   (self-hosted only:
+ *                            the public API closed on 2026-02-15)
+ *     "mock"              — falls back to ./execution-mock.js (offline / CI;
+ *                            passes anything non-empty without running it)
  *
  * The function signature and return shape are IDENTICAL to runMockExecution
  * so the service layer can swap implementations without changes.
@@ -40,7 +44,18 @@ function getJudge0Url() {
   return process.env.JUDGE0_URL || 'https://judge0-ce.p.rapidapi.com';
 }
 
-const PISTON_URL = process.env.PISTON_URL || 'https://emkc.org/api/v2/piston';
+// PISTON_URL means two different things in this repo: index.js:236 and
+// execution/piston.js:3 treat it as the full ".../api/v2/execute" endpoint,
+// while this module needs the API *base* and appends /execute itself. Setting
+// it for one broke the other. Accept either form by stripping a trailing
+// /execute, and let PISTON_BASE_URL override explicitly.
+//
+// Note the default is dead as a public service: emkc.org went whitelist-only on
+// 2026-02-15 and now answers /execute with HTTP 401. It is kept only as the
+// correct base path for a self-hosted instance.
+const PISTON_URL = process.env.PISTON_BASE_URL
+  || String(process.env.PISTON_URL || '').replace(/\/execute\/?$/, '')
+  || 'https://emkc.org/api/v2/piston';
 
 const JUDGE0_API_KEY  = process.env.JUDGE0_API_KEY  || '';
 const JUDGE0_API_HOST = process.env.JUDGE0_API_HOST || 'judge0-ce.p.rapidapi.com';
@@ -51,6 +66,12 @@ const CONCURRENCY         = Math.max(1, Number(process.env.EXECUTION_CONCURRENCY
 const MEMORY_MB           = Number(process.env.EXECUTION_MEMORY_MB) || 256;
 
 const SUPPORTED_LANGUAGES = new Set(['javascript', 'python', 'cpp', 'c', 'csharp']);
+
+// Relative tolerance for comparing non-integral numbers. Problems that return a
+// double (e.g. maximum-average-subarray-i, an average) cannot be compared with
+// === : a correct solution that sums in a different order differs in the last
+// bit. Integers are still compared exactly, so this cannot mask an off-by-one.
+const FLOAT_TOLERANCE = Number(process.env.EXECUTION_FLOAT_TOLERANCE) || 1e-6;
 
 /**
  * Normalize loose user-supplied language strings ("C++", "c++", "javascript")
@@ -85,6 +106,13 @@ function deepEqual(a, b) {
   if (a === b) return true;
   if (typeof a !== typeof b) return false;
   if (a === null || b === null) return a === b;
+  // Numbers: exact for integers, tolerance-based for anything fractional.
+  // Reached only when a !== b already, so equal values never get here.
+  if (typeof a === 'number' && typeof b === 'number') {
+    if (Number.isInteger(a) && Number.isInteger(b)) return a === b;
+    if (!Number.isFinite(a) || !Number.isFinite(b)) return false;
+    return Math.abs(a - b) <= FLOAT_TOLERANCE * Math.max(1, Math.abs(a), Math.abs(b));
+  }
   if (typeof a !== 'object') return a === b;
   if (Array.isArray(a) !== Array.isArray(b)) return false;
   if (Array.isArray(a)) {
@@ -400,7 +428,9 @@ public class Program {
 // The signature shape (validated at the top of runExecution):
 //   {
 //     fn:    'maxSubArray',                   // function or method name
-//     class: 'Solution' | undefined,           // optional LeetCode-style class
+//     class: 'Solution' | undefined,           // how the reference solution was
+//                                              // written; the harness accepts
+//                                              // either shape from the user
 //     args:  [{ name: 'nums', type: 'vector<int>' }, ...],
 //     ret:   'int' | 'vector<int>' | ...
 //   }
@@ -415,7 +445,12 @@ public class Program {
 // builder so the user sees "unsupported type 'X'" instead of cryptic
 // compiler output.
 // ---------------------------------------------------------------------------
-const CPP_TYPE_MAP = Object.freeze({
+// Exported so the seed-file tooling (backfill-cpp-signatures.js,
+// backfill-cpp-starters.js) can generate only types the harness can actually
+// compile. Duplicating this list in a script means a type can be added here and
+// silently never emitted, or emitted and rejected at submit time — which is the
+// worst place for the user to find out.
+export const CPP_TYPE_MAP = Object.freeze({
   'int':                  { decl: 'int',                 decoder: 'decodeInt'     },
   'long':                 { decl: 'long long',           decoder: 'decodeLL'      },
   'long long':            { decl: 'long long',           decoder: 'decodeLL'      },
@@ -433,8 +468,21 @@ const CPP_TYPE_MAP = Object.freeze({
   'vector<vector<int>>':  { decl: 'vector<vector<int>>', decoder: 'decodeMatI'    },
 });
 
-function normalizeCppType(t) {
-  return String(t || '').replace(/\s+/g, '').replace(/>>/g, '> >').replace(/> >/g, '>>').trim();
+/**
+ * Canonicalize a C++ type string to a CPP_TYPE_MAP key.
+ *
+ * Whitespace is *collapsed*, not removed. Removing it turned `long long` into
+ * `longlong` and `vector<long long>` into `vector<long long>` with the space gone —
+ * neither of which is a key, so both of the map's long-long entries were unreachable
+ * and any problem whose data exceeded 32 bits was rejected with "unsupported
+ * argument type". Nothing caught it because no seeded problem had values that large.
+ */
+export function normalizeCppType(t) {
+  return String(t || '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s*<\s*/g, '<')
+    .replace(/\s*>\s*/g, '>')
+    .trim();
 }
 
 function validateCppSignature(sig) {
@@ -476,14 +524,45 @@ function emitCppArgDecodes(args) {
 }
 
 /**
- * Emit the call expression. Two shapes:
- *   class-style:  Solution __sol; auto __out = __sol.fn(arg1, arg2);
- *   free-fn:      auto __out = fn(arg1, arg2);
+ * Does the submitted code actually define this class or struct?
+ *
+ * `cpp_signature.class` records how the reference solution was written, not what
+ * the user must write. Both a LeetCode-style `class Solution { int f(...) }` and
+ * a bare `int f(...)` are natural submissions, so the harness reads the shape off
+ * the code instead of trusting the signature. Before this, a free-function
+ * submission to a problem whose signature named a class failed with
+ * `unknown type name 'Solution'`, which reads as a platform bug rather than a
+ * mistake in the submission. The generated C++ starter (see
+ * server/scripts/backfill-cpp-starters.js) is class-shaped, but nothing stops a
+ * user deleting the wrapper, so this stays a runtime decision.
+ *
+ * A heuristic: it looks for a definition (`... {`), not a mere mention, so a
+ * `Solution` in a comment or a `Solution*` parameter does not count. Guessing
+ * wrong is no worse than the old behaviour — a compile error naming the symbol
+ * that is missing.
  */
-function emitCppCallExpr(sig) {
+function cppDefinesClass(userCode, className) {
+  const name = String(className || '').trim();
+  if (!name) return false;
+  const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return new RegExp(`\\b(?:class|struct)\\s+${escaped}\\b[^;{]*\\{`).test(String(userCode || ''));
+}
+
+/**
+ * Emit the call expression. Two shapes:
+ *   class-style:  Solution __sol; __out = __sol.fn(arg1, arg2);
+ *   free-fn:      __out = fn(arg1, arg2);
+ *
+ * Chosen from what the submission contains, not from the signature alone.
+ */
+function emitCppCallExpr(sig, userCode) {
   const argList = sig.args.map((a) => a.name).join(', ');
-  if (sig.class && typeof sig.class === 'string' && sig.class.trim()) {
-    return `${sig.class.trim()} __sol; __out = __sol.${sig.fn}(${argList});`;
+  const declared = typeof sig.class === 'string' ? sig.class.trim() : '';
+  // Default to Solution so a class-style submission still works on a problem
+  // whose signature describes a free function.
+  const className = declared || 'Solution';
+  if (cppDefinesClass(userCode, className)) {
+    return `${className} __sol; __out = __sol.${sig.fn}(${argList});`;
   }
   return `__out = ${sig.fn}(${argList});`;
 }
@@ -492,7 +571,7 @@ function buildCppProgram(userCode, sig) {
   validateCppSignature(sig);
   const retInfo = CPP_TYPE_MAP[normalizeCppType(sig.ret)];
   const argDecodes = emitCppArgDecodes(sig.args);
-  const callExpr = emitCppCallExpr(sig);
+  const callExpr = emitCppCallExpr(sig, userCode);
 
   // Embedded JSON parser/writer — Judge0's stock GCC image has no nlohmann/json.
   // Strict subset of JSON sufficient for whatever JSON.stringify emits on the
@@ -620,22 +699,29 @@ struct Parser {
 inline Value parse(const string& s) { Parser p(s); return p.parse(); }
 
 inline string esc(const string& s) {
-  string o = "\"";
+  // Deliberately written WITHOUT backslashes inside string literals. This file is
+  // emitted from a JS template literal, so every backslash below is escaped
+  // twice; a miscount here produced \`string o = """;\` and made EVERY C++
+  // submission fail to compile (found and fixed 2026-08-29 by compiling the
+  // generated harness on Paiza -- see server/scripts/check-paiza.js).
+  // Q and BS are the ASCII codes for the only two characters that must be
+  // escaped, so no escape sequence is involved in producing them at all.
+  const char Q = 34, BS = 92;
+  string o(1, Q);
   for (char c : s) {
-    switch (c) {
-      case '"':  o += "\\\\\""; break;
-      case '\\\\': o += "\\\\\\\\"; break;
-      case '\\n': o += "\\\\n"; break;
-      case '\\t': o += "\\\\t"; break;
-      case '\\r': o += "\\\\r"; break;
-      case '\\b': o += "\\\\b"; break;
-      case '\\f': o += "\\\\f"; break;
-      default:
-        if ((unsigned char)c < 0x20) { char buf[8]; snprintf(buf, sizeof(buf), "\\\\u%04x", (unsigned char)c); o += buf; }
-        else o += c;
-    }
+    if (c == Q)          { o += BS; o += Q;   }
+    else if (c == BS)    { o += BS; o += BS;  }
+    else if (c == '\\n') { o += BS; o += 'n'; }
+    else if (c == '\\t') { o += BS; o += 't'; }
+    else if (c == '\\r') { o += BS; o += 'r'; }
+    else if (c == '\\b') { o += BS; o += 'b'; }
+    else if (c == '\\f') { o += BS; o += 'f'; }
+    else if ((unsigned char)c < 0x20) {
+      char buf[8]; snprintf(buf, sizeof(buf), "u%04x", (unsigned char)c);
+      o += BS; o += buf;
+    } else o += c;
   }
-  o += '"'; return o;
+  o += Q; return o;
 }
 
 inline string toJson(int x)         { return to_string(x); }
@@ -815,58 +901,377 @@ function b64decode(s) {
   return Buffer.from(s, 'base64').toString('utf8');
 }
 
-async function judge0Run({ language, program, stdin }) {
-  const langId = JUDGE0_LANG_ID[language];
-  if (!langId) throw new Error(`Judge0: unsupported language ${language}`);
+// Judge0's official host does NOT enable `wait=true` (and the parameter is not
+// defined for the batch endpoints at all), so results must be created and then
+// polled. Batching is not just an optimisation here: it is the only shape that
+// works, and it collapses one submission from 12-15 HTTP requests (the seeded
+// problems average 12.1 test cases) down to roughly three, which matters against
+// a metered RapidAPI quota. Per-test-case granularity is preserved because each
+// test case is still its own Judge0 submission with its own status, time and
+// memory -- a TLE on case 9 is still reported as a TLE on case 9.
+const JUDGE0_BATCH_SIZE = Math.max(1, Number(process.env.JUDGE0_BATCH_SIZE) || 20);
+const JUDGE0_POLL_INTERVAL_MS = Math.max(150, Number(process.env.JUDGE0_POLL_INTERVAL_MS) || 400);
+const JUDGE0_MAX_POLLS = Math.max(1, Number(process.env.JUDGE0_MAX_POLLS) || 40);
+const JUDGE0_FIELDS = 'token,stdout,stderr,compile_output,message,status,time,memory,exit_code';
 
-  // Use the synchronous /submissions endpoint with wait=true and base64
-  // encoding to avoid newline / shell-escape issues.
-  const url = `${getJudge0Url()}/submissions?base64_encoded=true&wait=true&fields=stdout,stderr,compile_output,status,time,memory,exit_code`;
-  const body = {
-    source_code:    b64encode(program),
-    language_id:    langId,
-    stdin:          b64encode(stdin || ''),
-    cpu_time_limit: Math.max(1, Math.ceil(PER_TEST_TIMEOUT_MS / 1000)),
-    wall_time_limit: Math.max(2, Math.ceil(PER_TEST_TIMEOUT_MS / 1000) + 2),
-    enable_network: false,
-    redirect_stderr_to_stdout: false,
-  };
+// HTTP requests spent by the most recent runExecution call, across whichever
+// provider ran it. Surfaced in the result so real cost is measured, not assumed.
+let providerRequestCount = 0;
 
-  const res = await withTimeout(
-    fetch(url, {
-      method: 'POST',
-      headers: judge0Headers(),
-      body: JSON.stringify(body),
-    }),
-    HTTP_TIMEOUT_MS,
-    'judge0'
-  );
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
+/**
+ * Strip the RapidAPI key out of any text that is about to become an error
+ * message. Judge0 error bodies are surfaced to the user via `stderr`, and an
+ * upstream gateway that echoes a request header back would otherwise publish
+ * the key to every solver on the platform.
+ */
+function judge0Redact(text) {
+  const s = String(text ?? '');
+  return JUDGE0_API_KEY ? s.split(JUDGE0_API_KEY).join('[redacted]') : s;
+}
+
+async function judge0Fetch(url, init) {
+  providerRequestCount += 1;
+  const res = await withTimeout(fetch(url, init), HTTP_TIMEOUT_MS, 'judge0');
   if (!res.ok) {
     const text = await res.text().catch(() => '');
-    throw new Error(`Judge0 HTTP ${res.status}: ${text.slice(0, 200)}`);
+    // Status plus a redacted, truncated body only. Never include `init` or its
+    // headers in an error: they carry the RapidAPI key.
+    throw new Error(`Judge0 HTTP ${res.status}: ${judge0Redact(text).slice(0, 200)}`);
   }
-  const j = await res.json();
-  // Judge0 status descriptions (id 1..14 reserved; id=3 means Accepted).
-  const statusId = j.status?.id ?? 0;
-  const stdout = b64decode(j.stdout || '');
-  const stderr = b64decode(j.stderr || '');
-  const compile = b64decode(j.compile_output || '');
+  return res.json();
+}
+
+/**
+ * Map one finished Judge0 submission onto the exec shape the comparison layer
+ * expects, identical to what pistonRun returns.
+ */
+function judge0MapSubmission(j) {
+  // Judge0 status ids: 1 In Queue, 2 Processing, 3 Accepted, 4 Wrong Answer,
+  // 5 TLE, 6 Compilation Error, 7-12 runtime errors, 13 Internal Error,
+  // 14 Exec Format Error. Status 3 vs 4 is Judge0's own exact-string verdict,
+  // which we ignore -- correctness is decided by deepEqual on parsed JSON.
+  const statusId = j?.status?.id ?? 0;
+  const stdout = b64decode(j?.stdout || '');
+  const stderr = b64decode(j?.stderr || '');
+  const compile = b64decode(j?.compile_output || '');
+  const message = b64decode(j?.message || '');
 
   let kind = null;
-  if (statusId === 6)             kind = ERROR_KIND.COMPILE_ERROR;       // Compilation Error
-  else if (statusId === 5)        kind = ERROR_KIND.TIME_LIMIT_EXCEEDED; // TLE
+  if (statusId === 6) kind = ERROR_KIND.COMPILE_ERROR;
+  else if (statusId === 5) kind = ERROR_KIND.TIME_LIMIT_EXCEEDED;
   else if (statusId >= 7 && statusId <= 12) kind = ERROR_KIND.RUNTIME_ERROR;
+  else if (statusId === 13 || statusId === 14) kind = ERROR_KIND.HARNESS_ERROR;
 
   return {
     stdout,
-    stderr: stderr || compile,
-    exitCode: j.exit_code,
+    stderr: stderr || compile || message,
+    exitCode: j?.exit_code ?? null,
     signal: null,
     timed_out: statusId === 5,
     kind,
-    runtime_seconds: parseFloat(j.time) || 0,
-    memory_kb: Number(j.memory) || 0,
+    runtime_seconds: parseFloat(j?.time) || 0,
+    memory_kb: Number(j?.memory) || 0,
+  };
+}
+
+/**
+ * A batch POST returns 201 with a POSITIONAL array: a valid item yields
+ * { token }, an invalid one yields a validation error object in that slot. So a
+ * batch can be partially rejected while still returning 201 -- results must be
+ * matched by index, never by assuming every slot succeeded.
+ */
+function describeJudge0Rejection(entry) {
+  if (!entry) return 'Judge0 returned no result for this test case.';
+  try {
+    const parts = Object.entries(entry).map(([k, v]) => (
+      `${k}: ${Array.isArray(v) ? v.join('; ') : String(v)}`
+    ));
+    if (parts.length === 0) return 'Judge0 rejected this submission.';
+    return judge0Redact(`Judge0 rejected this submission (${parts.join(' | ')})`).slice(0, 500);
+  } catch {
+    return 'Judge0 rejected this submission.';
+  }
+}
+
+/**
+ * Execute every test case as one Judge0 batch (chunked), then poll to completion.
+ * Returns an exec object per test case, in the original order.
+ */
+async function judge0RunBatch({ language, program, testCases }) {
+  const langId = JUDGE0_LANG_ID[language];
+  if (!langId) throw new Error(`Judge0: unsupported language ${language}`);
+
+  const base = getJudge0Url().replace(/\/$/, '');
+  const source = b64encode(program);
+  const cpuLimit = Math.max(1, Math.ceil(PER_TEST_TIMEOUT_MS / 1000));
+
+  // One slot per test case: { token } once created, or { error } if rejected.
+  const slots = new Array(testCases.length).fill(null);
+
+  for (let start = 0; start < testCases.length; start += JUDGE0_BATCH_SIZE) {
+    const chunk = testCases.slice(start, start + JUDGE0_BATCH_SIZE);
+    const created = await judge0Fetch(`${base}/submissions/batch?base64_encoded=true`, {
+      method: 'POST',
+      headers: judge0Headers(),
+      body: JSON.stringify({
+        submissions: chunk.map((tc) => ({
+          language_id: langId,
+          source_code: source,
+          stdin: b64encode(JSON.stringify(tc.input_payload ?? {})),
+          cpu_time_limit: cpuLimit,
+          wall_time_limit: cpuLimit + 2,
+          enable_network: false,
+          redirect_stderr_to_stdout: false,
+        })),
+      }),
+    });
+
+    const arr = Array.isArray(created) ? created : [];
+    for (let i = 0; i < chunk.length; i++) {
+      const entry = arr[i];
+      slots[start + i] = entry && entry.token
+        ? { token: entry.token }
+        : { error: describeJudge0Rejection(entry) };
+    }
+  }
+
+  // ----- poll until every created submission reaches a terminal status -----
+  const finished = new Map();
+  const pending = new Set(slots.filter((s) => s?.token).map((s) => s.token));
+  let delay = JUDGE0_POLL_INTERVAL_MS;
+
+  for (let attempt = 0; attempt < JUDGE0_MAX_POLLS && pending.size > 0; attempt++) {
+    await sleep(delay);
+    delay = Math.min(Math.round(delay * 1.5), 3000);
+
+    const got = await judge0Fetch(
+      `${base}/submissions/batch?tokens=${encodeURIComponent([...pending].join(','))}`
+      + `&base64_encoded=true&fields=${JUDGE0_FIELDS}`,
+      { method: 'GET', headers: judge0Headers() }
+    );
+
+    for (const sub of got?.submissions || []) {
+      const statusId = sub?.status?.id ?? 0;
+      // 1 = In Queue, 2 = Processing. Anything else is terminal.
+      if (statusId > 2 && sub.token) {
+        finished.set(sub.token, sub);
+        pending.delete(sub.token);
+      }
+    }
+  }
+
+  return slots.map((slot) => {
+    if (slot?.error) {
+      return {
+        stdout: '', stderr: slot.error, exitCode: -1, signal: null,
+        timed_out: false, kind: ERROR_KIND.HARNESS_ERROR,
+      };
+    }
+    const sub = finished.get(slot.token);
+    if (!sub) {
+      // Still queued when the poll budget ran out. Report it as a timeout
+      // rather than silently treating an unfinished run as a wrong answer.
+      return {
+        stdout: '',
+        stderr: 'Judge0 did not return a result within the poll budget.',
+        exitCode: -1, signal: null,
+        timed_out: true, kind: ERROR_KIND.TIME_LIMIT_EXCEEDED,
+      };
+    }
+    return judge0MapSubmission(sub);
+  });
+}
+
+/**
+ * Judge0 entry point used by runExecution. Returns the same
+ * { idx, tc, exec, elapsed } records the per-case path produces, so all the
+ * comparison and redaction logic downstream is shared.
+ */
+async function judge0Collect({ language, program, testCases }) {
+  let execs;
+  try {
+    execs = await judge0RunBatch({ language, program, testCases });
+  } catch (e) {
+    // A transport-level failure (auth, quota, outage) has no per-case detail,
+    // so attribute the same error to every case instead of throwing a 500.
+    const msg = String((e && e.message) || e);
+    const timedOut = /timed out/i.test(msg);
+    execs = testCases.map(() => ({
+      stdout: '', stderr: msg, exitCode: -1, signal: null,
+      timed_out: timedOut,
+      kind: timedOut ? ERROR_KIND.TIME_LIMIT_EXCEEDED : ERROR_KIND.HARNESS_ERROR,
+    }));
+  }
+
+  return testCases.map((tc, idx) => ({
+    idx,
+    tc,
+    exec: execs[idx],
+    // Judge0 reports actual CPU time, which beats measuring our own wall clock.
+    elapsed: Math.round((Number(execs[idx]?.runtime_seconds) || 0) * 1000),
+  }));
+}
+
+// ---------------------------------------------------------------------------
+// Provider: Paiza.IO (https://api.paiza.io)
+// ---------------------------------------------------------------------------
+// The free option that actually works, and the reason this platform can grade
+// real submissions without a paid plan. Verified live on 2026-08-29 with
+// api_key=guest -- no signup, no card, no quota to top up. All six languages the
+// problem UI offers ran a stdin sum correctly:
+//
+//     c       Clang 14, C17         csharp      Mono
+//     cpp     Clang 18, C++20       java        18
+//     python  3.11.13               javascript  Node 16.17.1
+//
+// Those runtimes are NEWER than Judge0 CE 1.13.x (Node 12.14.0, Python 3.8.1),
+// so `?.`, `??` and `match` work here and would be compile errors on Judge0.
+//
+// Three measured constraints, not assumptions:
+//
+//  1. THE CPU LIMIT IS 1.00 SECOND and is not configurable on the guest key.
+//     ~0.35s of work succeeds; ~2s comes back result:"timeout" with time:"1.00".
+//     EXECUTION_TIMEOUT_MS cannot raise it. A correct but slow solution WILL be
+//     reported as Time Limit Exceeded, which is the main functional difference
+//     from Judge0 (where cpu_time_limit is ours to set).
+//  2. There is no batch endpoint, and `longpoll=true` is ignored -- create
+//     returns status:"running" immediately. So each test case costs its own
+//     create plus polls (~2 requests). Requests are free, so this is latency,
+//     not quota: 12 concurrent creates were accepted in about 1 second with no
+//     throttling.
+//  3. `memory` is reported in BYTES here (a Python hello-world is ~8_368_000),
+//     where Judge0 reports kilobytes.
+//
+// Risk worth stating plainly: this is an undocumented free endpoint with no
+// published rate limit and no terms covering production use. The public Piston
+// API closed to the public on 2026-02-15 with no notice. Assume this one can do
+// the same, which is exactly why `judge0` is kept working alongside it.
+// Read lazily, matching getJudge0Url(): a module-load constant cannot be pointed
+// at a fake server on an ephemeral port, and fixed ports make tests flaky.
+function getPaizaUrl() {
+  return String(process.env.PAIZA_URL || 'https://api.paiza.io').replace(/\/$/, '');
+}
+function getPaizaKey() {
+  return process.env.PAIZA_API_KEY || 'guest';
+}
+const PAIZA_POLL_INTERVAL_MS = Math.max(150, Number(process.env.PAIZA_POLL_INTERVAL_MS) || 500);
+const PAIZA_MAX_POLLS = Math.max(1, Number(process.env.PAIZA_MAX_POLLS) || 20);
+
+const PAIZA_LANG = {
+  javascript: 'javascript',
+  python: 'python3',
+  cpp: 'cpp',
+  c: 'c',
+  csharp: 'csharp',
+  // Accepted by Paiza today, but unreachable until buildJavaProgram exists.
+  // SUPPORTED_LANGUAGES is the gate, so listing it here is harmless.
+  java: 'java',
+};
+
+// 'guest' is not a credential, but a real key would be, and Paiza takes it as a
+// request parameter rather than a header -- so keep it out of error text.
+function paizaRedact(text) {
+  const s = String(text ?? '');
+  const key = getPaizaKey();
+  return key && key !== 'guest' ? s.split(key).join('[redacted]') : s;
+}
+
+async function paizaFetch(path, params, method = 'POST') {
+  providerRequestCount += 1;
+  const form = new URLSearchParams({ ...params, api_key: getPaizaKey() });
+  const init = method === 'GET'
+    ? { method: 'GET' }
+    : {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form,
+    };
+  const base = getPaizaUrl();
+  const url = method === 'GET' ? `${base}${path}?${form}` : `${base}${path}`;
+
+  const res = await withTimeout(fetch(url, init), HTTP_TIMEOUT_MS, 'paiza');
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Paiza HTTP ${res.status}: ${paizaRedact(text).slice(0, 200)}`);
+  }
+  return res.json();
+}
+
+/**
+ * Map a finished Paiza run onto the same exec shape pistonRun and
+ * judge0MapSubmission produce, so the comparison layer is provider-agnostic.
+ *
+ * Field semantics, each verified against the live API on 2026-08-29:
+ *
+ *   compile error : build_result "failure", build_stderr set, result null
+ *   runtime error : result "failure",  exit_code "1",   stderr set
+ *   timeout       : result "timeout",  exit_code null,  time "1.00"
+ *   success       : result "success",  exit_code "0",   time + memory set
+ *
+ * A run that succeeds but writes to stderr stays a success -- verified, so a
+ * warning on stderr does not fail an otherwise correct solution.
+ */
+function paizaMapDetails(d) {
+  const buildFailed = d?.build_result === 'failure';
+  const timedOut = d?.result === 'timeout';
+
+  let kind = null;
+  if (buildFailed) kind = ERROR_KIND.COMPILE_ERROR;
+  else if (timedOut) kind = ERROR_KIND.TIME_LIMIT_EXCEEDED;
+  else if (d?.result === 'failure') kind = ERROR_KIND.RUNTIME_ERROR;
+
+  const exitRaw = buildFailed ? d?.build_exit_code : d?.exit_code;
+
+  return {
+    stdout: d?.stdout || '',
+    stderr: buildFailed ? (d?.build_stderr || '') : (d?.stderr || ''),
+    exitCode: exitRaw === null || exitRaw === undefined ? null : Number(exitRaw),
+    signal: null,
+    timed_out: timedOut,
+    kind,
+    runtime_seconds: parseFloat(d?.time) || 0,
+    memory_kb: Math.round((Number(d?.memory) || 0) / 1024),
+  };
+}
+
+async function paizaRun({ language, program, stdin }) {
+  const lang = PAIZA_LANG[language];
+  if (!lang) throw new Error(`Paiza: unsupported language ${language}`);
+
+  const created = await paizaFetch('/runners/create', {
+    source_code: program,
+    language: lang,
+    input: stdin ?? '',
+  });
+
+  const id = created && created.id;
+  if (!id) {
+    throw new Error(
+      `Paiza returned no run id: ${paizaRedact(JSON.stringify(created)).slice(0, 200)}`,
+    );
+  }
+
+  let delay = PAIZA_POLL_INTERVAL_MS;
+  for (let attempt = 0; attempt < PAIZA_MAX_POLLS; attempt++) {
+    await sleep(delay);
+    delay = Math.min(Math.round(delay * 1.4), 2000);
+    // get_details carries its own `status`, so poll it directly instead of
+    // get_status first -- 2 requests per test case rather than 3.
+    const details = await paizaFetch('/runners/get_details', { id }, 'GET');
+    if (details && details.status !== 'running') return paizaMapDetails(details);
+  }
+
+  return {
+    stdout: '',
+    stderr: 'Paiza did not return a result within the poll budget.',
+    exitCode: -1,
+    signal: null,
+    timed_out: true,
+    kind: ERROR_KIND.TIME_LIMIT_EXCEEDED,
   };
 }
 
@@ -976,34 +1381,45 @@ export async function runExecution({ code, language, testCases, cpp_signature = 
     });
   }
 
-  const runOne = getProvider() === 'judge0' ? judge0Run : pistonRun;
+  const provider = getProvider();
 
-  // ----- parallel test execution with bounded concurrency -----
+  // ----- test execution -----
+  // Judge0 runs every case as one batch (it has no synchronous mode); other
+  // providers run per case with bounded concurrency. Both produce the same
+  // { idx, tc, exec, elapsed } records, so everything below is shared.
+  providerRequestCount = 0;
   const startedAt = Date.now();
-  const raw = await runWithConcurrency(testCases, CONCURRENCY, async (tc, idx) => {
-    const stdin = JSON.stringify(tc.input_payload ?? {});
-    const t0 = Date.now();
-    try {
-      const exec = await runOne({ language: lang, program, stdin });
-      const elapsed = Date.now() - t0;
-      return { idx, tc, exec, elapsed };
-    } catch (e) {
-      return {
-        idx, tc,
-        exec: {
-          stdout: '',
-          stderr: String((e && e.message) || e),
-          exitCode: -1,
-          signal: null,
-          timed_out: /timed out/i.test(String(e && e.message)),
-          kind: /timed out/i.test(String(e && e.message))
-            ? ERROR_KIND.TIME_LIMIT_EXCEEDED
-            : ERROR_KIND.HARNESS_ERROR,
-        },
-        elapsed: Date.now() - t0,
-      };
-    }
-  });
+
+  // Paiza has no batch endpoint either, so it goes down the per-case path with
+  // its own runner rather than Piston's.
+  const runOne = provider === 'paiza' ? paizaRun : pistonRun;
+
+  const raw = provider === 'judge0'
+    ? await judge0Collect({ language: lang, program, testCases })
+    : await runWithConcurrency(testCases, CONCURRENCY, async (tc, idx) => {
+      const stdin = JSON.stringify(tc.input_payload ?? {});
+      const t0 = Date.now();
+      try {
+        const exec = await runOne({ language: lang, program, stdin });
+        const elapsed = Date.now() - t0;
+        return { idx, tc, exec, elapsed };
+      } catch (e) {
+        return {
+          idx, tc,
+          exec: {
+            stdout: '',
+            stderr: String((e && e.message) || e),
+            exitCode: -1,
+            signal: null,
+            timed_out: /timed out/i.test(String(e && e.message)),
+            kind: /timed out/i.test(String(e && e.message))
+              ? ERROR_KIND.TIME_LIMIT_EXCEEDED
+              : ERROR_KIND.HARNESS_ERROR,
+          },
+          elapsed: Date.now() - t0,
+        };
+      }
+    });
 
   const totalRuntimeMs = Date.now() - startedAt;
 
@@ -1072,7 +1488,11 @@ export async function runExecution({ code, language, testCases, cpp_signature = 
     results,
     first_failed_index: firstFailedIndex === -1 ? null : firstFailedIndex,
     language: lang,
-    provider: getProvider(),
+    provider,
+    // Measured, not assumed: lets us see the real quota cost of one submission.
+    http_requests: provider === 'judge0' || provider === 'paiza'
+      ? providerRequestCount
+      : undefined,
   };
 }
 

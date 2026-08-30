@@ -1,4 +1,22 @@
-// Judge0 API integration
+// Judge0 API integration for the LEGACY /api/execute route.
+//
+// WARNING: this client does not work against a hosted (RapidAPI) Judge0, and has
+// two independent reasons why:
+//
+//   1. resolveJudge0Endpoint() below appends `wait=true`. The official host does
+//      NOT enable that parameter, so the response comes back still queued with
+//      no stdout.
+//   2. It sends no X-RapidAPI-Key / X-RapidAPI-Host headers at all, so every
+//      request is rejected before it is even parsed.
+//
+// It also issues one HTTP request per test case, which is expensive against a
+// metered quota.
+//
+// The live submission path does NOT come through here -- it uses
+// server/learning-engine/execution-engine.js (judge0RunBatch), which creates a
+// batch and polls for results. If you need to fix this file, port that approach
+// rather than reinventing it. Left as-is deliberately: it only serves the older
+// /api/execute façade, and changing it is out of scope for the submission work.
 import axios from 'axios';
 const JUDGE0_URL = process.env.JUDGE0_URL || 'http://localhost:2358';
 const JUDGE0_TIMEOUT_MS = Number(process.env.JUDGE0_TIMEOUT_MS || 15000);
