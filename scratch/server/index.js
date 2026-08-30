@@ -1062,6 +1062,28 @@ async function connectRedisWithRetry() {
       }
     }
   }
+  // In-memory sessions are a development convenience, and in production they are a
+  // silent correctness bug rather than a degradation:
+  //
+  //   - inMemoryAuthSessions is per-process, so every logged-in user is signed out
+  //     by any restart, crash or deploy. Measured: a valid token returns 200, the
+  //     backend restarts, the same token returns 401.
+  //   - with more than one replica, a token issued by one process is unknown to the
+  //     others, so requests fail depending on which one they land on.
+  //
+  // Neither is visible in a health check, so production refuses to start instead.
+  // A single-process deployment that genuinely accepts losing sessions on restart
+  // can opt in with ALLOW_IN_MEMORY_SESSIONS=true.
+  if (process.env.NODE_ENV === 'production' && String(process.env.ALLOW_IN_MEMORY_SESSIONS).toLowerCase() !== 'true') {
+    console.error(
+      `[Robinhood] FATAL: Redis is unreachable after ${REDIS_CONNECT_RETRIES} attempts and NODE_ENV=production. ` +
+      'Sessions would fall back to per-process memory, which signs every user out on restart and breaks entirely ' +
+      'across multiple replicas. Provide a reachable REDIS_URL, or set ALLOW_IN_MEMORY_SESSIONS=true to accept ' +
+      `that trade-off on a single-process deployment. Error: ${lastError?.message}`,
+    );
+    process.exit(1);
+  }
+
   CACHE_MODE = 'memory';
   console.warn(`[Robinhood] Redis connection failed after ${REDIS_CONNECT_RETRIES} attempts. Falling back to in-memory storage. Cache mode set to 'memory'. Error: ${lastError?.message}`);
   return;

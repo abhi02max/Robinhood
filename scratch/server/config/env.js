@@ -23,6 +23,8 @@ const serverEnvSchema = z.object({
   AI_DAILY_REQUEST_LIMIT: positiveInteger.default(100),
   AI_GLOBAL_CONCURRENCY_LIMIT: positiveInteger.default(8),
   PISTON_TIMEOUT_MS: positiveInteger.default(10_000),
+  // Explicit opt-in to per-process session storage. See the REDIS_URL rule below.
+  ALLOW_IN_MEMORY_SESSIONS: z.enum(['true', 'false']).default('false'),
 }).superRefine((env, ctx) => {
   if (!env.DATABASE_URL && !env.POSTGRES_URL) {
     ctx.addIssue({
@@ -40,12 +42,39 @@ const serverEnvSchema = z.object({
         message: 'Production requires an explicit CORS allow-list and cannot use *.',
       });
     }
+
   }
 });
 
+/**
+ * Production must not accept the REDIS_URL default.
+ *
+ * The default points at localhost, which in production is silently wrong: the
+ * connection fails, sessions fall back to per-process memory, and then every user is
+ * signed out by a restart while a token issued by one replica is unknown to the
+ * others. Neither symptom appears in a health check.
+ *
+ * This lives outside the Zod schema because superRefine only sees values after
+ * defaults are applied, so it cannot tell "explicitly set to the default" from
+ * "never set at all". That distinction is the whole point of the check.
+ */
+function checkProductionRedis(rawEnv, parsed) {
+  if (parsed.NODE_ENV !== 'production') return null;
+  if (parsed.ALLOW_IN_MEMORY_SESSIONS === 'true') return null;
+  const provided = typeof rawEnv.REDIS_URL === 'string' && rawEnv.REDIS_URL.trim().length > 0;
+  if (provided) return null;
+  return 'REDIS_URL: Production requires an explicit REDIS_URL, because sessions are stored there. '
+    + 'Set ALLOW_IN_MEMORY_SESSIONS=true only for a single-process deployment that accepts signing '
+    + 'every user out on restart.';
+}
+
 export function validateServerEnv(rawEnv = process.env) {
   const result = serverEnvSchema.safeParse(rawEnv);
-  if (result.success) return result.data;
+  if (result.success) {
+    const redisIssue = checkProductionRedis(rawEnv, result.data);
+    if (redisIssue) throw new Error(`Invalid server environment: ${redisIssue}`);
+    return result.data;
+  }
 
   const details = result.error.issues
     .map((issue) => `${issue.path.join('.') || 'environment'}: ${issue.message}`)
