@@ -145,6 +145,20 @@ record(
   `status ${forgedToken.status}`,
 );
 
+// The server authenticates ONLY via Authorization: Bearer -- there is no session
+// cookie. Any client that omits the header gets 401 on submit, which is exactly what
+// the problem page did until the token was wired into its API layer. This assertion
+// pins the contract so the omission cannot come back unnoticed.
+const submitNoAuth = await call('/api/learning/submit', {
+  method: 'POST',
+  body: { problem_id: problem.id, language: 'javascript', code: CORRECT_JS },
+});
+record(
+  'authz: submit without an Authorization header is rejected',
+  submitNoAuth.status === 401,
+  `status ${submitNoAuth.status} — the UI must send Bearer; there is no cookie fallback`,
+);
+
 // --- submission verdicts ----------------------------------------------------
 const accepted = await call('/api/learning/submit', {
   method: 'POST', token, body: { problem_id: problem.id, language: 'javascript', code: CORRECT_JS },
@@ -179,12 +193,14 @@ record(
   `${threw.body.status} ${threw.body.pass_count}/${threw.body.total_cases}`,
 );
 
+// A compile error must say so. It used to be folded into 'Runtime Error', which
+// sends a user with a missing semicolon off debugging logic instead of syntax.
 const compileError = await call('/api/learning/submit', {
   method: 'POST', token, body: { problem_id: problem.id, language: 'cpp', code: CPP_SYNTAX_ERROR },
 });
 record(
-  'submit: uncompilable C++ is reported as a Compilation Error',
-  compileError.body.status === 'Compilation Error' || compileError.body.status === 'Runtime Error',
+  'submit: uncompilable C++ is reported as Compilation Error, not Runtime Error',
+  compileError.body.status === 'Compilation Error',
   `${compileError.body.status} — ${String(compileError.body.failed_test_case?.message || '').slice(0, 120)}`,
 );
 
