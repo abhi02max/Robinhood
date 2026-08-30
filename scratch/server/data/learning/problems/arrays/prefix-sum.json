@@ -1,0 +1,572 @@
+{
+  "$schema": "../../problem.schema.json",
+  "schema_version": "2.0",
+  "topic_slug": "arrays",
+  "pattern_slug": "prefix-sum",
+  "problems": [
+    {
+      "slug": "running-sum-of-1d-array",
+      "title": "Running Sum of 1d Array",
+      "difficulty": "Easy",
+      "tags": ["arrays", "prefix-sum", "array-traversal"],
+      "companies": ["Amazon", "Google"],
+      "description": "Given an array `nums`, return its *running sum*. The running sum is the array `out` where `out[i]` is the sum of `nums[0] + nums[1] + ... + nums[i]`.\n\nThis is the prefix-sum array itself, and building it is the first step of almost every other problem in this pattern. Do it in one pass, reusing the previous total rather than re-summing the prefix each time.",
+      "real_world_analogy": "A bank statement with a running balance column. Each row does not re-add every past transaction — it takes yesterday's balance and applies today's single change. That is exactly the recurrence out[i] = out[i-1] + nums[i].",
+      "examples": [
+        {
+          "input": "nums = [1,2,3,4]",
+          "output": "[1,3,6,10]",
+          "explanation": "Running sum is [1, 1+2, 1+2+3, 1+2+3+4] = [1,3,6,10]."
+        },
+        {
+          "input": "nums = [1,1,1,1,1]",
+          "output": "[1,2,3,4,5]",
+          "explanation": "Adding one each step, so the running sum counts the elements seen so far."
+        },
+        {
+          "input": "nums = [3,1,2,10,1]",
+          "output": "[3,4,6,16,17]",
+          "explanation": "The large jump at index 3 comes from the single element 10; nothing before it is recomputed."
+        },
+        {
+          "input": "nums = [-1,-2,-3]",
+          "output": "[-1,-3,-6]",
+          "explanation": "Negative inputs are no special case — the accumulator simply decreases."
+        }
+      ],
+      "constraints": [
+        "1 <= nums.length <= 1000",
+        "-10^6 <= nums[i] <= 10^6"
+      ],
+      "edge_cases": [
+        "Single element — the running sum is the array itself",
+        "All negatives — the running sum decreases monotonically",
+        "Values that cancel to zero, so the running sum returns to a previous value",
+        "Mixed signs, where the running sum is not monotonic in either direction"
+      ],
+      "hints": [
+        "You never need to look further back than one position. What is the relationship between out[i] and out[i-1]?",
+        "out[0] = nums[0], and out[i] = out[i-1] + nums[i] for every later index. That is one pass and no inner loop."
+      ],
+      "approaches": [
+        {
+          "name": "Re-Sum Each Prefix",
+          "summary": "For every index, loop from the start and add up everything to the left of it.",
+          "intuition": "The definition is literal: out[i] is the sum of the first i+1 elements, so compute exactly that for each i. It is correct and obviously so, which makes it a good baseline to check the fast version against.\n\nThe waste is visible once you write it: computing out[5] re-adds the same four numbers that out[4] just added. Each prefix costs O(i), so the total is 1 + 2 + ... + N = O(N^2).",
+          "steps": [
+            "Create an empty output array.",
+            "For each index i, set total = 0 and add nums[j] for every j from 0 to i.",
+            "Append total to the output.",
+            "Return the output array."
+          ],
+          "code": {
+            "javascript": "function runningSum(nums) {\n  const out = [];\n  for (let i = 0; i < nums.length; i++) {\n    let total = 0;\n    for (let j = 0; j <= i; j++) total += nums[j];\n    out.push(total);\n  }\n  return out;\n}",
+            "python": "def running_sum(nums):\n    out = []\n    for i in range(len(nums)):\n        total = 0\n        for j in range(i + 1):\n            total += nums[j]\n        out.append(total)\n    return out"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Single Pass Accumulation",
+          "summary": "Carry one running total and append it after each element.",
+          "intuition": "Every prefix sum contains the previous prefix sum as a sub-part, so there is no reason to recompute it. Keep one accumulator, add the current element, and record the accumulator.\n\nThis is the prefix-sum array, and it is worth naming what it buys you elsewhere: once you have it, the sum of any range [l, r] is prefix[r] - prefix[l-1] in constant time. Every other problem in this pattern is an application of that identity.",
+          "steps": [
+            "Set total = 0 and create an empty output array.",
+            "For each element in order, add it to total.",
+            "Append the current value of total to the output.",
+            "Return the output array."
+          ],
+          "code": {
+            "javascript": "function runningSum(nums) {\n  const out = [];\n  let total = 0;\n  for (const value of nums) {\n    total += value;\n    out.push(total);\n  }\n  return out;\n}",
+            "python": "def running_sum(nums):\n    out = []\n    total = 0\n    for value in nums:\n        total += value\n        out.append(total)\n    return out"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(N)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function runningSum(nums) {\n  // Your code here\n}",
+        "python": "def running_sum(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> runningSum(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "runningSum",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<int>"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": {"nums":[1,2,3,4]}, "expected_output": [1,3,6,10], "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[1,1,1,1,1]}, "expected_output": [1,2,3,4,5], "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[3,1,2,10,1]}, "expected_output": [3,4,6,16,17], "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[-1,-2,-3]}, "expected_output": [-1,-3,-6], "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[7]}, "expected_output": [7], "is_hidden": true, "order_index": 5, "label": "single element" },
+        { "input_payload": {"nums":[0,0,0,0]}, "expected_output": [0,0,0,0], "is_hidden": true, "order_index": 6, "label": "all zeros" },
+        { "input_payload": {"nums":[5,-5,5,-5]}, "expected_output": [5,0,5,0], "is_hidden": true, "order_index": 7, "label": "running sum returns to a previous value" },
+        { "input_payload": {"nums":[-1000000,1000000]}, "expected_output": [-1000000,0], "is_hidden": true, "order_index": 8, "label": "constraint boundary values" },
+        { "input_payload": {"nums":[2,-1,0,4,-6,3]}, "expected_output": [2,1,1,5,-1,2], "is_hidden": true, "order_index": 9, "label": "mixed signs, non-monotonic" },
+        { "input_payload": {"nums":[100,200,300,400,500,600]}, "expected_output": [100,300,600,1000,1500,2100], "is_hidden": true, "order_index": 10, "label": "strictly increasing" },
+        { "input_payload": {"nums":[-4,4,-4,4,-4,4,-4]}, "expected_output": [-4,0,-4,0,-4,0,-4], "is_hidden": true, "order_index": 11, "label": "alternating cancellation, odd length" },
+        { "input_payload": {"nums":[1,0,-1,0,1,0,-1,0,1]}, "expected_output": [1,1,0,0,1,1,0,0,1], "is_hidden": true, "order_index": 12, "label": "oscillating around zero" }
+      ]
+    },
+    {
+      "slug": "find-pivot-index",
+      "title": "Find Pivot Index",
+      "difficulty": "Easy",
+      "tags": ["arrays", "prefix-sum", "array-traversal"],
+      "companies": ["Amazon", "Facebook"],
+      "description": "Given an array of integers `nums`, return the leftmost *pivot index*: the index where the sum of all elements strictly to its left equals the sum of all elements strictly to its right.\n\nThe element at the pivot index itself belongs to neither side. If the index is 0 the left sum is 0, and if it is the last index the right sum is 0. Return `-1` if no such index exists.",
+      "real_world_analogy": "Balancing a loaded plank on a single support. You slide the support along and ask whether the weight sitting to the left of it matches the weight to the right; the plank section directly over the support counts for neither side.",
+      "examples": [
+        {
+          "input": "nums = [1,7,3,6,5,6]",
+          "output": "3",
+          "explanation": "Left of index 3 is 1+7+3 = 11 and right is 5+6 = 11. The element 6 at index 3 counts for neither side."
+        },
+        {
+          "input": "nums = [1,2,3]",
+          "output": "-1",
+          "explanation": "No index balances: the candidates give left/right of 0/5, 1/3 and 3/0."
+        },
+        {
+          "input": "nums = [2,1,-1]",
+          "output": "0",
+          "explanation": "At index 0 the left sum is the empty sum 0, and the right sum is 1 + (-1) = 0."
+        },
+        {
+          "input": "nums = [-1,-1,-1,-1,-1,0]",
+          "output": "2",
+          "explanation": "Left of index 2 is -2 and right is -1-1+0 = -2. Negative sums balance the same way positive ones do."
+        }
+      ],
+      "constraints": [
+        "1 <= nums.length <= 10^4",
+        "-1000 <= nums[i] <= 1000"
+      ],
+      "edge_cases": [
+        "Pivot at index 0, where the left sum is the empty sum 0",
+        "Pivot at the last index, where the right sum is the empty sum 0",
+        "No pivot exists at all — must return -1",
+        "Several valid pivots — the leftmost one must be returned",
+        "Negative numbers, which mean sums are not monotonic as the pivot moves right"
+      ],
+      "hints": [
+        "Sum the whole array once. If you know the total and the sum of everything left of index i, can you get the right sum without another loop?",
+        "right = total - left - nums[i]. Walk i from left to right maintaining left, and check left == total - left - nums[i] at each step.",
+        "Update left only *after* testing index i, because the element at the pivot is excluded from both sides."
+      ],
+      "approaches": [
+        {
+          "name": "Recompute Both Sides",
+          "summary": "For each candidate index, sum everything to its left and everything to its right from scratch.",
+          "intuition": "Translate the definition directly: for each index, run two inner loops and compare the two totals. The first index where they match is the answer.\n\nThis is O(N^2) because each candidate re-walks the array. It is worth writing once, because it makes the exclusion rule concrete — neither inner loop ever touches nums[i] itself, which is the detail most first attempts get wrong.",
+          "steps": [
+            "For each index i from 0 to N-1:",
+            "Sum nums[0..i-1] into left.",
+            "Sum nums[i+1..N-1] into right.",
+            "If left equals right, return i immediately — it is the leftmost such index.",
+            "If the loop finishes with no match, return -1."
+          ],
+          "code": {
+            "javascript": "function pivotIndex(nums) {\n  for (let i = 0; i < nums.length; i++) {\n    let left = 0;\n    for (let j = 0; j < i; j++) left += nums[j];\n    let right = 0;\n    for (let j = i + 1; j < nums.length; j++) right += nums[j];\n    if (left === right) return i;\n  }\n  return -1;\n}",
+            "python": "def pivot_index(nums):\n    n = len(nums)\n    for i in range(n):\n        left = 0\n        for j in range(i):\n            left += nums[j]\n        right = 0\n        for j in range(i + 1, n):\n            right += nums[j]\n        if left == right:\n            return i\n    return -1"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(1)"
+        },
+        {
+          "name": "Total Minus Running Left",
+          "summary": "Compute the grand total once, then sweep left to right deriving each right sum by subtraction.",
+          "intuition": "The two sides are not independent: left + nums[i] + right = total, always. So the right sum is never worth computing directly — it is total - left - nums[i].\n\nThat turns the problem into a single sweep with one accumulator. Test index i using the left sum accumulated so far, and only then add nums[i] to it, because the pivot element is excluded from both sides. Returning on the first match satisfies the leftmost requirement for free.\n\nNote that negative values do not break this. It is tempting to think the left sum grows and the right sum shrinks so you could binary search the crossover — with negatives neither side is monotonic, and only a linear scan is correct.",
+          "steps": [
+            "Compute total as the sum of every element.",
+            "Set left = 0.",
+            "For each index i: if left equals total - left - nums[i], return i.",
+            "Otherwise add nums[i] to left and continue.",
+            "Return -1 if no index qualified."
+          ],
+          "code": {
+            "javascript": "function pivotIndex(nums) {\n  let total = 0;\n  for (const value of nums) total += value;\n  let left = 0;\n  for (let i = 0; i < nums.length; i++) {\n    if (left === total - left - nums[i]) return i;\n    left += nums[i];\n  }\n  return -1;\n}",
+            "python": "def pivot_index(nums):\n    total = sum(nums)\n    left = 0\n    for i, value in enumerate(nums):\n        if left == total - left - value:\n            return i\n        left += value\n    return -1"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function pivotIndex(nums) {\n  // Your code here\n}",
+        "python": "def pivot_index(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int pivotIndex(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "pivotIndex",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"nums":[1,7,3,6,5,6]}, "expected_output": 3, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[1,2,3]}, "expected_output": -1, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[2,1,-1]}, "expected_output": 0, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[-1,-1,-1,-1,-1,0]}, "expected_output": 2, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[0]}, "expected_output": 0, "is_hidden": true, "order_index": 5, "label": "single element, trivially balanced" },
+        { "input_payload": {"nums":[5]}, "expected_output": 0, "is_hidden": true, "order_index": 6, "label": "single non-zero element still balances at index 0" },
+        { "input_payload": {"nums":[0,0,0,0]}, "expected_output": 0, "is_hidden": true, "order_index": 7, "label": "all zeros — leftmost must win" },
+        { "input_payload": {"nums":[1,-1,0,1,-1]}, "expected_output": 2, "is_hidden": true, "order_index": 8, "label": "multiple valid pivots" },
+        { "input_payload": {"nums":[8,4,4]}, "expected_output": -1, "is_hidden": true, "order_index": 9, "label": "pivot at the last index, empty right side" },
+        { "input_payload": {"nums":[1000,1000,1000]}, "expected_output": 1, "is_hidden": true, "order_index": 10, "label": "constraint boundary magnitudes" },
+        { "input_payload": {"nums":[-1000,1000,-1000,1000]}, "expected_output": -1, "is_hidden": true, "order_index": 11, "label": "no pivot with large alternating values" },
+        { "input_payload": {"nums":[2,3,-1,8,4]}, "expected_output": 3, "is_hidden": true, "order_index": 12, "label": "pivot found only in the middle" }
+      ]
+    },
+    {
+      "slug": "subarray-sum-equals-k",
+      "title": "Subarray Sum Equals K",
+      "difficulty": "Medium",
+      "tags": ["arrays", "prefix-sum", "hash-map", "counting"],
+      "companies": ["Facebook", "Amazon", "Google", "Microsoft"],
+      "description": "Given an integer array `nums` and an integer `k`, return the **number of contiguous subarrays** whose elements sum to exactly `k`.\n\nThe array may contain negative numbers and zeros, so a longer subarray is not necessarily a larger sum. That single fact rules out the sliding-window approach that works for all-positive input, and is what makes this the defining problem of the prefix-sum-with-hash-map pattern.",
+      "real_world_analogy": "You have a ledger of daily balance readings and want to count every stretch of days over which the balance changed by exactly k. Two readings that differ by k bracket exactly one such stretch, so you count pairs of readings, not the stretches themselves.",
+      "examples": [
+        {
+          "input": "nums = [1,1,1], k = 2",
+          "output": "2",
+          "explanation": "The subarrays [1,1] at indices 0-1 and 1-2 both sum to 2. They overlap, and both count."
+        },
+        {
+          "input": "nums = [1,2,3], k = 3",
+          "output": "2",
+          "explanation": "[1,2] and the single element [3] both sum to 3."
+        },
+        {
+          "input": "nums = [1,-1,0], k = 0",
+          "output": "3",
+          "explanation": "[1,-1], [0] and [1,-1,0] all sum to 0. Negatives and zeros are why a sliding window cannot solve this."
+        },
+        {
+          "input": "nums = [3,4,7,2,-3,1,4,2], k = 7",
+          "output": "4",
+          "explanation": "[3,4], [7], [7,2,-3,1] and [1,4,2] each sum to 7."
+        }
+      ],
+      "constraints": [
+        "1 <= nums.length <= 2 * 10^4",
+        "-1000 <= nums[i] <= 1000",
+        "-10^7 <= k <= 10^7"
+      ],
+      "edge_cases": [
+        "k = 0 with zeros in the array, which creates many valid subarrays",
+        "Negative numbers, which make the running sum non-monotonic",
+        "The whole array is the only answer",
+        "Overlapping answers that must each be counted separately",
+        "No subarray sums to k — the answer is 0",
+        "Single element equal to k, and single element not equal to k"
+      ],
+      "hints": [
+        "Write the sum of the subarray from i to j in terms of prefix sums. What has to be true about prefix[j] and prefix[i-1]?",
+        "sum(i..j) = prefix[j] - prefix[i-1], so you need prefix[i-1] = prefix[j] - k. As you sweep j, how many earlier prefixes had that exact value?",
+        "Keep a hash map from prefix-sum value to how many times it has occurred, seeded with {0: 1} so a subarray starting at index 0 is counted. At each j, add map[prefix - k] to the answer, then record prefix.",
+        "Seeding with {0: 1} is not a trick — the empty prefix genuinely has sum 0 and genuinely precedes index 0."
+      ],
+      "approaches": [
+        {
+          "name": "All Subarrays with a Running Sum",
+          "summary": "Fix each start index and extend the end index, accumulating the sum and counting every time it hits k.",
+          "intuition": "Every contiguous subarray is one (start, end) pair, so enumerate them. Extending the end by one only adds one element, so each pair costs O(1) if you carry the sum — that is O(N^2) overall rather than O(N^3).\n\nThis version is worth keeping in mind because it is trivially correct even with negatives and zeros, which is exactly where faster-looking approaches go wrong. At N = 2*10^4 it is around 4*10^8 additions, too slow, but it is the oracle the optimal solution has to match.",
+          "steps": [
+            "Set count = 0.",
+            "For each start index i, set sum = 0.",
+            "For each end index j from i to N-1, add nums[j] to sum.",
+            "If sum equals k, increment count.",
+            "Return count."
+          ],
+          "code": {
+            "javascript": "function subarraySum(nums, k) {\n  let count = 0;\n  for (let i = 0; i < nums.length; i++) {\n    let sum = 0;\n    for (let j = i; j < nums.length; j++) {\n      sum += nums[j];\n      if (sum === k) count++;\n    }\n  }\n  return count;\n}",
+            "python": "def subarray_sum(nums, k):\n    count = 0\n    n = len(nums)\n    for i in range(n):\n        total = 0\n        for j in range(i, n):\n            total += nums[j]\n            if total == k:\n                count += 1\n    return count"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(1)"
+        },
+        {
+          "name": "Prefix Sums in a Hash Map",
+          "summary": "Sweep once, and at each position count how many earlier prefix sums are exactly k below the current one.",
+          "intuition": "Let prefix[j] be the sum of nums[0..j]. The sum of the subarray ending at j and starting at i is prefix[j] - prefix[i-1]. Asking for that to equal k is asking for prefix[i-1] = prefix[j] - k.\n\nSo the question \"how many subarrays ending at j sum to k\" becomes \"how many earlier prefix values equal prefix[j] - k\", which a hash map answers in O(1). Sum that over all j and you have the total, in one pass.\n\nTwo details carry the correctness. First, the map is seeded with {0: 1}: the empty prefix has sum 0 and sits before index 0, so a subarray starting at the very beginning is counted like any other. Second, you must look up *before* inserting prefix[j], otherwise a k of 0 counts the empty subarray ending at j.\n\nWhy not a sliding window? A window relies on the sum growing when you extend right and shrinking when you shrink left. With negatives and zeros neither holds, so there is no monotonic quantity to steer the window with. Counting prefix pairs never assumes monotonicity.",
+          "steps": [
+            "Create a map seeded with {0: 1} and set prefix = 0, count = 0.",
+            "For each element: add it to prefix.",
+            "Add map[prefix - k] (or 0 if absent) to count.",
+            "Increment map[prefix] by one.",
+            "Return count."
+          ],
+          "code": {
+            "javascript": "function subarraySum(nums, k) {\n  const seen = new Map([[0, 1]]);\n  let prefix = 0;\n  let count = 0;\n  for (const value of nums) {\n    prefix += value;\n    count += seen.get(prefix - k) || 0;\n    seen.set(prefix, (seen.get(prefix) || 0) + 1);\n  }\n  return count;\n}",
+            "python": "def subarray_sum(nums, k):\n    seen = {0: 1}\n    prefix = 0\n    count = 0\n    for value in nums:\n        prefix += value\n        count += seen.get(prefix - k, 0)\n        seen[prefix] = seen.get(prefix, 0) + 1\n    return count"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(N)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function subarraySum(nums, k) {\n  // Your code here\n}",
+        "python": "def subarray_sum(nums, k):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int subarraySum(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "subarraySum",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": {"nums":[1,1,1],"k":2}, "expected_output": 2, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[1,2,3],"k":3}, "expected_output": 2, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[1,-1,0],"k":0}, "expected_output": 3, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[3,4,7,2,-3,1,4,2],"k":7}, "expected_output": 4, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[5],"k":5}, "expected_output": 1, "is_hidden": true, "order_index": 5, "label": "single element equal to k" },
+        { "input_payload": {"nums":[5],"k":3}, "expected_output": 0, "is_hidden": true, "order_index": 6, "label": "single element, no answer" },
+        { "input_payload": {"nums":[0,0,0,0],"k":0}, "expected_output": 10, "is_hidden": true, "order_index": 7, "label": "k = 0 with all zeros — every subarray qualifies" },
+        { "input_payload": {"nums":[1,2,3,4,5],"k":100}, "expected_output": 0, "is_hidden": true, "order_index": 8, "label": "k larger than the total" },
+        { "input_payload": {"nums":[-1,-1,1],"k":0}, "expected_output": 1, "is_hidden": true, "order_index": 9, "label": "negatives only reaching zero" },
+        { "input_payload": {"nums":[1,2,3,4,5],"k":15}, "expected_output": 1, "is_hidden": true, "order_index": 10, "label": "the whole array is the only answer" },
+        { "input_payload": {"nums":[28,54,7,-70,22,65,-6],"k":100}, "expected_output": 1, "is_hidden": true, "order_index": 11, "label": "answer spans a negative dip" },
+        { "input_payload": {"nums":[1,-1,1,-1,1,-1,1,-1],"k":0}, "expected_output": 16, "is_hidden": true, "order_index": 12, "label": "many overlapping zero-sum windows" },
+        { "input_payload": {"nums":[1000,-1000,1000,-1000,1000],"k":1000}, "expected_output": 6, "is_hidden": true, "order_index": 13, "label": "boundary magnitudes, repeated prefixes" }
+      ]
+    },
+    {
+      "slug": "product-of-array-except-self",
+      "title": "Product of Array Except Self",
+      "difficulty": "Medium",
+      "tags": ["arrays", "prefix-sum", "prefix-product", "array-traversal"],
+      "companies": ["Amazon", "Facebook", "Microsoft", "Apple"],
+      "description": "Given an integer array `nums`, return an array `out` where `out[i]` is the product of every element of `nums` **except** `nums[i]`.\n\nYou must solve it **without using division** and in `O(N)` time. Division looks like an easy shortcut until the array contains a zero, at which point the shortcut needs so many special cases that the prefix approach is simpler as well as safer.",
+      "real_world_analogy": "Assembling a relay result for each runner: how fast was the team without you? Instead of re-timing the whole team for every runner, you keep a cumulative time for everyone before them and everyone after them, then combine the two.",
+      "examples": [
+        {
+          "input": "nums = [1,2,3,4]",
+          "output": "[24,12,8,6]",
+          "explanation": "out[0] = 2*3*4 = 24, out[1] = 1*3*4 = 12, out[2] = 1*2*4 = 8, out[3] = 1*2*3 = 6."
+        },
+        {
+          "input": "nums = [-1,1,0,-3,3]",
+          "output": "[0,0,9,0,0]",
+          "explanation": "One zero, so every slot except the zero's own is 0. At the zero's index the answer is -1*1*-3*3 = 9."
+        },
+        {
+          "input": "nums = [2,3]",
+          "output": "[3,2]",
+          "explanation": "The smallest allowed input: each answer is simply the other element."
+        },
+        {
+          "input": "nums = [0,0,5]",
+          "output": "[0,0,0]",
+          "explanation": "Two zeros, so every product excluding one index still contains the other zero."
+        }
+      ],
+      "constraints": [
+        "2 <= nums.length <= 10^5",
+        "-30 <= nums[i] <= 30",
+        "The product of any prefix or suffix fits in a 32-bit integer"
+      ],
+      "edge_cases": [
+        "Exactly one zero — every position except that one becomes 0",
+        "Two or more zeros — the whole output is 0",
+        "Negative values, where the sign of the answer depends on how many negatives are excluded",
+        "Two-element array, the smallest allowed input, where each output is just the other element",
+        "Ones, which leave the product unchanged and expose off-by-one errors in the sweeps"
+      ],
+      "hints": [
+        "The answer for index i is (product of everything to its left) times (product of everything to its right). Both of those are prefix-style quantities.",
+        "Build a left-product sweep and a right-product sweep, then multiply them position by position. That is O(N) time using O(N) extra arrays.",
+        "You can drop the extra arrays: write the left products into the output array during a forward pass, then walk backwards carrying a single running right product and multiply it in. O(1) extra space beyond the output."
+      ],
+      "approaches": [
+        {
+          "name": "Multiply Everything Else",
+          "summary": "For each index, loop over the whole array multiplying every element except the one at that index.",
+          "intuition": "The definition again, taken literally and with no division: for each output slot, walk the array and skip yourself. Correct for zeros and negatives without any special handling, because nothing is ever divided or inverted.\n\nThe cost is O(N^2), which fails at N = 10^5, but it is the oracle for the fast version — and unlike the division trick it never has to ask how many zeros there are.",
+          "steps": [
+            "Create an output array of the same length.",
+            "For each index i, set product = 1.",
+            "For each index j, multiply product by nums[j] whenever j is not i.",
+            "Store product at out[i].",
+            "Return out."
+          ],
+          "code": {
+            "javascript": "function productExceptSelf(nums) {\n  const out = [];\n  for (let i = 0; i < nums.length; i++) {\n    let product = 1;\n    for (let j = 0; j < nums.length; j++) {\n      if (j !== i) product *= nums[j];\n    }\n    out.push(product);\n  }\n  return out;\n}",
+            "python": "def product_except_self(nums):\n    out = []\n    n = len(nums)\n    for i in range(n):\n        product = 1\n        for j in range(n):\n            if j != i:\n                product *= nums[j]\n        out.append(product)\n    return out"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Prefix and Suffix Products in One Array",
+          "summary": "Forward pass writes the product of everything to the left; backward pass multiplies in the product of everything to the right.",
+          "intuition": "Split the answer at index i: out[i] = left[i] * right[i], where left[i] is the product of nums[0..i-1] and right[i] is the product of nums[i+1..N-1]. Each of those is a one-pass cumulative product, exactly like a prefix sum with multiplication in place of addition.\n\nThe space trick is to notice the two passes never need to be resident at once. The forward pass fills out[] with left products. Then the backward pass carries a single scalar holding the running product of everything to the right, multiplies it into out[i], and only then folds nums[i] into that scalar — the same \"use before update\" discipline as the pivot-index problem, and for the same reason: nums[i] must not appear in its own answer.\n\nWhy avoid division? out[i] = total / nums[i] breaks on any zero, and patching it means counting zeros and branching on zero, one and many. The two-sweep version has no special cases at all: with one zero the left or right product is zero everywhere it should be, and with two zeros everything is zero, automatically.",
+          "steps": [
+            "Create out with the same length as nums.",
+            "Forward pass: carry left = 1, and for each i set out[i] = left, then multiply left by nums[i].",
+            "Backward pass: carry right = 1, and for each i from the end, multiply out[i] by right, then multiply right by nums[i].",
+            "Return out."
+          ],
+          "code": {
+            "javascript": "function productExceptSelf(nums) {\n  const n = nums.length;\n  const out = new Array(n);\n  let left = 1;\n  for (let i = 0; i < n; i++) {\n    out[i] = left;\n    left *= nums[i];\n  }\n  let right = 1;\n  for (let i = n - 1; i >= 0; i--) {\n    out[i] *= right;\n    right *= nums[i];\n  }\n  return out;\n}",
+            "python": "def product_except_self(nums):\n    n = len(nums)\n    out = [1] * n\n    left = 1\n    for i in range(n):\n        out[i] = left\n        left *= nums[i]\n    right = 1\n    for i in range(n - 1, -1, -1):\n        out[i] *= right\n        right *= nums[i]\n    return out"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function productExceptSelf(nums) {\n  // Your code here\n}",
+        "python": "def product_except_self(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> productExceptSelf(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "productExceptSelf",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<int>"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"nums":[1,2,3,4]}, "expected_output": [24,12,8,6], "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[-1,1,0,-3,3]}, "expected_output": [0,0,9,0,0], "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[2,3]}, "expected_output": [3,2], "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[0,0,5]}, "expected_output": [0,0,0], "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[1,1,1,1]}, "expected_output": [1,1,1,1], "is_hidden": true, "order_index": 5, "label": "all ones" },
+        { "input_payload": {"nums":[-2,-3,-4]}, "expected_output": [12,8,6], "is_hidden": true, "order_index": 6, "label": "all negative, odd count" },
+        { "input_payload": {"nums":[-2,-3]}, "expected_output": [-3,-2], "is_hidden": true, "order_index": 7, "label": "all negative, even count" },
+        { "input_payload": {"nums":[30,30,30]}, "expected_output": [900,900,900], "is_hidden": true, "order_index": 8, "label": "constraint boundary magnitudes" },
+        { "input_payload": {"nums":[5,0]}, "expected_output": [0,5], "is_hidden": true, "order_index": 9, "label": "zero in a two-element array" },
+        { "input_payload": {"nums":[1,-1,1,-1,1,-1]}, "expected_output": [-1,1,-1,1,-1,1], "is_hidden": true, "order_index": 10, "label": "alternating signs" },
+        { "input_payload": {"nums":[7,3,1,2,9,4]}, "expected_output": [216,504,1512,756,168,378], "is_hidden": true, "order_index": 11, "label": "no zeros, no repeats" },
+        { "input_payload": {"nums":[0,1,2,3,0]}, "expected_output": [0,0,0,0,0], "is_hidden": true, "order_index": 12, "label": "zeros at both ends" }
+      ]
+    },
+    {
+      "slug": "contiguous-array",
+      "title": "Contiguous Array",
+      "difficulty": "Medium",
+      "tags": ["arrays", "prefix-sum", "hash-map", "binary-array"],
+      "companies": ["Facebook", "Amazon"],
+      "description": "Given a binary array `nums` containing only `0` and `1`, return the length of the **longest contiguous subarray with an equal number of 0s and 1s**.\n\nThe trick is a change of variable. Counting two things and comparing them is awkward; treating `0` as `-1` turns \"equally many 0s and 1s\" into the single condition \"sums to zero\", which prefix sums handle directly.",
+      "real_world_analogy": "A tug-of-war scoreboard where each pull moves the rope one step left or right. You want the longest stretch of pulls that ended exactly where it started — the rope back at the centre line, however far it wandered in between.",
+      "examples": [
+        {
+          "input": "nums = [0,1]",
+          "output": "2",
+          "explanation": "The whole array has one 0 and one 1. This is the case that fails if the map is not seeded with balance 0 at index -1."
+        },
+        {
+          "input": "nums = [0,1,0]",
+          "output": "2",
+          "explanation": "Both [0,1] and [1,0] are balanced and length 2; no length-3 subarray can balance because 3 is odd."
+        },
+        {
+          "input": "nums = [0,0,1,0,0,0,1,1]",
+          "output": "6",
+          "explanation": "The stretch from index 2 to 7 holds three 0s and three 1s."
+        },
+        {
+          "input": "nums = [1,1,1]",
+          "output": "0",
+          "explanation": "No zeros at all, so no subarray can balance and the answer is 0."
+        }
+      ],
+      "constraints": [
+        "1 <= nums.length <= 10^5",
+        "nums[i] is either 0 or 1"
+      ],
+      "edge_cases": [
+        "No balanced subarray exists — the answer is 0",
+        "The entire array is balanced",
+        "All zeros or all ones, where the answer is 0",
+        "Balance returning to a value seen much earlier, so the first occurrence must be kept",
+        "Odd-length array, where the answer must be even"
+      ],
+      "hints": [
+        "Replace every 0 with -1. What does \"equal numbers of 0s and 1s\" become in terms of the sum of the subarray?",
+        "It becomes a sum of exactly 0, so you need two prefix sums that are equal: prefix[j] == prefix[i-1] means the stretch between them is balanced.",
+        "Store the FIRST index at which each prefix value occurred, and when you see that value again take the distance. Later occurrences give shorter subarrays, so overwriting the stored index loses the answer.",
+        "Seed the map with prefix 0 at index -1 so a balanced subarray starting at index 0 measures correctly."
+      ],
+      "approaches": [
+        {
+          "name": "Check Every Subarray",
+          "summary": "For each start index, extend right while tracking the running balance, recording the length whenever the balance is zero.",
+          "intuition": "Enumerate all O(N^2) subarrays and keep a running count of ones minus zeros so each extension costs O(1). Whenever that count is zero the subarray is balanced, so compare its length against the best so far.\n\nCorrect and easy to trust, and it makes the -1 substitution obvious: the only thing the loop actually tracks is a single balance number, not two separate counts.",
+          "steps": [
+            "Set best = 0.",
+            "For each start index i, set balance = 0.",
+            "For each end index j from i, add +1 for a 1 and -1 for a 0.",
+            "If balance is 0, update best with j - i + 1.",
+            "Return best."
+          ],
+          "code": {
+            "javascript": "function findMaxLength(nums) {\n  let best = 0;\n  for (let i = 0; i < nums.length; i++) {\n    let balance = 0;\n    for (let j = i; j < nums.length; j++) {\n      balance += nums[j] === 1 ? 1 : -1;\n      if (balance === 0 && j - i + 1 > best) best = j - i + 1;\n    }\n  }\n  return best;\n}",
+            "python": "def find_max_length(nums):\n    best = 0\n    n = len(nums)\n    for i in range(n):\n        balance = 0\n        for j in range(i, n):\n            balance += 1 if nums[j] == 1 else -1\n            if balance == 0 and j - i + 1 > best:\n                best = j - i + 1\n    return best"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(1)"
+        },
+        {
+          "name": "First-Occurrence Map of the Running Balance",
+          "summary": "Track the running balance and remember the earliest index at which each balance value appeared.",
+          "intuition": "With 0 read as -1, the running balance after index j is a prefix sum. A subarray (i..j) is balanced exactly when prefix[j] == prefix[i-1], because the difference between the two prefixes is the subarray sum, and that has to be 0.\n\nSo the algorithm is: sweep once, and each time the current balance has been seen before, the stretch from just after that earlier position to here is balanced. To make it the *longest* such stretch, the map must hold the **first** index where each balance occurred — overwriting with later indices yields shorter answers. That \"insert only if absent\" line is the whole difference between a correct and an almost-correct solution.\n\nThe seed is prefix 0 at index -1, which encodes the empty prefix. Without it, an array like [0,1] never matches and the answer comes back 0 instead of 2.\n\nThe answer is always even, which is a useful sanity check: a balanced subarray has as many 0s as 1s, so its length is twice the count of either.",
+          "steps": [
+            "Create a map holding balance 0 at index -1, set balance = 0 and best = 0.",
+            "For each index i: add +1 for a 1 and -1 for a 0.",
+            "If the map already holds this balance, update best with i minus the stored index.",
+            "Otherwise store this balance with index i — first occurrence only.",
+            "Return best."
+          ],
+          "code": {
+            "javascript": "function findMaxLength(nums) {\n  const firstIndex = new Map([[0, -1]]);\n  let balance = 0;\n  let best = 0;\n  for (let i = 0; i < nums.length; i++) {\n    balance += nums[i] === 1 ? 1 : -1;\n    if (firstIndex.has(balance)) {\n      const length = i - firstIndex.get(balance);\n      if (length > best) best = length;\n    } else {\n      firstIndex.set(balance, i);\n    }\n  }\n  return best;\n}",
+            "python": "def find_max_length(nums):\n    first_index = {0: -1}\n    balance = 0\n    best = 0\n    for i, value in enumerate(nums):\n        balance += 1 if value == 1 else -1\n        if balance in first_index:\n            length = i - first_index[balance]\n            if length > best:\n                best = length\n        else:\n            first_index[balance] = i\n    return best"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(N)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function findMaxLength(nums) {\n  // Your code here\n}",
+        "python": "def find_max_length(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findMaxLength(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "findMaxLength",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": {"nums":[0,1]}, "expected_output": 2, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[0,1,0]}, "expected_output": 2, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[0,0,1,0,0,0,1,1]}, "expected_output": 6, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[1,1,1]}, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[0]}, "expected_output": 0, "is_hidden": true, "order_index": 5, "label": "single zero" },
+        { "input_payload": {"nums":[1]}, "expected_output": 0, "is_hidden": true, "order_index": 6, "label": "single one" },
+        { "input_payload": {"nums":[0,0,0,0]}, "expected_output": 0, "is_hidden": true, "order_index": 7, "label": "all zeros" },
+        { "input_payload": {"nums":[1,0,1,0,1,0]}, "expected_output": 6, "is_hidden": true, "order_index": 8, "label": "fully alternating, whole array balanced" },
+        { "input_payload": {"nums":[1,1,0,0,1,1,0,0,1]}, "expected_output": 8, "is_hidden": true, "order_index": 9, "label": "balance revisits an early value" },
+        { "input_payload": {"nums":[0,0,0,1,1,1,0]}, "expected_output": 6, "is_hidden": true, "order_index": 10, "label": "longest run is interior" },
+        { "input_payload": {"nums":[1,1,1,1,0]}, "expected_output": 2, "is_hidden": true, "order_index": 11, "label": "heavily skewed toward ones" },
+        { "input_payload": {"nums":[0,1,1,0,1,1,1,0,0,0]}, "expected_output": 10, "is_hidden": true, "order_index": 12, "label": "answer requires the first-occurrence rule" }
+      ]
+    }
+  ]
+}

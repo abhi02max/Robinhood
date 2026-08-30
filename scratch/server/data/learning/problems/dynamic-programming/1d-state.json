@@ -1,0 +1,453 @@
+{
+  "$schema": "../../problem.schema.json",
+  "schema_version": "2.0",
+  "topic_slug": "dynamic-programming",
+  "pattern_slug": "1d-state",
+  "problems": [
+    {
+      "slug": "climbing-stairs",
+      "title": "Climbing Stairs",
+      "difficulty": "Easy",
+      "tags": ["dynamic-programming", "1d-state", "counting", "fibonacci"],
+      "companies": ["Amazon", "Adobe", "Apple"],
+      "description": "You are climbing a staircase of `n` steps. Each move you may climb either **1** or **2** steps. Return the number of distinct ways to reach the top.\n\nTwo ways are distinct if the sequence of moves differs, so `1+2` and `2+1` count separately. This is the smallest problem that shows the whole DP method: name the state, find the recurrence, decide the base cases, then choose how much of the table to keep.",
+      "real_world_analogy": "Counting the routes water can take down a set of terraced steps, where each terrace can be reached only from the one directly above or the one two above. The number of routes to a terrace is the sum of the routes to those two — no route is ever counted twice, because the last hop is different.",
+      "examples": [
+        {
+          "input": "n = 2",
+          "output": "2",
+          "explanation": "Either 1+1 or a single 2-step."
+        },
+        {
+          "input": "n = 3",
+          "output": "3",
+          "explanation": "1+1+1, 1+2 and 2+1. The last two are distinct because the move order differs."
+        },
+        {
+          "input": "n = 1",
+          "output": "1",
+          "explanation": "One step, one way, and the recurrence never runs."
+        },
+        {
+          "input": "n = 5",
+          "output": "8",
+          "explanation": "Following the recurrence: 1, 2, 3, 5, 8."
+        }
+      ],
+      "constraints": [
+        "1 <= n <= 45"
+      ],
+      "edge_cases": [
+        "n = 1, where there is exactly one way",
+        "n = 2, where there are two ways and the recurrence first applies",
+        "n = 3, the first case where the answer is not simply n",
+        "The upper bound n = 45, where the answer exceeds a million and would overflow a naive 32-bit count for much larger n"
+      ],
+      "hints": [
+        "Let f(n) be the number of ways to reach step n. Your final move was either a 1-step or a 2-step. What does that tell you?",
+        "If the last move was a 1-step you were at n-1; if it was a 2-step you were at n-2. Those sets of routes are disjoint and together they are all of them, so f(n) = f(n-1) + f(n-2).",
+        "Base cases: f(1) = 1 and f(2) = 2. The recurrence only reaches back two steps, so two scalars suffice — no array is needed."
+      ],
+      "approaches": [
+        {
+          "name": "Plain Recursion",
+          "summary": "Recursively count the routes from n-1 and n-2 and add them.",
+          "intuition": "Transcribe the recurrence directly. It is the clearest statement of why the answer is a sum: the routes ending in a 1-step and the routes ending in a 2-step partition all routes, with no overlap and nothing missing.\n\nThe problem is that it recomputes the same subproblems exponentially often — f(n-2) is evaluated by both branches, and so on down. The running time is O(2^n), which is already painful around n = 40. That waste is exactly what dynamic programming removes, and seeing it here is the point of writing this version.",
+          "steps": [
+            "If n is 1, return 1.",
+            "If n is 2, return 2.",
+            "Otherwise return the count for n-1 plus the count for n-2."
+          ],
+          "code": {
+            "javascript": "function climbStairs(n) {\n  if (n === 1) return 1;\n  if (n === 2) return 2;\n  return climbStairs(n - 1) + climbStairs(n - 2);\n}",
+            "python": "def climb_stairs(n):\n    if n == 1:\n        return 1\n    if n == 2:\n        return 2\n    return climb_stairs(n - 1) + climb_stairs(n - 2)"
+          },
+          "time_complexity": "O(2^N)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Bottom-Up with Two Scalars",
+          "summary": "Iterate upward carrying only the last two counts.",
+          "intuition": "The recurrence f(n) = f(n-1) + f(n-2) reaches back a fixed distance of two, so the answer for each step depends on a bounded window of history. Evaluate it bottom-up — from the base cases toward n — and every value is already available when it is needed, so nothing is computed twice.\n\nThat alone turns O(2^n) into O(n). The second observation is about space: because the window is two wide, an array of size n is never needed. Keep `previous` = f(i-2) and `current` = f(i-1), and roll them forward. O(1) space.\n\nThe sequence is the Fibonacci numbers offset by one, which is a nice check on an implementation but not a shortcut — the reason it is Fibonacci is the two-way branch on the last move, and that reasoning is what transfers to other problems.",
+          "steps": [
+            "If n is 1 or 2, return n.",
+            "Set previous = 1 (ways to reach step 1) and current = 2 (ways to reach step 2).",
+            "For each step from 3 to n, compute next = previous + current, then shift the pair forward.",
+            "Return current."
+          ],
+          "code": {
+            "javascript": "function climbStairs(n) {\n  if (n <= 2) return n;\n  let previous = 1;\n  let current = 2;\n  for (let step = 3; step <= n; step++) {\n    const next = previous + current;\n    previous = current;\n    current = next;\n  }\n  return current;\n}",
+            "python": "def climb_stairs(n):\n    if n <= 2:\n        return n\n    previous, current = 1, 2\n    for _ in range(3, n + 1):\n        previous, current = current, previous + current\n    return current"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function climbStairs(n) {\n  // Your code here\n}",
+        "python": "def climb_stairs(n):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int climbStairs(int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "climbStairs",
+        "class": "Solution",
+        "args": [{ "name": "n", "type": "int" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"n":2}, "expected_output": 2, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"n":3}, "expected_output": 3, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"n":1}, "expected_output": 1, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"n":5}, "expected_output": 8, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"n":4}, "expected_output": 5, "is_hidden": true, "order_index": 5, "label": "first value needing two iterations" },
+        { "input_payload": {"n":6}, "expected_output": 13, "is_hidden": true, "order_index": 6, "label": "small even input" },
+        { "input_payload": {"n":7}, "expected_output": 21, "is_hidden": true, "order_index": 7, "label": "small odd input" },
+        { "input_payload": {"n":10}, "expected_output": 89, "is_hidden": true, "order_index": 8, "label": "two-digit answer" },
+        { "input_payload": {"n":20}, "expected_output": 10946, "is_hidden": true, "order_index": 9, "label": "brute force already noticeably slow" },
+        { "input_payload": {"n":30}, "expected_output": 1346269, "is_hidden": true, "order_index": 10, "label": "brute force impractical, skipped for the reference check" },
+        { "input_payload": {"n":44}, "expected_output": 1134903170, "is_hidden": true, "order_index": 11, "label": "one below the constraint boundary" },
+        { "input_payload": {"n":45}, "expected_output": 1836311903, "is_hidden": true, "order_index": 12, "label": "constraint boundary" }
+      ]
+    },
+    {
+      "slug": "min-cost-climbing-stairs",
+      "title": "Min Cost Climbing Stairs",
+      "difficulty": "Easy",
+      "tags": ["dynamic-programming", "1d-state", "minimisation"],
+      "companies": ["Amazon", "Google"],
+      "description": "You are given an array `cost` where `cost[i]` is the price of stepping on stair `i`. Once you pay for a stair you may move on by **one** or **two** stairs.\n\nYou may start at index `0` or index `1`, and the goal is to step *past* the last stair. Return the minimum total price. Note that the top is one position beyond the final index — you never pay a cost for arriving there.",
+      "real_world_analogy": "Crossing a river on stepping stones that each charge a toll. You can hop one or two stones at a time, you may start from either of the first two, and you only pay for stones you actually land on. Reaching the far bank is free.",
+      "examples": [
+        {
+          "input": "cost = [10,15,20]",
+          "output": "15",
+          "explanation": "Start at index 1, pay 15, and take a two-step past the end. Paying 10 then 20 would cost 30."
+        },
+        {
+          "input": "cost = [1,100,1,1,1,100,1,1,100,1]",
+          "output": "6",
+          "explanation": "Step on every cheap stair and hop over each 100, for six payments of 1."
+        },
+        {
+          "input": "cost = [10,15]",
+          "output": "10",
+          "explanation": "With two stairs the answer is the cheaper one — a solution that sums both returns 25."
+        },
+        {
+          "input": "cost = [0,0,0,0]",
+          "output": "0",
+          "explanation": "All free. Zero is a real cost, not an \"unset\" marker."
+        }
+      ],
+      "constraints": [
+        "2 <= cost.length <= 1000",
+        "0 <= cost[i] <= 999"
+      ],
+      "edge_cases": [
+        "Exactly two stairs, where the answer is the cheaper of the two",
+        "All costs equal, where the answer is skipping every other stair",
+        "A single very expensive stair that must be stepped over",
+        "Zero costs, which must not be mistaken for \"not yet computed\"",
+        "The last stair being expensive, which can be skipped entirely by arriving from the second-to-last"
+      ],
+      "hints": [
+        "Define the state as the cheapest way to *reach* a position, not to have finished at it. What are the two ways to reach position i?",
+        "You arrive at i from i-1 or from i-2, having paid that stair's cost: reach(i) = min(reach(i-1) + cost[i-1], reach(i-2) + cost[i-2]).",
+        "The answer is reach(n), one past the end. Both reach(0) and reach(1) are 0, because starting at either of the first two stairs is free until you step on it."
+      ],
+      "approaches": [
+        {
+          "name": "Recursive Minimum From Each Start",
+          "summary": "Recursively compute the cheapest completion from a position, taking the better of the one-step and two-step moves.",
+          "intuition": "Read it forwards: from stair i you pay cost[i], then face the same problem from i+1 or i+2, and you take whichever is cheaper. The overall answer is the better of starting at stair 0 or stair 1.\n\nCorrect, and it makes the base case unambiguous: once the index is past the last stair, the cost of finishing is 0 — which is what \"step past the last stair\" means. The cost is exponential for the same reason as Climbing Stairs, since both branches re-solve overlapping suffixes.",
+          "steps": [
+            "Define a helper that returns the cheapest completion from index i.",
+            "If i is at or beyond the array length, return 0.",
+            "Otherwise return cost[i] plus the smaller of the completions from i+1 and i+2.",
+            "Return the smaller of the completions from index 0 and index 1."
+          ],
+          "code": {
+            "javascript": "// Helpers must be top-level and declared BEFORE the entry function:\n// the grader treats the last top-level function as your entrypoint.\nfunction cheapestFrom(cost, i) {\n  if (i >= cost.length) return 0;\n  return cost[i] + Math.min(cheapestFrom(cost, i + 1), cheapestFrom(cost, i + 2));\n}\n\nfunction minCostClimbingStairs(cost) {\n  return Math.min(cheapestFrom(cost, 0), cheapestFrom(cost, 1));\n}",
+            "python": "# Helpers must be top-level and declared BEFORE the entry function:\n# the grader treats the last top-level function as your entrypoint.\ndef cheapest_from(cost, i):\n    if i >= len(cost):\n        return 0\n    return cost[i] + min(cheapest_from(cost, i + 1), cheapest_from(cost, i + 2))\n\n\ndef min_cost_climbing_stairs(cost):\n    return min(cheapest_from(cost, 0), cheapest_from(cost, 1))"
+          },
+          "time_complexity": "O(2^N)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Bottom-Up Reach Cost",
+          "summary": "Sweep forward keeping the cheapest cost to reach the previous two positions.",
+          "intuition": "Turn the recursion around. Instead of \"cheapest way to finish from here\", track \"cheapest way to have reached here\". That flip is what makes the sweep possible: reaching position i only ever depends on positions i-1 and i-2, both already computed.\n\nThe transition pays for the stair you are leaving, not the one you are arriving at: reach(i) = min(reach(i-1) + cost[i-1], reach(i-2) + cost[i-2]). Getting that off by one is the single most common error here, and the two-stair example is the quickest way to catch it — the answer must be min(cost[0], cost[1]), not their sum.\n\nreach(0) and reach(1) are both 0 because the problem lets you begin at either without paying to arrive. The answer is reach(n), one past the last index, which is why the loop runs to n inclusive.\n\nOnly two values of history are live, so two scalars replace the table: O(N) time, O(1) space.",
+          "steps": [
+            "Set twoBack = 0 and oneBack = 0, the free costs of reaching positions 0 and 1.",
+            "For each position i from 2 to n inclusive:",
+            "Compute reach = min(oneBack + cost[i-1], twoBack + cost[i-2]).",
+            "Shift twoBack = oneBack and oneBack = reach.",
+            "Return oneBack, which now holds the cost of reaching position n."
+          ],
+          "code": {
+            "javascript": "function minCostClimbingStairs(cost) {\n  let twoBack = 0;\n  let oneBack = 0;\n  for (let i = 2; i <= cost.length; i++) {\n    const reach = Math.min(oneBack + cost[i - 1], twoBack + cost[i - 2]);\n    twoBack = oneBack;\n    oneBack = reach;\n  }\n  return oneBack;\n}",
+            "python": "def min_cost_climbing_stairs(cost):\n    two_back = 0\n    one_back = 0\n    for i in range(2, len(cost) + 1):\n        reach = min(one_back + cost[i - 1], two_back + cost[i - 2])\n        two_back, one_back = one_back, reach\n    return one_back"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function minCostClimbingStairs(cost) {\n  // Your code here\n}",
+        "python": "def min_cost_climbing_stairs(cost):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minCostClimbingStairs(vector<int>& cost) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "minCostClimbingStairs",
+        "class": "Solution",
+        "args": [{ "name": "cost", "type": "vector<int>" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"cost":[10,15,20]}, "expected_output": 15, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"cost":[1,100,1,1,1,100,1,1,100,1]}, "expected_output": 6, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"cost":[10,15]}, "expected_output": 10, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"cost":[0,0,0,0]}, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"cost":[1,2]}, "expected_output": 1, "is_hidden": true, "order_index": 5, "label": "minimum length, cheaper first" },
+        { "input_payload": {"cost":[2,1]}, "expected_output": 1, "is_hidden": true, "order_index": 6, "label": "minimum length, cheaper second" },
+        { "input_payload": {"cost":[5,5,5,5,5]}, "expected_output": 10, "is_hidden": true, "order_index": 7, "label": "all equal costs" },
+        { "input_payload": {"cost":[999,0,0,999]}, "expected_output": 0, "is_hidden": true, "order_index": 8, "label": "expensive ends, free middle" },
+        { "input_payload": {"cost":[0,999,0,999,0]}, "expected_output": 0, "is_hidden": true, "order_index": 9, "label": "alternating free and expensive" },
+        { "input_payload": {"cost":[1,1,1,1,1,1,1,1,1,1,1,1]}, "expected_output": 6, "is_hidden": true, "order_index": 10, "label": "long run of equal costs" },
+        { "input_payload": {"cost":[999,999]}, "expected_output": 999, "is_hidden": true, "order_index": 11, "label": "both stairs at the cost boundary" },
+        { "input_payload": {"cost":[4,2,9,1,7,3,8,2]}, "expected_output": 8, "is_hidden": true, "order_index": 12, "label": "no obvious pattern" }
+      ]
+    },
+    {
+      "slug": "house-robber",
+      "title": "House Robber",
+      "difficulty": "Medium",
+      "tags": ["dynamic-programming", "1d-state", "maximisation", "non-adjacent"],
+      "companies": ["Amazon", "Google", "LinkedIn", "Microsoft"],
+      "description": "You are given an array `nums` where `nums[i]` is the amount of money in house `i`, all arranged along one street. You cannot rob two **adjacent** houses.\n\nReturn the maximum amount you can rob. The constraint is local — only immediate neighbours conflict — but the choice is not: taking a large house can cost you two even larger neighbours, so no greedy rule on the values alone is correct.",
+      "real_world_analogy": "Picking apples from a row of trees where picking one triggers the alarm on both trees beside it. The best haul is rarely \"take the biggest first\" — sometimes two medium trees beat one large one wedged between them.",
+      "examples": [
+        {
+          "input": "nums = [1,2,3,1]",
+          "output": "4",
+          "explanation": "Rob houses 0 and 2 for 1 + 3 = 4. Robbing house 1 (value 2) would forbid both."
+        },
+        {
+          "input": "nums = [2,7,9,3,1]",
+          "output": "12",
+          "explanation": "Rob houses 0, 2 and 4 for 2 + 9 + 1 = 12, which beats 7 + 3 = 10."
+        },
+        {
+          "input": "nums = [5]",
+          "output": "5",
+          "explanation": "One house and no adjacency to worry about."
+        },
+        {
+          "input": "nums = [2,1,1,2]",
+          "output": "4",
+          "explanation": "Both ends, skipping the two middle houses. A \"take the biggest, then recurse\" rule gets confused here because the maxima are tied."
+        }
+      ],
+      "constraints": [
+        "1 <= nums.length <= 100",
+        "0 <= nums[i] <= 400"
+      ],
+      "edge_cases": [
+        "Single house — rob it",
+        "Two houses — take the larger",
+        "A large value between two larger ones, defeating a greedy choice",
+        "All values equal, where the answer takes every other house",
+        "Zeros in the array, which are free to skip or take"
+      ],
+      "hints": [
+        "For each house you make one binary decision: rob it or skip it. What does robbing house i forbid?",
+        "Robbing i means you cannot have robbed i-1, so the best total is nums[i] plus the best total up to i-2. Skipping i leaves the best total up to i-1.",
+        "best(i) = max(best(i-1), best(i-2) + nums[i]). Two scalars are enough, and the answer is best at the last index.",
+        "Do not try to reason about odd or even positions — the optimal set is not always every other house. [2,1,1,2] is the standard counterexample."
+      ],
+      "approaches": [
+        {
+          "name": "Explore Both Choices Recursively",
+          "summary": "At each house, recursively take the better of robbing it (and skipping the next) or skipping it.",
+          "intuition": "Enumerate the decision tree. From position i you either rob and jump to i+2, or skip and move to i+1; take whichever yields more. Once the index runs past the end there is nothing left to take, so the value is 0.\n\nThis is the clearest possible statement of the constraint — the jump to i+2 *is* the no-adjacent rule — and it is the version to trust when checking a faster one. It is O(2^N) because the same suffixes are re-explored down both branches.",
+          "steps": [
+            "Define a helper for the best haul starting at index i.",
+            "If i is past the last house, return 0.",
+            "Return the larger of: nums[i] plus the best from i+2, or the best from i+1.",
+            "Call the helper at index 0."
+          ],
+          "code": {
+            "javascript": "// Helpers must be top-level and declared BEFORE the entry function:\n// the grader treats the last top-level function as your entrypoint.\nfunction bestFrom(nums, i) {\n  if (i >= nums.length) return 0;\n  return Math.max(nums[i] + bestFrom(nums, i + 2), bestFrom(nums, i + 1));\n}\n\nfunction rob(nums) {\n  return bestFrom(nums, 0);\n}",
+            "python": "# Helpers must be top-level and declared BEFORE the entry function:\n# the grader treats the last top-level function as your entrypoint.\ndef best_from(nums, i):\n    if i >= len(nums):\n        return 0\n    return max(nums[i] + best_from(nums, i + 2), best_from(nums, i + 1))\n\n\ndef rob(nums):\n    return best_from(nums, 0)"
+          },
+          "time_complexity": "O(2^N)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Rolling Take-or-Skip",
+          "summary": "Sweep left to right holding the best totals for the previous two positions.",
+          "intuition": "Let best(i) be the most money obtainable from houses 0..i. Every solution either includes house i or does not, and those cases are exhaustive and disjoint:\n\n- **Skip i.** Then the answer is whatever was best over 0..i-1, so best(i-1).\n- **Rob i.** Then i-1 is off limits, and the rest of the haul is unconstrained over 0..i-2, so nums[i] + best(i-2).\n\nTake the larger. Note that best(i-2) is used rather than \"best ending at i-2\" — the previous decisions are already optimal and already legal, which is what makes the one-step recurrence sound.\n\nOnly two values of history matter, so the table collapses to two scalars. O(N) time, O(1) space.\n\nThe reason no greedy rule works is worth seeing concretely: on [2,1,1,2] the largest values are the two 2s, and taking them is optimal (4) — but on [2,7,9,3,1] taking the largest first (9) then forces skipping 7 and 3, and the answer 12 comes from 2+9+1 rather than from any greedy pick order.",
+          "steps": [
+            "Set twoBack = 0 and oneBack = 0.",
+            "For each house value: compute best = max(oneBack, twoBack + value).",
+            "Shift twoBack = oneBack and oneBack = best.",
+            "Return oneBack."
+          ],
+          "code": {
+            "javascript": "function rob(nums) {\n  let twoBack = 0;\n  let oneBack = 0;\n  for (const value of nums) {\n    const best = Math.max(oneBack, twoBack + value);\n    twoBack = oneBack;\n    oneBack = best;\n  }\n  return oneBack;\n}",
+            "python": "def rob(nums):\n    two_back = 0\n    one_back = 0\n    for value in nums:\n        best = max(one_back, two_back + value)\n        two_back, one_back = one_back, best\n    return one_back"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function rob(nums) {\n  // Your code here\n}",
+        "python": "def rob(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int rob(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "rob",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"nums":[1,2,3,1]}, "expected_output": 4, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[2,7,9,3,1]}, "expected_output": 12, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[5]}, "expected_output": 5, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[2,1,1,2]}, "expected_output": 4, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[0]}, "expected_output": 0, "is_hidden": true, "order_index": 5, "label": "single house worth nothing" },
+        { "input_payload": {"nums":[1,2]}, "expected_output": 2, "is_hidden": true, "order_index": 6, "label": "two houses, larger second" },
+        { "input_payload": {"nums":[2,1]}, "expected_output": 2, "is_hidden": true, "order_index": 7, "label": "two houses, larger first" },
+        { "input_payload": {"nums":[4,4,4,4,4]}, "expected_output": 12, "is_hidden": true, "order_index": 8, "label": "all equal, every other house" },
+        { "input_payload": {"nums":[0,0,0,0]}, "expected_output": 0, "is_hidden": true, "order_index": 9, "label": "all zeros" },
+        { "input_payload": {"nums":[100,1,1,100]}, "expected_output": 200, "is_hidden": true, "order_index": 10, "label": "valuable ends" },
+        { "input_payload": {"nums":[1,100,1,1,100,1]}, "expected_output": 200, "is_hidden": true, "order_index": 11, "label": "valuable interior houses, non-adjacent" },
+        { "input_payload": {"nums":[400,400,400,400,400,400,400]}, "expected_output": 1600, "is_hidden": true, "order_index": 12, "label": "constraint boundary values" },
+        { "input_payload": {"nums":[6,7,1,30,8,2,4]}, "expected_output": 41, "is_hidden": true, "order_index": 13, "label": "no obvious pattern" }
+      ]
+    },
+    {
+      "slug": "decode-ways",
+      "title": "Decode Ways",
+      "difficulty": "Medium",
+      "tags": ["dynamic-programming", "1d-state", "counting", "strings"],
+      "companies": ["Facebook", "Amazon", "Microsoft", "Uber"],
+      "description": "A message of letters was encoded to digits by mapping `A` to `\"1\"` through `Z` to `\"26\"`, then concatenating. Given a digit string `s`, return the number of ways it can be decoded back into letters.\n\nThe subtlety is `0`. There is no letter mapped to `\"0\"`, so a zero can only ever appear as the second digit of `\"10\"` or `\"20\"`. Any other zero makes the whole string undecodable, and the answer is `0`.",
+      "real_world_analogy": "Reading a run-together telegram where each letter was replaced by its position in the alphabet. At every point you have to decide whether the next character stands alone or joins the one after it, and some pairings are simply not words — a leading zero is not a letter, so that branch dies.",
+      "examples": [
+        {
+          "input": "s = \"12\"",
+          "output": "2",
+          "explanation": "Either \"AB\" (1, 2) or \"L\" (12)."
+        },
+        {
+          "input": "s = \"226\"",
+          "output": "3",
+          "explanation": "\"BZ\" (2, 26), \"VF\" (22, 6) and \"BBF\" (2, 2, 6)."
+        },
+        {
+          "input": "s = \"06\"",
+          "output": "0",
+          "explanation": "A leading zero is not a letter, and \"06\" is not in the 10..26 range, so there is no decoding."
+        },
+        {
+          "input": "s = \"27\"",
+          "output": "1",
+          "explanation": "27 exceeds 26, so only the single-digit reading \"BG\" works."
+        }
+      ],
+      "constraints": [
+        "1 <= s.length <= 100",
+        "s contains only digits and may contain leading zeros"
+      ],
+      "edge_cases": [
+        "A string starting with 0 — undecodable, answer 0",
+        "An interior 0 not preceded by 1 or 2 — answer 0",
+        "\"10\" and \"20\", which have exactly one decoding each",
+        "\"27\" through \"99\", where the two-digit reading is invalid but the single-digit one is fine",
+        "A long run of 1s, where the count grows like Fibonacci",
+        "\"100\", where the first two digits decode but the trailing zero cannot"
+      ],
+      "hints": [
+        "Let f(i) be the number of ways to decode the first i characters. The last letter used either one digit or two.",
+        "A one-digit letter is valid when that digit is not 0. A two-digit letter is valid when the pair reads between 10 and 26 inclusive. Add the counts of the branches that are valid.",
+        "f(0) = 1 — the empty string has exactly one decoding, the empty one. Without that base case every count comes out as 0.",
+        "If neither branch is valid at some position then f(i) = 0, and because every later term is built from it the whole answer collapses to 0. That is the correct behaviour, not a special case to bolt on."
+      ],
+      "approaches": [
+        {
+          "name": "Recursive Branching Over Splits",
+          "summary": "From each position, try consuming one digit and try consuming two, counting only valid letters.",
+          "intuition": "At each position decide how long the next letter is. Consuming one digit is allowed unless it is 0. Consuming two is allowed when the pair is between 10 and 26. Sum the counts from the branches that are legal; if none are, this path contributes nothing.\n\nReaching the end of the string means a complete decoding was found, so that returns 1. This is the definition made executable, and it exposes the two invalidity rules cleanly. It is exponential — around O(2^N) — because both branches re-solve the same suffixes.",
+          "steps": [
+            "Define a helper counting decodings of the suffix starting at i.",
+            "If i equals the string length, return 1 — a complete decoding.",
+            "If s[i] is \"0\", return 0 — no letter starts with zero.",
+            "Start with the count from i+1.",
+            "If the two digits at i form a number from 10 to 26, add the count from i+2."
+          ],
+          "code": {
+            "javascript": "// Helpers must be top-level and declared BEFORE the entry function:\n// the grader treats the last top-level function as your entrypoint.\nfunction countFrom(s, i) {\n  if (i === s.length) return 1;\n  if (s[i] === \"0\") return 0;\n  let total = countFrom(s, i + 1);\n  if (i + 1 < s.length) {\n    const pair = Number(s.slice(i, i + 2));\n    if (pair >= 10 && pair <= 26) total += countFrom(s, i + 2);\n  }\n  return total;\n}\n\nfunction numDecodings(s) {\n  return countFrom(s, 0);\n}",
+            "python": "# Helpers must be top-level and declared BEFORE the entry function:\n# the grader treats the last top-level function as your entrypoint.\ndef count_from(s, i):\n    if i == len(s):\n        return 1\n    if s[i] == \"0\":\n        return 0\n    total = count_from(s, i + 1)\n    if i + 1 < len(s):\n        pair = int(s[i:i + 2])\n        if 10 <= pair <= 26:\n            total += count_from(s, i + 2)\n    return total\n\n\ndef num_decodings(s):\n    return count_from(s, 0)"
+          },
+          "time_complexity": "O(2^N)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Bottom-Up Count with Two Scalars",
+          "summary": "Build the count for each prefix length from the previous two, adding only the branches whose letter is valid.",
+          "intuition": "Let f(i) be the number of ways to decode the first i characters. The final letter of any decoding of that prefix used either one digit or two, and those cases are disjoint:\n\n- **One digit**, s[i-1]. Valid unless it is \"0\". Contributes f(i-1).\n- **Two digits**, s[i-2..i-1]. Valid when that pair is 10 to 26 inclusive — which also rules out \"07\" style pairs, since a leading zero puts the value below 10. Contributes f(i-2).\n\nSo f(i) is the sum of whichever contributions are legal. f(0) = 1, the empty decoding, and that base case is load-bearing: set it to 0 and every subsequent term is 0.\n\nZeros need no special-casing beyond those two validity tests. A zero at position i-1 kills the one-digit branch, so the only way f(i) is non-zero is via a valid \"10\" or \"20\" pair. A zero with no such partner leaves both branches invalid, f(i) becomes 0, and since later terms are sums of earlier ones the whole answer stays 0 — which is exactly right for an undecodable string.\n\nThe window is two wide, so two scalars replace the table: O(N) time, O(1) space. On a string of all 1s every position admits both branches, and the counts are the Fibonacci numbers.",
+          "steps": [
+            "Set twoBack = 1 (the empty prefix) and oneBack = the count for the first character: 0 if it is \"0\", otherwise 1.",
+            "For each position i from 2 to the length:",
+            "Start current at 0; add oneBack if s[i-1] is not \"0\"; add twoBack if s[i-2..i-1] is between 10 and 26.",
+            "Shift twoBack = oneBack and oneBack = current.",
+            "Return oneBack."
+          ],
+          "code": {
+            "javascript": "function numDecodings(s) {\n  if (s.length === 0) return 0;\n  let twoBack = 1;\n  let oneBack = s[0] === \"0\" ? 0 : 1;\n  for (let i = 2; i <= s.length; i++) {\n    let current = 0;\n    if (s[i - 1] !== \"0\") current += oneBack;\n    const pair = Number(s.slice(i - 2, i));\n    if (pair >= 10 && pair <= 26) current += twoBack;\n    twoBack = oneBack;\n    oneBack = current;\n  }\n  return oneBack;\n}",
+            "python": "def num_decodings(s):\n    if not s:\n        return 0\n    two_back = 1\n    one_back = 0 if s[0] == \"0\" else 1\n    for i in range(2, len(s) + 1):\n        current = 0\n        if s[i - 1] != \"0\":\n            current += one_back\n        pair = int(s[i - 2:i])\n        if 10 <= pair <= 26:\n            current += two_back\n        two_back, one_back = one_back, current\n    return one_back"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function numDecodings(s) {\n  // Your code here\n}",
+        "python": "def num_decodings(s):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numDecodings(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "numDecodings",
+        "class": "Solution",
+        "args": [{ "name": "s", "type": "string" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"s":"12"}, "expected_output": 2, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"s":"226"}, "expected_output": 3, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"s":"06"}, "expected_output": 0, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"s":"27"}, "expected_output": 1, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"s":"1"}, "expected_output": 1, "is_hidden": true, "order_index": 5, "label": "single valid digit" },
+        { "input_payload": {"s":"0"}, "expected_output": 0, "is_hidden": true, "order_index": 6, "label": "single zero, undecodable" },
+        { "input_payload": {"s":"10"}, "expected_output": 1, "is_hidden": true, "order_index": 7, "label": "zero as the second digit of a valid pair" },
+        { "input_payload": {"s":"20"}, "expected_output": 1, "is_hidden": true, "order_index": 8, "label": "the other valid pair ending in zero" },
+        { "input_payload": {"s":"30"}, "expected_output": 0, "is_hidden": true, "order_index": 9, "label": "zero with no valid partner" },
+        { "input_payload": {"s":"100"}, "expected_output": 0, "is_hidden": true, "order_index": 10, "label": "valid pair followed by an orphan zero" },
+        { "input_payload": {"s":"101"}, "expected_output": 1, "is_hidden": true, "order_index": 11, "label": "zero forced into a pair mid-string" },
+        { "input_payload": {"s":"1111111111"}, "expected_output": 89, "is_hidden": true, "order_index": 12, "label": "all ones, Fibonacci growth" },
+        { "input_payload": {"s":"2611055971756562"}, "expected_output": 4, "is_hidden": true, "order_index": 13, "label": "long mixed string with interior zeros" }
+      ]
+    }
+  ]
+}

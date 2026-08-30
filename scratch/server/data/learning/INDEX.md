@@ -95,58 +95,55 @@ server/data/learning/
 
 ## Generation status
 
-Legend: ✅ complete · 🟡 partial · ⬜ pending
+Measured against the live database on 2026-08-30: 96 problems, 1,168 test cases,
+16 of 108 patterns filled.
 
-| # | Topic                              | Slug                              | Topic meta | Patterns | Problems |
-|---|------------------------------------|-----------------------------------|------------|----------|----------|
-| 1 | Basics                             | `basics`                          | ✅         | ✅       | ⬜       |
-| 2 | Sorting                            | `sorting`                         | ✅         | ✅       | ⬜       |
-| 3 | Arrays                             | `arrays`                          | ✅         | ✅       | ⬜       |
-| 4 | Binary Search                      | `binary-search`                   | ✅         | ✅       | ⬜       |
-| 5 | Strings                            | `strings`                         | ✅         | ✅       | ⬜       |
-| 6 | Linked List                        | `linked-list`                     | ✅         | ✅       | ⬜       |
-| 7 | Recursion                          | `recursion`                       | ✅         | ✅       | ⬜       |
-| 8 | Bit Manipulation                   | `bit-manipulation`                | ✅         | ✅       | ⬜       |
-| 9 | Stack & Queue                      | `stack-queue`                     | ✅         | ✅       | ⬜       |
-|10 | Sliding Window & Two Pointers      | `sliding-window-two-pointers`     | ✅         | ✅       | ✅ (REF) |
-|11 | Heaps                              | `heaps`                           | ✅         | ✅       | ⬜       |
-|12 | Greedy                             | `greedy`                          | ✅         | ✅       | ⬜       |
-|13 | Binary Trees                       | `binary-trees`                    | ✅         | ✅       | ⬜       |
-|14 | BST                                | `bst`                             | ✅         | ✅       | ⬜       |
-|15 | Graphs                             | `graphs`                          | ✅         | ✅       | ⬜       |
-|16 | Dynamic Programming                | `dynamic-programming`             | ✅         | ✅       | ⬜       |
-|17 | Tries                              | `tries`                           | ✅         | ✅       | ⬜       |
+Legend: ✅ complete · 🟡 partial · ⬜ pending · 🚫 blocked
 
-REF = Reference topic, fully implemented end-to-end as the quality benchmark.
+| #  | Topic                         | Slug                          | Patterns filled | Problems |
+|----|-------------------------------|-------------------------------|-----------------|----------|
+| 1  | Basics                        | `basics`                      | 0 / 6           | ⬜ 0     |
+| 2  | Sorting                       | `sorting`                     | 0 / 6           | ⬜ 0     |
+| 3  | Arrays                        | `arrays`                      | 2 / 7           | 🟡 6     |
+| 4  | Binary Search                 | `binary-search`               | 1 / 6           | 🟡 4     |
+| 5  | Strings                       | `strings`                     | 1 / 6           | 🟡 4     |
+| 6  | Linked List                   | `linked-list`                 | 0 / 6           | 🚫 0     |
+| 7  | Recursion                     | `recursion`                   | 0 / 6           | ⬜ 0     |
+| 8  | Bit Manipulation              | `bit-manipulation`            | 1 / 6           | 🟡 4     |
+| 9  | Stack & Queue                 | `stack-queue`                 | 2 / 7           | 🟡 5     |
+| 10 | Sliding Window & Two Pointers | `sliding-window-two-pointers` | 6 / 7           | ✅ 61 (REF) |
+| 11 | Heaps                         | `heaps`                       | 0 / 6           | ⬜ 0     |
+| 12 | Greedy                        | `greedy`                      | 1 / 6           | 🟡 4     |
+| 13 | Binary Trees                  | `binary-trees`                | 0 / 7           | 🚫 0     |
+| 14 | BST                           | `bst`                         | 0 / 5           | 🚫 0     |
+| 15 | Graphs                        | `graphs`                      | 1 / 8           | 🟡 4     |
+| 16 | Dynamic Programming           | `dynamic-programming`         | 1 / 8           | 🟡 4     |
+| 17 | Tries                         | `tries`                       | 0 / 5           | ⬜ 0     |
 
-## Phase 1 batch plan
+REF = reference topic, the original quality benchmark.
 
-| Batch | Deliverable                                             | Status |
-|-------|---------------------------------------------------------|--------|
-| 1.A   | Architecture + topics.json + all 17 pattern files + reference topic problems | THIS BATCH |
-| 1.B   | Problems for `arrays`                                   | next   |
-| 1.C   | Problems for `binary-search`                            |        |
-| 1.D   | Problems for `strings`                                  |        |
-| 1.E   | Problems for `linked-list`                              |        |
-| 1.F   | Problems for `recursion`                                |        |
-| 1.G   | Problems for `stack-queue`                              |        |
-| 1.H   | Problems for `dynamic-programming` (split across 2 batches if needed) |        |
-| 1.I   | Problems for `graphs`                                   |        |
-| 1.J   | Problems for `binary-trees`                             |        |
-| 1.K   | Problems for `bst`                                      |        |
-| 1.L   | Problems for `heaps`                                    |        |
-| 1.M   | Problems for `greedy`                                   |        |
-| 1.N   | Problems for `tries`                                    |        |
-| 1.O   | Problems for `bit-manipulation`                         |        |
-| 1.P   | Problems for `sorting`                                  |        |
-| 1.Q   | Problems for `basics`                                   |        |
+🚫 = **blocked on the execution harness, not on authoring.** Arguments are decoded from
+JSON into the types in `CPP_TYPE_MAP`, which has no encoding for a node with pointers.
+Passing a linked list or tree as a flat array produces problems that are solvable without
+the algorithm they are meant to teach — `linked-list-cycle` in this repo is that mistake
+already made. These three topics need a node type in the harness first.
 
-After 1.Q ships, Phase 1 is complete and Phase 2 (backend integration / loader) begins.
+## How problems are added now
+
+Problems in `problems/` are **generated** from specs in `authoring/<topic>/<pattern>.mjs`
+by `server/scripts/build-authored-problems.js`. A spec contains no expected outputs: it
+carries the prose, a brute force, and two independently written reference solutions, and
+the build computes every `expected_output` and refuses to write unless all three agree,
+every worked example matches its hand-stated answer, and the spec's own `assume`
+precondition holds for every payload.
+
+`server/data/learning/problems/sliding-window-two-pointers/` and the two other v1 files
+predate the pipeline and are still hand-maintained.
 
 ## Authoring rules (followed by every problem file)
 
 1. **No templated junk.** Every problem references a real, named, verifiable algorithmic problem (most map to canonical LeetCode entries; some are well-known textbook problems).
-2. **Test cases must be deterministic and verifiable** — output is computed by hand from the algorithm spec, not auto-generated against a possibly-buggy implementation.
+2. **Test-case outputs are computed, then cross-checked.** Hand-computed expected values are how a problem ships that grades a correct answer as Wrong, so the build derives them from a reference implementation and requires a second implementation and a brute force to agree. The hand-written part is the *worked examples*, which the references must then reproduce — that is what catches a reference solving the wrong problem.
 3. **≥10 test cases per problem, ≥5 hidden.** Visible cases are the canonical examples + 1–2 trivial. Hidden cases include edge boundaries (empty, size-1, all-equal, max-size, negative-only, integer-overflow-adjacent), adversarial inputs (worst-case for the brute force), and stress cases.
 4. **Examples are formatted as plain text input/output strings** (LeetCode style) but the **test_cases use structured JSON payloads** — these are different on purpose: examples render in the description, test cases drive the executor.
 5. **Starter code is provided in JavaScript and Python** with idiomatic signatures matching the test-case payload keys.

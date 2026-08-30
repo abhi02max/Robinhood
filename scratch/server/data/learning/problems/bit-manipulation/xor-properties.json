@@ -1,0 +1,454 @@
+{
+  "$schema": "../../problem.schema.json",
+  "schema_version": "2.0",
+  "topic_slug": "bit-manipulation",
+  "pattern_slug": "xor-properties",
+  "problems": [
+    {
+      "slug": "single-number",
+      "title": "Single Number",
+      "difficulty": "Easy",
+      "tags": ["bit-manipulation", "xor-properties", "hash-map"],
+      "companies": ["Amazon", "Google", "Bloomberg"],
+      "description": "Given a non-empty array `nums` where every element appears **exactly twice** except for one element which appears once, return that single element.\n\nThe intended solution runs in `O(N)` time using `O(1)` extra space, which rules out both a hash set and sorting. The array is *not* sorted, so the pairs can be anywhere.",
+      "real_world_analogy": "A room where everyone arrived with a partner except one person, and partners cancel out when they meet. Pair everyone off in any order at all and the same lone person is left standing — which is why the order of the array is irrelevant.",
+      "examples": [
+        {
+          "input": "nums = [2,2,1]",
+          "output": "1",
+          "explanation": "2 ^ 2 cancels to 0, and 0 ^ 1 is 1."
+        },
+        {
+          "input": "nums = [4,1,2,1,2]",
+          "output": "4",
+          "explanation": "The 1s and 2s cancel even though they are not adjacent, leaving 4."
+        },
+        {
+          "input": "nums = [1]",
+          "output": "1",
+          "explanation": "A single element XOR-ed into 0 returns itself."
+        },
+        {
+          "input": "nums = [-1,-1,-5]",
+          "output": "-5",
+          "explanation": "Negatives cancel on their bit patterns just like positives do."
+        }
+      ],
+      "constraints": [
+        "1 <= nums.length <= 3 * 10^4",
+        "nums.length is odd",
+        "-3 * 10^4 <= nums[i] <= 3 * 10^4",
+        "Each element appears exactly twice except for one element which appears once"
+      ],
+      "edge_cases": [
+        "Single-element array — that element is the answer",
+        "The unique element is first or last",
+        "Pairs separated by long distances rather than adjacent",
+        "Negative values, which XOR correctly under two's complement",
+        "Zero as the unique element, and zero as one of the pairs"
+      ],
+      "hints": [
+        "Find an operation where combining a value with itself destroys it, and combining anything with the identity leaves it alone.",
+        "XOR does both: x ^ x is 0 and x ^ 0 is x. What happens if you XOR every element of the array together?",
+        "Every paired value cancels regardless of where its partner sits, because XOR is commutative and associative. The accumulator ends holding only the unpaired value."
+      ],
+      "approaches": [
+        {
+          "name": "Hash Set of Unmatched Values",
+          "summary": "Add each value to a set, removing it instead if it is already there; one value survives.",
+          "intuition": "Track the values seen an odd number of times so far. On each element, if it is already in the set its partner has arrived, so remove both by deleting it; otherwise insert it. After the pass, the set holds exactly the unpaired value.\n\nO(N) time but O(N) space, which is the part the problem asks you to remove. It is a faithful oracle, and the set-toggle behaviour is itself a hint: XOR is exactly this toggle done in a single integer.",
+          "steps": [
+            "Create an empty set.",
+            "For each value: delete it from the set if present, otherwise add it.",
+            "Return the one remaining member of the set."
+          ],
+          "code": {
+            "javascript": "function singleNumber(nums) {\n  const seen = new Set();\n  for (const value of nums) {\n    if (seen.has(value)) seen.delete(value);\n    else seen.add(value);\n  }\n  return [...seen][0];\n}",
+            "python": "def single_number(nums):\n    seen = set()\n    for value in nums:\n        if value in seen:\n            seen.discard(value)\n        else:\n            seen.add(value)\n    return next(iter(seen))"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "XOR Everything",
+          "summary": "Fold the whole array with XOR; paired values cancel and the lone value remains.",
+          "intuition": "XOR has exactly the algebra this problem needs. It is its own inverse (x ^ x = 0), it has 0 as an identity (x ^ 0 = x), and it is commutative and associative, so a chain of XORs can be reordered freely.\n\nThat last property is what makes the arrangement of the array irrelevant. Conceptually, reorder the XOR chain so each pair sits together: every pair collapses to 0, all the zeros collapse to 0, and 0 XOR the unique value is the unique value. The actual left-to-right fold computes the same result because reordering does not change it.\n\nOne accumulator, one pass, no allocation: O(N) time and genuinely O(1) space. Negative numbers need no special handling — XOR operates on the two's-complement bit pattern, and identical patterns still cancel.",
+          "steps": [
+            "Set result = 0.",
+            "For each value, set result = result XOR value.",
+            "Return result."
+          ],
+          "code": {
+            "javascript": "function singleNumber(nums) {\n  let result = 0;\n  for (const value of nums) result ^= value;\n  return result;\n}",
+            "python": "def single_number(nums):\n    result = 0\n    for value in nums:\n        result ^= value\n    return result"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function singleNumber(nums) {\n  // Your code here\n}",
+        "python": "def single_number(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int singleNumber(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "singleNumber",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"nums":[2,2,1]}, "expected_output": 1, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[4,1,2,1,2]}, "expected_output": 4, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[1]}, "expected_output": 1, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[-1,-1,-5]}, "expected_output": -5, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[0]}, "expected_output": 0, "is_hidden": true, "order_index": 5, "label": "zero as the only element" },
+        { "input_payload": {"nums":[0,1,1]}, "expected_output": 0, "is_hidden": true, "order_index": 6, "label": "zero as the unique value" },
+        { "input_payload": {"nums":[7,7,0]}, "expected_output": 0, "is_hidden": true, "order_index": 7, "label": "zero as the unique value after a pair" },
+        { "input_payload": {"nums":[5,3,3]}, "expected_output": 5, "is_hidden": true, "order_index": 8, "label": "unique value first" },
+        { "input_payload": {"nums":[3,3,5]}, "expected_output": 5, "is_hidden": true, "order_index": 9, "label": "unique value last" },
+        { "input_payload": {"nums":[30000,-30000,30000]}, "expected_output": -30000, "is_hidden": true, "order_index": 10, "label": "constraint boundary values" },
+        { "input_payload": {"nums":[1,2,3,4,5,1,2,3,4]}, "expected_output": 5, "is_hidden": true, "order_index": 11, "label": "pairs widely separated" },
+        { "input_payload": {"nums":[-4,-3,-2,-1,-4,-3,-2]}, "expected_output": -1, "is_hidden": true, "order_index": 12, "label": "all negative with pairs interleaved" }
+      ]
+    },
+    {
+      "slug": "missing-number",
+      "title": "Missing Number",
+      "difficulty": "Easy",
+      "tags": ["bit-manipulation", "xor-properties", "math", "counting"],
+      "companies": ["Amazon", "Microsoft", "Apple"],
+      "description": "Given an array `nums` containing `n` distinct numbers drawn from the range `[0, n]`, return the one number in that range which is missing.\n\nThe array holds `n` values but the range has `n + 1` members, so exactly one is absent. Solve it in `O(N)` time and `O(1)` extra space — no sorting and no auxiliary array.",
+      "real_world_analogy": "A cloakroom with numbered pegs 0 through n and one coat missing. You do not need to inspect every peg in order: pair each coat you find against the peg number it should occupy, and the peg with nothing to pair against is the answer.",
+      "examples": [
+        {
+          "input": "nums = [3,0,1]",
+          "output": "2",
+          "explanation": "n is 3 and the range is 0..3; 2 is the only member absent from the array."
+        },
+        {
+          "input": "nums = [0,1]",
+          "output": "2",
+          "explanation": "The missing number is n itself, the top of the range."
+        },
+        {
+          "input": "nums = [1]",
+          "output": "0",
+          "explanation": "The missing number is 0, the bottom of the range."
+        },
+        {
+          "input": "nums = [9,6,4,2,3,5,7,0,1]",
+          "output": "8",
+          "explanation": "n is 9; every value except 8 is present, in no particular order."
+        }
+      ],
+      "constraints": [
+        "n == nums.length",
+        "1 <= n <= 10^4",
+        "0 <= nums[i] <= n",
+        "All values in nums are distinct"
+      ],
+      "edge_cases": [
+        "The missing number is 0",
+        "The missing number is n, the largest possible",
+        "Single-element array, where the answer is 0 or 1",
+        "The array is already in ascending order",
+        "The array is in descending order or otherwise shuffled"
+      ],
+      "hints": [
+        "You have two collections: the values present, and the indices 0..n. What is the relationship between them?",
+        "Every number except the missing one appears in both collections. Can you combine them so the shared members cancel?",
+        "XOR every index from 0 to n together with every value in the array. Each present number is XOR-ed an even number of times and cancels; only the missing one survives.",
+        "The sum formula n*(n+1)/2 minus the array sum also works and is easier to remember, but it can overflow in fixed-width integer languages where XOR cannot."
+      ],
+      "approaches": [
+        {
+          "name": "Membership Set",
+          "summary": "Put every value into a set, then test each candidate from 0 to n for membership.",
+          "intuition": "The definition, executed directly: build the set of present values, then walk the range and return the first candidate that is not in it. Correct and easy to read.\n\nO(N) time but O(N) space, which is what the constraint is trying to eliminate. Its value here is as an oracle, and as a reminder that the answer is defined by the range 0..n rather than by anything about the array's order.",
+          "steps": [
+            "Insert every value of nums into a set.",
+            "For each candidate from 0 to n:",
+            "Return it if the set does not contain it."
+          ],
+          "code": {
+            "javascript": "function missingNumber(nums) {\n  const present = new Set(nums);\n  for (let candidate = 0; candidate <= nums.length; candidate++) {\n    if (!present.has(candidate)) return candidate;\n  }\n  return -1;\n}",
+            "python": "def missing_number(nums):\n    present = set(nums)\n    for candidate in range(len(nums) + 1):\n        if candidate not in present:\n            return candidate\n    return -1"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "XOR Indices Against Values",
+          "summary": "XOR together every index 0..n and every array value; the missing number is what is left.",
+          "intuition": "Consider the multiset formed by taking all of 0, 1, ..., n and all of the array values. Every number in the range except the missing one appears exactly twice in that multiset: once as a range member and once as an array element. The missing number appears once, as a range member only.\n\nSo this is the Single Number problem in disguise. XOR the whole multiset: the doubled values cancel and the missing number survives.\n\nIn code that is one loop. Fold in the loop index (running to n inclusive) and the value at that index, then fold in the final index n on its own — or equivalently seed the accumulator with n and XOR i ^ nums[i] for each i. No extra space, one pass.\n\nThe arithmetic alternative — expected sum minus actual sum — is also O(1) space and slightly more obvious, but the sum of 0..n grows quadratically and can overflow a 32-bit accumulator for large n. XOR never grows, which is why it is the more robust habit.",
+          "steps": [
+            "Set result = n, the array length, to account for the final range member.",
+            "For each index i, XOR result with i and with nums[i].",
+            "Return result."
+          ],
+          "code": {
+            "javascript": "function missingNumber(nums) {\n  let result = nums.length;\n  for (let i = 0; i < nums.length; i++) {\n    result ^= i ^ nums[i];\n  }\n  return result;\n}",
+            "python": "def missing_number(nums):\n    result = len(nums)\n    for i, value in enumerate(nums):\n        result ^= i ^ value\n    return result"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function missingNumber(nums) {\n  // Your code here\n}",
+        "python": "def missing_number(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int missingNumber(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "missingNumber",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"nums":[3,0,1]}, "expected_output": 2, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[0,1]}, "expected_output": 2, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[1]}, "expected_output": 0, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[9,6,4,2,3,5,7,0,1]}, "expected_output": 8, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[0]}, "expected_output": 1, "is_hidden": true, "order_index": 5, "label": "single element, missing the top" },
+        { "input_payload": {"nums":[0,1,2,3,4]}, "expected_output": 5, "is_hidden": true, "order_index": 6, "label": "already ascending, missing the top" },
+        { "input_payload": {"nums":[1,2,3,4,5]}, "expected_output": 0, "is_hidden": true, "order_index": 7, "label": "ascending, missing zero" },
+        { "input_payload": {"nums":[5,4,3,2,1]}, "expected_output": 0, "is_hidden": true, "order_index": 8, "label": "descending, missing zero" },
+        { "input_payload": {"nums":[5,4,3,2,0]}, "expected_output": 1, "is_hidden": true, "order_index": 9, "label": "descending, missing an interior value" },
+        { "input_payload": {"nums":[0,2,4,6,8,1,3,5,7]}, "expected_output": 9, "is_hidden": true, "order_index": 10, "label": "evens then odds, missing the top" },
+        { "input_payload": {"nums":[2,0]}, "expected_output": 1, "is_hidden": true, "order_index": 11, "label": "two elements, missing an interior value" },
+        { "input_payload": {"nums":[0,1,3,4,5,6,7,8,9,10]}, "expected_output": 2, "is_hidden": true, "order_index": 12, "label": "longer array, missing near the front" }
+      ]
+    },
+    {
+      "slug": "xor-operation-in-an-array",
+      "title": "XOR Operation in an Array",
+      "difficulty": "Easy",
+      "tags": ["bit-manipulation", "xor-properties", "simulation"],
+      "companies": ["Amazon"],
+      "description": "You are given an integer `n` and an integer `start`. Define the array `nums` where `nums[i] = start + 2 * i` for every `i` from `0` to `n - 1`. Return the XOR of every element of `nums`.\n\nThe array is never actually needed — each element is derivable from its index — so this is the pattern at its simplest: accumulate with XOR while generating terms on the fly.",
+      "real_world_analogy": "Reading a meter that ticks up by a fixed step and combining every reading into one running checksum. You never keep the list of readings, only the checksum, because nothing else is ever asked of them.",
+      "examples": [
+        {
+          "input": "n = 5, start = 0",
+          "output": "8",
+          "explanation": "The array is [0,2,4,6,8] and 0^2^4^6^8 = 8."
+        },
+        {
+          "input": "n = 4, start = 3",
+          "output": "8",
+          "explanation": "The array is [3,5,7,9] and 3^5^7^9 = 8."
+        },
+        {
+          "input": "n = 1, start = 7",
+          "output": "7",
+          "explanation": "A single term, and 0 is the XOR identity, so the answer is start."
+        },
+        {
+          "input": "n = 10, start = 5",
+          "output": "2",
+          "explanation": "The array is [5,7,9,11,13,15,17,19,21,23], whose XOR is 2."
+        }
+      ],
+      "constraints": [
+        "1 <= n <= 1000",
+        "0 <= start <= 1000",
+        "start + 2 * (n - 1) fits comfortably in a 32-bit integer"
+      ],
+      "edge_cases": [
+        "n = 1, where the answer is start itself",
+        "start = 0, so the sequence begins at zero",
+        "Sequences where consecutive terms share high bits, exercising partial cancellation",
+        "n large enough that the running value rises and falls repeatedly",
+        "Every element even (start even) versus every element odd (start odd)"
+      ],
+      "hints": [
+        "You do not need to build the array. What is nums[i] in terms of i alone?",
+        "nums[i] = start + 2*i, so a single loop over i can accumulate result ^= start + 2*i directly.",
+        "Because every step adds 2, all elements share the parity of start — the lowest bit is constant across the whole array, which is why the answer's low bit depends only on n and start."
+      ],
+      "approaches": [
+        {
+          "name": "Materialise the Array, Then Fold",
+          "summary": "Build the array explicitly from the formula, then XOR its elements in a second pass.",
+          "intuition": "Follow the problem statement literally in two stages: construct nums, then reduce it. It is the clearest possible reading and a good check on the index arithmetic, because the constructed array can be inspected directly.\n\nThe only cost is the O(N) array that is read once and thrown away. At n up to 1000 that is irrelevant in practice; the point is that it is unnecessary, and noticing why is the pattern.",
+          "steps": [
+            "Create an empty array.",
+            "For each i from 0 to n-1, append start + 2*i.",
+            "Fold the array with XOR starting from 0.",
+            "Return the accumulator."
+          ],
+          "code": {
+            "javascript": "function xorOperation(n, start) {\n  const nums = [];\n  for (let i = 0; i < n; i++) nums.push(start + 2 * i);\n  let result = 0;\n  for (const value of nums) result ^= value;\n  return result;\n}",
+            "python": "def xor_operation(n, start):\n    nums = [start + 2 * i for i in range(n)]\n    result = 0\n    for value in nums:\n        result ^= value\n    return result"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Accumulate Without Materialising",
+          "summary": "Fold the XOR while generating each term from its index, keeping nothing but the accumulator.",
+          "intuition": "Nothing in the problem needs two elements at once, and nothing needs to revisit an element. The reduction is a fold over a sequence that is fully determined by its index, so the sequence never needs to exist — generate each term inside the loop and XOR it straight into the accumulator.\n\nThat drops the space from O(N) to O(1) and removes a pass. It is a small change, and worth internalising because the same reasoning applies to any accumulate-over-a-generated-sequence problem: if the recurrence for the next term is closed-form, materialising the terms is pure overhead.\n\nStarting the accumulator at 0 is correct rather than arbitrary — 0 is XOR's identity, so it contributes nothing and the n = 1 case returns start unchanged.",
+          "steps": [
+            "Set result = 0.",
+            "For each i from 0 to n-1, XOR result with start + 2*i.",
+            "Return result."
+          ],
+          "code": {
+            "javascript": "function xorOperation(n, start) {\n  let result = 0;\n  for (let i = 0; i < n; i++) result ^= start + 2 * i;\n  return result;\n}",
+            "python": "def xor_operation(n, start):\n    result = 0\n    for i in range(n):\n        result ^= start + 2 * i\n    return result"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function xorOperation(n, start) {\n  // Your code here\n}",
+        "python": "def xor_operation(n, start):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int xorOperation(int n, int start) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "xorOperation",
+        "class": "Solution",
+        "args": [
+          { "name": "n", "type": "int" },
+          { "name": "start", "type": "int" }
+        ],
+        "ret": "int"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"n":5,"start":0}, "expected_output": 8, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"n":4,"start":3}, "expected_output": 8, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"n":1,"start":7}, "expected_output": 7, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"n":10,"start":5}, "expected_output": 2, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"n":1,"start":0}, "expected_output": 0, "is_hidden": true, "order_index": 5, "label": "smallest possible input" },
+        { "input_payload": {"n":2,"start":0}, "expected_output": 2, "is_hidden": true, "order_index": 6, "label": "two even terms" },
+        { "input_payload": {"n":2,"start":1}, "expected_output": 2, "is_hidden": true, "order_index": 7, "label": "two odd terms" },
+        { "input_payload": {"n":3,"start":1}, "expected_output": 7, "is_hidden": true, "order_index": 8, "label": "three odd terms" },
+        { "input_payload": {"n":8,"start":0}, "expected_output": 0, "is_hidden": true, "order_index": 9, "label": "eight even terms, high bits interact" },
+        { "input_payload": {"n":100,"start":1}, "expected_output": 0, "is_hidden": true, "order_index": 10, "label": "long odd sequence" },
+        { "input_payload": {"n":1000,"start":1000}, "expected_output": 0, "is_hidden": true, "order_index": 11, "label": "constraint boundary for both arguments" },
+        { "input_payload": {"n":7,"start":999}, "expected_output": 997, "is_hidden": true, "order_index": 12, "label": "odd start near the boundary" }
+      ]
+    },
+    {
+      "slug": "single-number-iii",
+      "title": "Single Number III",
+      "difficulty": "Medium",
+      "tags": ["bit-manipulation", "xor-properties", "bit-mask"],
+      "companies": ["Amazon", "Google"],
+      "description": "Given an array `nums` in which exactly **two** elements appear once and every other element appears exactly twice, return the two single elements **sorted in ascending order**.\n\nThe expected solution is `O(N)` time and `O(1)` extra space. XOR-ing everything now leaves `a ^ b` rather than a single answer, so the work is in separating the two survivors — and the sorted return order is specified so that there is exactly one correct answer.",
+      "real_world_analogy": "Two unpartnered people in a room instead of one. Cancelling everyone off leaves you with the combined description of the pair, not either individual. To tell them apart you need one attribute they disagree on — say, one wears glasses and the other does not — and then you can split the room into two smaller rooms, each with exactly one survivor.",
+      "examples": [
+        {
+          "input": "nums = [1,2,1,3,2,5]",
+          "output": "[3,5]",
+          "explanation": "1 and 2 cancel, leaving 3 ^ 5 = 6. Bit 2 (value 2) separates 3 from 5, and the answer is returned ascending."
+        },
+        {
+          "input": "nums = [-1,0]",
+          "output": "[-1,0]",
+          "explanation": "The smallest input: both elements are unique, and one is negative."
+        },
+        {
+          "input": "nums = [0,1]",
+          "output": "[0,1]",
+          "explanation": "Zero as one of the singles; XOR handles it with no special case."
+        },
+        {
+          "input": "nums = [4,1,4,6]",
+          "output": "[1,6]",
+          "explanation": "The 4s cancel; 1 ^ 6 = 7, and its lowest set bit separates 1 from 6."
+        }
+      ],
+      "constraints": [
+        "2 <= nums.length <= 3 * 10^4",
+        "-2^31 <= nums[i] <= 2^31 - 1",
+        "Exactly two elements appear once; every other element appears exactly twice",
+        "The two single elements must be returned in ascending order"
+      ],
+      "edge_cases": [
+        "Array of exactly two elements, both unique",
+        "The two unique values differ only in the lowest bit",
+        "The two unique values differ only in a high bit",
+        "One of the unique values is zero",
+        "Negative unique values, including one negative and one positive"
+      ],
+      "hints": [
+        "XOR everything. You get a ^ b. What can you learn about a and b from the bits that are set in that value?",
+        "Any set bit in a ^ b is a bit where a and b differ. Pick one such bit — the lowest is easiest — and it splits every value in the array into two groups.",
+        "Each group contains exactly one of the two unique values, and every pair falls entirely inside one group because both copies have identical bits. So XOR each group separately.",
+        "The lowest set bit of x is x & -x under two's complement. Sort the two results before returning them."
+      ],
+      "approaches": [
+        {
+          "name": "Count Occurrences in a Map",
+          "summary": "Tally every value, collect the two with a count of one, and sort them.",
+          "intuition": "Counting makes the specification directly checkable: build a frequency map, then pick out the keys whose count is 1. There will be exactly two, and sorting them satisfies the required order.\n\nO(N) time and O(N) space. The space is what the problem wants removed, but this version is the oracle — and it also makes clear that the answer is a *set* of two values, which is why an ordering has to be imposed for the result to be well defined.",
+          "steps": [
+            "Count every value into a map.",
+            "Collect the keys whose count is exactly 1.",
+            "Sort the two collected values ascending and return them."
+          ],
+          "code": {
+            "javascript": "function singleNumber(nums) {\n  const counts = new Map();\n  for (const value of nums) counts.set(value, (counts.get(value) || 0) + 1);\n  const out = [];\n  for (const [value, n] of counts) if (n === 1) out.push(value);\n  out.sort((a, b) => a - b);\n  return out;\n}",
+            "python": "def single_number(nums):\n    counts = {}\n    for value in nums:\n        counts[value] = counts.get(value, 0) + 1\n    out = [value for value, n in counts.items() if n == 1]\n    out.sort()\n    return out"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Split on a Differing Bit",
+          "summary": "XOR everything to get a ^ b, isolate one bit where they differ, and XOR each half separately.",
+          "intuition": "XOR-ing the whole array cancels every pair and leaves a ^ b, where a and b are the two singles. That is not the answer, but it is informative: a bit is set in a ^ b exactly when a and b disagree on that bit. Since a and b are distinct, at least one such bit exists.\n\nPick one — the lowest set bit, computed as x & -x. Now partition every element of the array by that bit. Two things are true. First, a and b land in different groups, because they disagree on precisely this bit. Second, every duplicated pair lands entirely in one group, because the two copies are equal and therefore agree on every bit.\n\nSo each group contains exactly one single and some number of complete pairs, which is the original Single Number problem. XOR each group and you have a and b. Sort them to satisfy the specified order.\n\nTwo passes, two accumulators: O(N) time and O(1) space. Negative values work unchanged — x & -x isolates the lowest set bit of the two's-complement pattern, and the partition only ever asks whether a bit is set.",
+          "steps": [
+            "XOR every element to obtain diff = a ^ b.",
+            "Isolate one differing bit: bit = diff & -diff.",
+            "Sweep again, XOR-ing each element into groupOne if it has that bit set and groupTwo otherwise.",
+            "Sort the two accumulators ascending and return them."
+          ],
+          "code": {
+            "javascript": "function singleNumber(nums) {\n  let diff = 0;\n  for (const value of nums) diff ^= value;\n  const bit = diff & -diff;\n  let withBit = 0;\n  let withoutBit = 0;\n  for (const value of nums) {\n    if (value & bit) withBit ^= value;\n    else withoutBit ^= value;\n  }\n  return withBit < withoutBit ? [withBit, withoutBit] : [withoutBit, withBit];\n}",
+            "python": "def single_number(nums):\n    diff = 0\n    for value in nums:\n        diff ^= value\n    bit = diff & -diff\n    with_bit = 0\n    without_bit = 0\n    for value in nums:\n        if value & bit:\n            with_bit ^= value\n        else:\n            without_bit ^= value\n    return sorted([with_bit, without_bit])"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function singleNumber(nums) {\n  // Your code here\n}",
+        "python": "def single_number(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> singleNumber(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature":       {
+        "fn": "singleNumber",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<int>"
+      },
+      "time_complexity": "O(N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"nums":[1,2,1,3,2,5]}, "expected_output": [3,5], "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[-1,0]}, "expected_output": [-1,0], "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[0,1]}, "expected_output": [0,1], "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[4,1,4,6]}, "expected_output": [1,6], "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[2,3]}, "expected_output": [2,3], "is_hidden": true, "order_index": 5, "label": "two elements differing in the lowest bit" },
+        { "input_payload": {"nums":[1,1024]}, "expected_output": [1,1024], "is_hidden": true, "order_index": 6, "label": "differ only in a high bit" },
+        { "input_payload": {"nums":[7,7,8,9]}, "expected_output": [8,9], "is_hidden": true, "order_index": 7, "label": "pair first, then adjacent singles" },
+        { "input_payload": {"nums":[-5,-3,-5,-1]}, "expected_output": [-3,-1], "is_hidden": true, "order_index": 8, "label": "all negative" },
+        { "input_payload": {"nums":[-2,2]}, "expected_output": [-2,2], "is_hidden": true, "order_index": 9, "label": "negative and positive of the same magnitude" },
+        { "input_payload": {"nums":[10,20,30,10,20,40]}, "expected_output": [30,40], "is_hidden": true, "order_index": 10, "label": "singles far apart in the array" },
+        { "input_payload": {"nums":[1,2,3,4,1,2,3,5]}, "expected_output": [4,5], "is_hidden": true, "order_index": 11, "label": "several pairs, singles at the end" },
+        { "input_payload": {"nums":[2147483647,-2147483648]}, "expected_output": [-2147483648,2147483647], "is_hidden": true, "order_index": 12, "label": "extreme 32-bit boundary values" }
+      ]
+    }
+  ]
+}
