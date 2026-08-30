@@ -54,7 +54,19 @@ const connectionString =
                   process.env.POSTGRES_PORT     || '5433'}/${
                   process.env.POSTGRES_DB       || 'robinhood'}`;
 
-console.log('Using DB:', connectionString);
+/**
+ * Strip the password out of a connection string before it is printed.
+ *
+ * A managed-Postgres URL carries the password inline, so printing it raw put the
+ * live credential into every terminal scrollback, CI log and screenshot of a seed
+ * run. The summary at the bottom of this file already redacted; the startup line
+ * did not.
+ */
+export function redactConnectionString(url) {
+  return String(url).replace(/:[^:@/]+@/, ':***@');
+}
+
+console.log('Using DB:', redactConnectionString(connectionString));
 
 const pool = new Pool({ connectionString });
 
@@ -539,7 +551,7 @@ function fmtCounts(k) {
 
 async function main() {
   console.log(c.bold(c.cyan('\n=== LEARNING DATA SEEDER ===')));
-  console.log(c.dim(`DB    : ${connectionString.replace(/:[^:@]+@/, ':***@')}`));
+  console.log(c.dim(`DB    : ${redactConnectionString(connectionString)}`));
   console.log(c.dim(`Data  : ${DATA_ROOT}\n`));
 
   // -----------------------------------------------------------------
