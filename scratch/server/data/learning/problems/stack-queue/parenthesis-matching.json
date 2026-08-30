@@ -96,7 +96,14 @@
       ],
       "starter_code": {
         "javascript": "function isValid(s) {\n  // Your code here\n}",
-        "python": "def is_valid(s):\n    pass"
+        "python": "def is_valid(s):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isValid(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "isValid",
+        "class": "Solution",
+        "args": [{ "name": "s", "type": "string" }],
+        "ret": "bool"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",

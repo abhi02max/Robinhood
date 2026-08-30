@@ -18,7 +18,17 @@
       "approach_optimal": "exactlyK = atMost(K) − atMost(K−1). The atMost helper uses a sliding window with a hashmap of frequencies. Time O(N), space O(K).",
       "starter_code": {
         "javascript": "function subarraysWithKDistinct(nums, k) {\n  // Your code here\n}",
-        "python": "def subarrays_with_k_distinct(nums, k):\n    pass"
+        "python": "def subarrays_with_k_distinct(nums, k):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int subarraysWithKDistinct(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "subarraysWithKDistinct",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(K)",
@@ -53,7 +63,17 @@
       "approach_optimal": "Reduce odds=1, evens=0. Count subarrays with sum exactly K via atMost(K) − atMost(K−1). Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function numberOfSubarrays(nums, k) {\n  // Your code here\n}",
-        "python": "def number_of_subarrays(nums, k):\n    pass"
+        "python": "def number_of_subarrays(nums, k):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numberOfSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "numberOfSubarrays",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -88,7 +108,17 @@
       "approach_optimal": "atMost(goal) − atMost(goal-1) via sliding window, OR prefix-sum hashmap. O(N).",
       "starter_code": {
         "javascript": "function numSubarraysWithSum(nums, goal) {\n  // Your code here\n}",
-        "python": "def num_subarrays_with_sum(nums, goal):\n    pass"
+        "python": "def num_subarrays_with_sum(nums, goal):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numSubarraysWithSum(vector<int>& nums, int goal) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "numSubarraysWithSum",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "goal", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -123,7 +153,18 @@
       "approach_optimal": "Compute c[i] = |s[i]-t[i]|. Find longest subarray of c with sum <= maxCost via sliding window. O(N).",
       "starter_code": {
         "javascript": "function equalSubstring(s, t, maxCost) {\n  // Your code here\n}",
-        "python": "def equal_substring(s, t, max_cost):\n    pass"
+        "python": "def equal_substring(s, t, max_cost):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int equalSubstring(string s, string t, int maxCost) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "equalSubstring",
+        "class": "Solution",
+        "args": [
+          { "name": "s", "type": "string" },
+          { "name": "t", "type": "string" },
+          { "name": "maxCost", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -158,7 +199,17 @@
       "approach_optimal": "Sort. Window [l..r] with target nums[r] needs cost = nums[r]·(r-l+1) - sum. Slide r forward, advance l when cost > k. O(N log N).",
       "starter_code": {
         "javascript": "function maxFrequency(nums, k) {\n  // Your code here\n}",
-        "python": "def max_frequency(nums, k):\n    pass"
+        "python": "def max_frequency(nums, k):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxFrequency(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "maxFrequency",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N log N)",
       "space_complexity": "O(1)",
@@ -193,7 +244,14 @@
       "approach_optimal": "Sliding window with a hash set + running sum. On duplicate, advance left removing values until duplicate is gone. Track max sum. O(N).",
       "starter_code": {
         "javascript": "function maximumUniqueSubarray(nums) {\n  // Your code here\n}",
-        "python": "def maximum_unique_subarray(nums):\n    pass"
+        "python": "def maximum_unique_subarray(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maximumUniqueSubarray(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "maximumUniqueSubarray",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
@@ -227,7 +285,14 @@
       "approach_optimal": "Sliding window with invariant max - min <= 2. Track max/min via two monotonic deques. For each r, count = r - l + 1. O(N).",
       "starter_code": {
         "javascript": "function continuousSubarrays(nums) {\n  // Your code here\n}",
-        "python": "def continuous_subarrays(nums):\n    pass"
+        "python": "def continuous_subarrays(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int continuousSubarrays(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "continuousSubarrays",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
@@ -262,7 +327,17 @@
       "approach_optimal": "Find max. Sliding window: maintain count of max in [l..r]. When count >= k, all subarrays starting from any index <= l contribute (n - r) extensions; advance l forward to keep count = k - 1, repeat. O(N).",
       "starter_code": {
         "javascript": "function countSubarrays(nums, k) {\n  // Your code here\n}",
-        "python": "def count_subarrays(nums, k):\n    pass"
+        "python": "def count_subarrays(nums, k):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "countSubarrays",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -297,7 +372,14 @@
       "approach_optimal": "Each maximal run of L consecutive 1s contributes L*(L+1)/2 substrings. Single linear scan tracking current run length. O(N).",
       "starter_code": {
         "javascript": "function numSub(s) {\n  // Your code here\n}",
-        "python": "def num_sub(s):\n    pass"
+        "python": "def num_sub(s):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numSub(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "numSub",
+        "class": "Solution",
+        "args": [{ "name": "s", "type": "string" }],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -333,7 +415,14 @@
       "approach_optimal": "For each maximal vowel-only segment, count substrings containing all 5 vowels via at-most-K (K=5) decomposition: atMost(5) − atMost(4). O(N).",
       "starter_code": {
         "javascript": "function countVowelSubstrings(word) {\n  // Your code here\n}",
-        "python": "def count_vowel_substrings(word):\n    pass"
+        "python": "def count_vowel_substrings(word):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countVowelSubstrings(string word) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "countVowelSubstrings",
+        "class": "Solution",
+        "args": [{ "name": "word", "type": "string" }],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -368,7 +457,17 @@
       "approach_optimal": "Sliding window of size k with frequency map. When map size == k after update, count++. On slide, increment incoming and decrement outgoing. O(N).",
       "starter_code": {
         "javascript": "function numKLenSubstrNoRepeats(s, k) {\n  // Your code here\n}",
-        "python": "def num_k_len_substr_no_repeats(s, k):\n    pass"
+        "python": "def num_k_len_substr_no_repeats(s, k):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numKLenSubstrNoRepeats(string s, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "numKLenSubstrNoRepeats",
+        "class": "Solution",
+        "args": [
+          { "name": "s", "type": "string" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(σ)",
@@ -403,7 +502,17 @@
       "approach_optimal": "Sliding window. For each right, advance left while score >= k. The longest valid window ending at right gives `right - left + 1` valid subarrays ending at right. Sum these contributions. O(N).",
       "starter_code": {
         "javascript": "function countSubarrays(nums, k) {\n  // Your code here\n}",
-        "python": "def count_subarrays(nums, k):\n    pass"
+        "python": "def count_subarrays(nums, k):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "countSubarrays",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",

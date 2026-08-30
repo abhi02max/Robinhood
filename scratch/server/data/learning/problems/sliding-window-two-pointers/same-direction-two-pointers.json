@@ -18,7 +18,14 @@
       "approach_optimal": "Slow/fast two pointers. Slow tracks where the next unique should land; fast scans forward. When `nums[fast] != nums[slow]`, advance slow and copy. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function removeDuplicates(nums) {\n  // Your code here\n}",
-        "python": "def remove_duplicates(nums):\n    pass"
+        "python": "def remove_duplicates(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeDuplicates(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "removeDuplicates",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -53,7 +60,17 @@
       "approach_optimal": "Slow/fast pointers. Slow = next write position. Fast scans; when nums[fast] != val, write to nums[slow] and slow++. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function removeElement(nums, val) {\n  // Your code here\n}",
-        "python": "def remove_element(nums, val):\n    pass"
+        "python": "def remove_element(nums, val):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeElement(vector<int>& nums, int val) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "removeElement",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "val", "type": "int" }
+        ],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -88,7 +105,14 @@
       "approach_optimal": "Slow/fast: slow tracks where next non-zero lands; fast scans. When `nums[fast] != 0`, swap with `nums[slow]` and slow++. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function moveZeroes(nums) {\n  // Your code here\n}",
-        "python": "def move_zeroes(nums):\n    pass"
+        "python": "def move_zeroes(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> moveZeroes(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "moveZeroes",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -112,7 +136,7 @@
       "title": "Linked List Cycle",
       "difficulty": "Easy",
       "tags": ["sliding-window-two-pointers", "same-direction-two-pointers", "linked-list", "floyds-cycle"],
-      "description": "Given `head`, the head of a linked list, determine if the linked list has a cycle in it.\n\nThere is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the `next` pointer.\n\nReturn `true` if there is a cycle in the linked list. Otherwise, return `false`.\n\nThe input is given as `{head: number[], pos: number}` where `pos` is the index where the tail's `next` connects (or `-1` for no cycle).",
+      "description": "Given `head`, the head of a linked list, determine if the linked list has a cycle in it.\n\nThere is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the `next` pointer.\n\nReturn `true` if there is a cycle in the linked list. Otherwise, return `false`.\n\nThe input is given as `{head: number[], pos: number}` where `pos` is the index where the tail's `next` connects (or `-1` for no cycle), and both are passed to your function.",
       "examples": [
         { "input": "head = [3,2,0,-4], pos = 1", "output": "true" },
         { "input": "head = [1,2], pos = 0", "output": "true" },
@@ -123,8 +147,18 @@
       "approach_brute": "Hash set of visited nodes. O(N) time and space.",
       "approach_optimal": "Floyd's tortoise and hare. Slow advances 1 step, fast advances 2 steps. They meet iff a cycle exists. Time O(N), space O(1).",
       "starter_code": {
-        "javascript": "function hasCycle(head) {\n  // Your code here\n}",
-        "python": "def has_cycle(head):\n    pass"
+        "javascript": "function hasCycle(head, pos) {\n  // Your code here\n}",
+        "python": "def has_cycle(head, pos):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool hasCycle(vector<int>& head, int pos) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "hasCycle",
+        "class": "Solution",
+        "args": [
+          { "name": "head", "type": "vector<int>" },
+          { "name": "pos", "type": "int" }
+        ],
+        "ret": "bool"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -148,7 +182,7 @@
       "title": "Linked List Cycle II",
       "difficulty": "Medium",
       "tags": ["sliding-window-two-pointers", "same-direction-two-pointers", "linked-list", "floyds-cycle"],
-      "description": "Given the `head` of a linked list, return the **node where the cycle begins**. If there is no cycle, return `null`.\n\nExpected output: the index of the cycle-start node, or `-1` if no cycle.",
+      "description": "Given the `head` of a linked list, return the **node where the cycle begins**. If there is no cycle, return `null`.\n\nThe input is given as `{head: number[], pos: number}` where `pos` is the index where the tail's `next` connects (or `-1` for no cycle), and both are passed to your function.\n\nExpected output: the index of the cycle-start node, or `-1` if no cycle.",
       "examples": [
         { "input": "head = [3,2,0,-4], pos = 1", "output": "1" },
         { "input": "head = [1,2], pos = 0", "output": "0" }
@@ -158,8 +192,18 @@
       "approach_brute": "Hash set of visited nodes; first repeat is the cycle start. O(N) time and space.",
       "approach_optimal": "Floyd's tortoise and hare. After they meet, reset one pointer to head and advance both one step at a time; they meet again at the cycle start. The math: distance from head to cycle-start = distance from meeting-point to cycle-start (mod cycle length). Time O(N), space O(1).",
       "starter_code": {
-        "javascript": "function detectCycle(head) {\n  // Your code here\n}",
-        "python": "def detect_cycle(head):\n    pass"
+        "javascript": "function detectCycle(head, pos) {\n  // Your code here\n}",
+        "python": "def detect_cycle(head, pos):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int detectCycle(vector<int>& head, int pos) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "detectCycle",
+        "class": "Solution",
+        "args": [
+          { "name": "head", "type": "vector<int>" },
+          { "name": "pos", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -194,7 +238,14 @@
       "approach_optimal": "Slow/fast pointers. Fast advances 2 steps per slow's 1. When fast reaches end, slow is at middle. One pass. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function middleNode(head) {\n  // Your code here\n}",
-        "python": "def middle_node(head):\n    pass"
+        "python": "def middle_node(head):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> middleNode(vector<int>& head) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "middleNode",
+        "class": "Solution",
+        "args": [{ "name": "head", "type": "vector<int>" }],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -230,7 +281,17 @@
       "approach_optimal": "Single pass with two pointers separated by n+1 nodes (using a dummy). Advance both until the leading pointer reaches null; the trailing one is at the predecessor of the node to remove. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function removeNthFromEnd(head, n) {\n  // Your code here\n}",
-        "python": "def remove_nth_from_end(head, n):\n    pass"
+        "python": "def remove_nth_from_end(head, n):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeNthFromEnd(vector<int>& head, int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "removeNthFromEnd",
+        "class": "Solution",
+        "args": [
+          { "name": "head", "type": "vector<int>" },
+          { "name": "n", "type": "int" }
+        ],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -265,7 +326,14 @@
       "approach_optimal": "Floyd's cycle detection on the digit-square-sum function. Slow advances one step, fast advances two. They meet at 1 (happy) or in the non-happy cycle. Time O(log n · iterations), space O(1).",
       "starter_code": {
         "javascript": "function isHappy(n) {\n  // Your code here\n}",
-        "python": "def is_happy(n):\n    pass"
+        "python": "def is_happy(n):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isHappy(int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "isHappy",
+        "class": "Solution",
+        "args": [{ "name": "n", "type": "int" }],
+        "ret": "bool"
       },
       "time_complexity": "O(log n · iterations)",
       "space_complexity": "O(1)",
@@ -300,7 +368,14 @@
       "approach_optimal": "Slow/fast pointers. Allow nums[fast] into nums[slow] iff slow < 2 OR nums[fast] != nums[slow-2]. Advance slow accordingly. Generalizes to 'at most K' by checking nums[fast] != nums[slow-K]. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function removeDuplicates(nums) {\n  // Your code here\n}",
-        "python": "def remove_duplicates(nums):\n    pass"
+        "python": "def remove_duplicates(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeDuplicates(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "removeDuplicates",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -335,7 +410,14 @@
       "approach_optimal": "Treat indices as a functional graph: i → nums[i]. Since one value repeats, the graph has a cycle. Apply Floyd's cycle detection — slow/fast pointers; meeting point + reset trick locates the duplicate. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function findDuplicate(nums) {\n  // Your code here\n}",
-        "python": "def find_duplicate(nums):\n    pass"
+        "python": "def find_duplicate(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findDuplicate(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "findDuplicate",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -370,7 +452,14 @@
       "approach_optimal": "Precompute the last occurrence of every letter. Then sweep: maintain current partition's required end as the maximum of last-occurrence of every letter encountered so far. When the current index reaches that end, close the partition. Time O(N), space O(σ).",
       "starter_code": {
         "javascript": "function partitionLabels(s) {\n  // Your code here\n}",
-        "python": "def partition_labels(s):\n    pass"
+        "python": "def partition_labels(s):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> partitionLabels(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "partitionLabels",
+        "class": "Solution",
+        "args": [{ "name": "s", "type": "string" }],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(σ)",
@@ -405,7 +494,14 @@
       "approach_optimal": "Two pointers: read pointer scans groups; write pointer emits compressed output in-place. After identifying each group, write the character; if count > 1, write the digits. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function compress(chars) {\n  // Your code here\n}",
-        "python": "def compress(chars):\n    pass"
+        "python": "def compress(chars):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<string> compress(vector<string>& chars) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "compress",
+        "class": "Solution",
+        "args": [{ "name": "chars", "type": "vector<string>" }],
+        "ret": "vector<string>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",

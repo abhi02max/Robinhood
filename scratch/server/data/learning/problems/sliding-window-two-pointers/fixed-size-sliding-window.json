@@ -18,7 +18,17 @@
       "approach_optimal": "Compute the sum of the first window of size k. Slide the window one step at a time: subtract the leaving element and add the entering element. Track the running maximum sum, then divide by k at the end. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nfunction findMaxAverage(nums, k) {\n  // Your code here\n}",
-        "python": "from typing import List\n\ndef find_max_average(nums: List[int], k: int) -> float:\n    pass"
+        "python": "from typing import List\n\ndef find_max_average(nums: List[int], k: int) -> float:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    double findMaxAverage(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "findMaxAverage",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "double"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -53,7 +63,17 @@
       "approach_optimal": "Maintain a frequency array of size 26 for p, and a frequency array for the current window. Initialize on the first window of size p.length, then slide one character at a time: increment the entering char, decrement the leaving char. After each slide, compare the two frequency arrays in O(26). Time O(N), space O(σ).",
       "starter_code": {
         "javascript": "/**\n * @param {string} s\n * @param {string} p\n * @return {number[]}\n */\nfunction findAnagrams(s, p) {\n  // Your code here\n}",
-        "python": "from typing import List\n\ndef find_anagrams(s: str, p: str) -> List[int]:\n    pass"
+        "python": "from typing import List\n\ndef find_anagrams(s: str, p: str) -> List[int]:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> findAnagrams(string s, string p) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "findAnagrams",
+        "class": "Solution",
+        "args": [
+          { "name": "s", "type": "string" },
+          { "name": "p", "type": "string" }
+        ],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N + M)",
       "space_complexity": "O(σ) where σ = 26",
@@ -88,7 +108,17 @@
       "approach_optimal": "Identical structure to 'Find All Anagrams': frequency-count s1, slide a window of length s1.length over s2, compare frequency vectors after each slide. Time O(N), space O(σ).",
       "starter_code": {
         "javascript": "/**\n * @param {string} s1\n * @param {string} s2\n * @return {boolean}\n */\nfunction checkInclusion(s1, s2) {\n  // Your code here\n}",
-        "python": "def check_inclusion(s1: str, s2: str) -> bool:\n    pass"
+        "python": "def check_inclusion(s1: str, s2: str) -> bool:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool checkInclusion(string s1, string s2) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "checkInclusion",
+        "class": "Solution",
+        "args": [
+          { "name": "s1", "type": "string" },
+          { "name": "s2", "type": "string" }
+        ],
+        "ret": "bool"
       },
       "time_complexity": "O(N + M)",
       "space_complexity": "O(σ) where σ = 26",
@@ -124,7 +154,17 @@
       "approach_optimal": "Slide a window of size k. Maintain a count of vowels in the window. When entering a vowel, increment; when leaving a vowel, decrement. Track the running max. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "/**\n * @param {string} s\n * @param {number} k\n * @return {number}\n */\nfunction maxVowels(s, k) {\n  // Your code here\n}",
-        "python": "def max_vowels(s: str, k: int) -> int:\n    pass"
+        "python": "def max_vowels(s: str, k: int) -> int:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxVowels(string s, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "maxVowels",
+        "class": "Solution",
+        "args": [
+          { "name": "s", "type": "string" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -159,7 +199,18 @@
       "approach_optimal": "Avoid floating-point: compare sum >= k * threshold. Slide a window of size k maintaining its sum incrementally. Increment count whenever sum >= k*threshold. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "/**\n * @param {number[]} arr\n * @param {number} k\n * @param {number} threshold\n * @return {number}\n */\nfunction numOfSubarrays(arr, k, threshold) {\n  // Your code here\n}",
-        "python": "from typing import List\n\ndef num_of_subarrays(arr: List[int], k: int, threshold: int) -> int:\n    pass"
+        "python": "from typing import List\n\ndef num_of_subarrays(arr: List[int], k: int, threshold: int) -> int:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numOfSubarrays(vector<int>& arr, int k, int threshold) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "numOfSubarrays",
+        "class": "Solution",
+        "args": [
+          { "name": "arr", "type": "vector<int>" },
+          { "name": "k", "type": "int" },
+          { "name": "threshold", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -195,7 +246,17 @@
       "approach_optimal": "Slide a fixed-size window of width |k| around the circular array. For k > 0, the window for index i covers code[i+1..i+k]. Slide one step at a time updating the sum. For k < 0, mirror the logic. Time O(N), space O(N) for output.",
       "starter_code": {
         "javascript": "/**\n * @param {number[]} code\n * @param {number} k\n * @return {number[]}\n */\nfunction decrypt(code, k) {\n  // Your code here\n}",
-        "python": "from typing import List\n\ndef decrypt(code: List[int], k: int) -> List[int]:\n    pass"
+        "python": "from typing import List\n\ndef decrypt(code: List[int], k: int) -> List[int]:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> decrypt(vector<int>& code, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "decrypt",
+        "class": "Solution",
+        "args": [
+          { "name": "code", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
@@ -230,7 +291,19 @@
       "approach_optimal": "Sliding window of size k with running sum. After each slide, classify the window into −1 / 0 / +1. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "/**\n * @param {number[]} calories\n * @param {number} k\n * @param {number} lower\n * @param {number} upper\n * @return {number}\n */\nfunction dietPlanPerformance(calories, k, lower, upper) {\n  // Your code here\n}",
-        "python": "from typing import List\n\ndef diet_plan_performance(calories: List[int], k: int, lower: int, upper: int) -> int:\n    pass"
+        "python": "from typing import List\n\ndef diet_plan_performance(calories: List[int], k: int, lower: int, upper: int) -> int:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int dietPlanPerformance(vector<int>& calories, int k, int lower, int upper) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "dietPlanPerformance",
+        "class": "Solution",
+        "args": [
+          { "name": "calories", "type": "vector<int>" },
+          { "name": "k", "type": "int" },
+          { "name": "lower", "type": "int" },
+          { "name": "upper", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -264,7 +337,18 @@
       "approach_optimal": "Compute the base satisfied total (sum of customers[i] where grumpy[i] == 0). Then slide a window of size `minutes` over customers[i]·grumpy[i] tracking the max gain. Answer = base + max_gain. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "/**\n * @param {number[]} customers\n * @param {number[]} grumpy\n * @param {number} minutes\n * @return {number}\n */\nfunction maxSatisfied(customers, grumpy, minutes) {\n  // Your code here\n}",
-        "python": "from typing import List\n\ndef max_satisfied(customers: List[int], grumpy: List[int], minutes: int) -> int:\n    pass"
+        "python": "from typing import List\n\ndef max_satisfied(customers: List[int], grumpy: List[int], minutes: int) -> int:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int minutes) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "maxSatisfied",
+        "class": "Solution",
+        "args": [
+          { "name": "customers", "type": "vector<int>" },
+          { "name": "grumpy", "type": "vector<int>" },
+          { "name": "minutes", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -299,7 +383,17 @@
       "approach_optimal": "Window size is `2k+1`. Slide it once across nums. Indices in [k, n-k-1] get a real average; others get -1. Use a 64-bit running sum to avoid overflow on max-value inputs. Time O(N), space O(N) for output.",
       "starter_code": {
         "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number[]}\n */\nfunction getAverages(nums, k) {\n  // Your code here\n}",
-        "python": "from typing import List\n\ndef get_averages(nums: List[int], k: int) -> List[int]:\n    pass"
+        "python": "from typing import List\n\ndef get_averages(nums: List[int], k: int) -> List[int]:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> getAverages(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "getAverages",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
@@ -334,7 +428,17 @@
       "approach_optimal": "Equivalent reformulation: minimize the sum of the (n-k) contiguous cards left in the middle. Slide a window of size n-k and find its minimum sum. Answer = total_sum - min_window_sum. Both approaches are O(N).",
       "starter_code": {
         "javascript": "/**\n * @param {number[]} cardPoints\n * @param {number} k\n * @return {number}\n */\nfunction maxScore(cardPoints, k) {\n  // Your code here\n}",
-        "python": "from typing import List\n\ndef max_score(card_points: List[int], k: int) -> int:\n    pass"
+        "python": "from typing import List\n\ndef max_score(card_points: List[int], k: int) -> int:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxScore(vector<int>& cardPoints, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "maxScore",
+        "class": "Solution",
+        "args": [
+          { "name": "cardPoints", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -369,7 +473,14 @@
       "approach_optimal": "Same as brute since the window is a fixed tiny size — three pairwise comparisons per window. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nfunction countGoodSubstrings(s) {\n  // Your code here\n}",
-        "python": "def count_good_substrings(s: str) -> int:\n    pass"
+        "python": "def count_good_substrings(s: str) -> int:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countGoodSubstrings(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "countGoodSubstrings",
+        "class": "Solution",
+        "args": [{ "name": "s", "type": "string" }],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -404,7 +515,17 @@
       "approach_optimal": "Sort the array. The optimal k-subset is a *contiguous* segment of the sorted array (any non-contiguous choice has a strictly worse spread). Slide a window of size k and minimize sorted[i+k-1] − sorted[i]. Time O(N log N), space O(1).",
       "starter_code": {
         "javascript": "/**\n * @param {number[]} nums\n * @param {number} k\n * @return {number}\n */\nfunction minimumDifference(nums, k) {\n  // Your code here\n}",
-        "python": "from typing import List\n\ndef minimum_difference(nums: List[int], k: int) -> int:\n    pass"
+        "python": "from typing import List\n\ndef minimum_difference(nums: List[int], k: int) -> int:\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minimumDifference(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "minimumDifference",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N log N)",
       "space_complexity": "O(1)",

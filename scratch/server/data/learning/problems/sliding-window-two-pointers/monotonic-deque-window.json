@@ -13,7 +13,17 @@
       "edge_cases": ["k == 1", "k == n", "All identical", "Monotonic input"],
       "approach_brute": "For each window, scan k. O(N·K).",
       "approach_optimal": "Monotonic decreasing deque of indices. Pop expired from front, smaller from back, push current; front is max. O(N).",
-      "starter_code": { "javascript": "function maxSlidingWindow(nums, k) {}", "python": "def max_sliding_window(nums, k): pass" },
+      "starter_code": { "javascript": "function maxSlidingWindow(nums, k) {}", "python": "def max_sliding_window(nums, k): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> maxSlidingWindow(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "maxSlidingWindow",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "vector<int>"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(K)",
       "test_cases": [
@@ -42,7 +52,17 @@
       "edge_cases": ["k == 1", "k == n", "All identical", "Monotonic"],
       "approach_brute": "Naive scan. O(N·K).",
       "approach_optimal": "Monotonic increasing deque. O(N).",
-      "starter_code": { "javascript": "function minSlidingWindow(nums, k) {}", "python": "def min_sliding_window(nums, k): pass" },
+      "starter_code": { "javascript": "function minSlidingWindow(nums, k) {}", "python": "def min_sliding_window(nums, k): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> minSlidingWindow(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "minSlidingWindow",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "vector<int>"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(K)",
       "test_cases": [
@@ -71,7 +91,17 @@
       "edge_cases": ["All negative", "k==1 (Kadane)", "k==n", "Single element"],
       "approach_brute": "DP with O(N·K) max recompute.",
       "approach_optimal": "DP + monotonic decreasing deque of dp values for sliding max. O(N).",
-      "starter_code": { "javascript": "function constrainedSubsetSum(nums, k) {}", "python": "def constrained_subset_sum(nums, k): pass" },
+      "starter_code": { "javascript": "function constrainedSubsetSum(nums, k) {}", "python": "def constrained_subset_sum(nums, k): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int constrainedSubsetSum(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "constrainedSubsetSum",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
       "test_cases": [
@@ -100,7 +130,17 @@
       "edge_cases": ["No valid subarray", "All negatives", "Single element >= k"],
       "approach_brute": "All O(N^2) subarrays.",
       "approach_optimal": "Prefix sums + monotonic increasing deque of indices. O(N).",
-      "starter_code": { "javascript": "function shortestSubarray(nums, k) {}", "python": "def shortest_subarray(nums, k): pass" },
+      "starter_code": { "javascript": "function shortestSubarray(nums, k) {}", "python": "def shortest_subarray(nums, k): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int shortestSubarray(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "shortestSubarray",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
       "test_cases": [
@@ -129,7 +169,17 @@
       "edge_cases": ["Single element", "All negative", "k==1", "Large k"],
       "approach_brute": "DP O(N·K).",
       "approach_optimal": "DP from right with monotonic decreasing deque. O(N).",
-      "starter_code": { "javascript": "function maxResult(nums, k) {}", "python": "def max_result(nums, k): pass" },
+      "starter_code": { "javascript": "function maxResult(nums, k) {}", "python": "def max_result(nums, k): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxResult(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "maxResult",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(K)",
       "test_cases": [
@@ -158,7 +208,17 @@
       "edge_cases": ["limit==0", "All equal", "Single element"],
       "approach_brute": "O(N^2).",
       "approach_optimal": "Sliding window with two deques (max and min). O(N).",
-      "starter_code": { "javascript": "function longestSubarray(nums, limit) {}", "python": "def longest_subarray(nums, limit): pass" },
+      "starter_code": { "javascript": "function longestSubarray(nums, limit) {}", "python": "def longest_subarray(nums, limit): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int longestSubarray(vector<int>& nums, int limit) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "longestSubarray",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "limit", "type": "int" }
+        ],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
       "test_cases": [
@@ -187,7 +247,18 @@
       "edge_cases": ["No robot fits", "All robots fit", "Single robot"],
       "approach_brute": "O(N^2).",
       "approach_optimal": "Sliding window + monotonic decreasing deque of chargeTimes + running sum of costs. O(N).",
-      "starter_code": { "javascript": "function maximumRobots(chargeTimes, runningCosts, budget) {}", "python": "def maximum_robots(charge_times, running_costs, budget): pass" },
+      "starter_code": { "javascript": "function maximumRobots(chargeTimes, runningCosts, budget) {}", "python": "def maximum_robots(charge_times, running_costs, budget): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maximumRobots(vector<int>& chargeTimes, vector<int>& runningCosts, int budget) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "maximumRobots",
+        "class": "Solution",
+        "args": [
+          { "name": "chargeTimes", "type": "vector<int>" },
+          { "name": "runningCosts", "type": "vector<int>" },
+          { "name": "budget", "type": "int" }
+        ],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
       "test_cases": [
@@ -216,7 +287,17 @@
       "edge_cases": ["Only 2 points", "All within k", "k tiny"],
       "approach_brute": "All pairs O(N^2).",
       "approach_optimal": "Rewrite as (yi-xi)+(yj+xj). For each j, max(yi-xi) over x-window via monotonic decreasing deque. O(N).",
-      "starter_code": { "javascript": "function findMaxValueOfEquation(points, k) {}", "python": "def find_max_value_of_equation(points, k): pass" },
+      "starter_code": { "javascript": "function findMaxValueOfEquation(points, k) {}", "python": "def find_max_value_of_equation(points, k): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findMaxValueOfEquation(vector<vector<int>>& points, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "findMaxValueOfEquation",
+        "class": "Solution",
+        "args": [
+          { "name": "points", "type": "vector<vector<int>>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
       "test_cases": [
@@ -245,7 +326,14 @@
       "edge_cases": ["All equal", "Strictly increasing"],
       "approach_brute": "O(N^2).",
       "approach_optimal": "Sliding window with max deque + min deque. For each r, count = r-l+1. O(N).",
-      "starter_code": { "javascript": "function continuousSubarrays(nums) {}", "python": "def continuous_subarrays(nums): pass" },
+      "starter_code": { "javascript": "function continuousSubarrays(nums) {}", "python": "def continuous_subarrays(nums): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int continuousSubarrays(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "continuousSubarrays",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
       "test_cases": [
@@ -274,7 +362,14 @@
       "edge_cases": ["Single element", "All equal", "Strictly increasing/decreasing"],
       "approach_brute": "All subarrays. O(N^2).",
       "approach_optimal": "For each element, use monotonic stack to find left/right nearest smaller. Contribution = arr[i] * left_count * right_count. O(N).",
-      "starter_code": { "javascript": "function sumSubarrayMins(arr) {}", "python": "def sum_subarray_mins(arr): pass" },
+      "starter_code": { "javascript": "function sumSubarrayMins(arr) {}", "python": "def sum_subarray_mins(arr): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int sumSubarrayMins(vector<int>& arr) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "sumSubarrayMins",
+        "class": "Solution",
+        "args": [{ "name": "arr", "type": "vector<int>" }],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
       "test_cases": [
@@ -303,7 +398,14 @@
       "edge_cases": ["Single bar", "All equal", "Increasing/decreasing"],
       "approach_brute": "O(N^2) by expanding around each bar.",
       "approach_optimal": "Monotonic increasing stack of indices. On pop, compute area with popped height as the limiting one. O(N).",
-      "starter_code": { "javascript": "function largestRectangleArea(heights) {}", "python": "def largest_rectangle_area(heights): pass" },
+      "starter_code": { "javascript": "function largestRectangleArea(heights) {}", "python": "def largest_rectangle_area(heights): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int largestRectangleArea(vector<int>& heights) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "largestRectangleArea",
+        "class": "Solution",
+        "args": [{ "name": "heights", "type": "vector<int>" }],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
       "test_cases": [
@@ -332,7 +434,14 @@
       "edge_cases": ["Single element", "All equal", "Strictly monotonic"],
       "approach_brute": "All subarrays. O(N^2).",
       "approach_optimal": "Monotonic stack to find for each element the maximal range it dominates as min; use prefix sums for O(1) sum lookup. O(N).",
-      "starter_code": { "javascript": "function maxSumMinProduct(nums) {}", "python": "def max_sum_min_product(nums): pass" },
+      "starter_code": { "javascript": "function maxSumMinProduct(nums) {}", "python": "def max_sum_min_product(nums): pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxSumMinProduct(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n" },
+      "cpp_signature": {
+        "fn": "maxSumMinProduct",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
+      },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
       "test_cases": [

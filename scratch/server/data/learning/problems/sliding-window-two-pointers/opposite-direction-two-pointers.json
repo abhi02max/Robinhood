@@ -18,7 +18,17 @@
       "approach_optimal": "Two pointers from opposite ends. Sum < target → l++; sum > target → r--; equal → return. The sortedness guarantees we never miss a valid pair. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function twoSum(numbers, target) {\n  // Your code here\n}",
-        "python": "def two_sum(numbers, target):\n    pass"
+        "python": "def two_sum(numbers, target):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> twoSum(vector<int>& numbers, int target) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "twoSum",
+        "class": "Solution",
+        "args": [
+          { "name": "numbers", "type": "vector<int>" },
+          { "name": "target", "type": "int" }
+        ],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -54,7 +64,14 @@
       "approach_optimal": "Sort. For each i, run a two-pointer scan over (i, n-1) finding pairs that sum to -nums[i]. Skip duplicates at every level. Time O(N^2), space O(1) extra.",
       "starter_code": {
         "javascript": "function threeSum(nums) {\n  // Your code here\n}",
-        "python": "def three_sum(nums):\n    pass"
+        "python": "def three_sum(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<vector<int>> threeSum(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "threeSum",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<vector<int>>"
       },
       "time_complexity": "O(N^2)",
       "space_complexity": "O(1)",
@@ -89,7 +106,17 @@
       "approach_optimal": "Sort. Two outer loops fix `a` and `b`, then a two-pointer scan finds pairs that sum to `target - nums[a] - nums[b]`. Skip duplicates at all four levels. Time O(N^3), space O(1) extra.",
       "starter_code": {
         "javascript": "function fourSum(nums, target) {\n  // Your code here\n}",
-        "python": "def four_sum(nums, target):\n    pass"
+        "python": "def four_sum(nums, target):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<vector<int>> fourSum(vector<int>& nums, int target) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "fourSum",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "target", "type": "int" }
+        ],
+        "ret": "vector<vector<int>>"
       },
       "time_complexity": "O(N^3)",
       "space_complexity": "O(1)",
@@ -124,7 +151,14 @@
       "approach_optimal": "Two pointers at the two ends. Compute area; advance the pointer at the *shorter* line — moving the taller side cannot increase area (width decreases, height bounded by the shorter). Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function maxArea(height) {\n  // Your code here\n}",
-        "python": "def max_area(height):\n    pass"
+        "python": "def max_area(height):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxArea(vector<int>& height) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "maxArea",
+        "class": "Solution",
+        "args": [{ "name": "height", "type": "vector<int>" }],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -159,7 +193,14 @@
       "approach_optimal": "Two pointers. Maintain leftMax, rightMax. If height[l] < height[r], water at l = leftMax - h[l], advance l. Else mirror on right. The pointer at the smaller side has its bound determined. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function trap(height) {\n  // Your code here\n}",
-        "python": "def trap(height):\n    pass"
+        "python": "def trap(height):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int trap(vector<int>& height) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "trap",
+        "class": "Solution",
+        "args": [{ "name": "height", "type": "vector<int>" }],
+        "ret": "int"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -195,7 +236,14 @@
       "approach_optimal": "Two pointers from both ends, skipping non-alphanumeric. Compare characters case-insensitively. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function isPalindrome(s) {\n  // Your code here\n}",
-        "python": "def is_palindrome(s):\n    pass"
+        "python": "def is_palindrome(s):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isPalindrome(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "isPalindrome",
+        "class": "Solution",
+        "args": [{ "name": "s", "type": "string" }],
+        "ret": "bool"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -231,7 +279,14 @@
       "approach_optimal": "Two pointers. On first mismatch, recursively check if `s[l+1..r]` or `s[l..r-1]` is a palindrome. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function validPalindrome(s) {\n  // Your code here\n}",
-        "python": "def valid_palindrome(s):\n    pass"
+        "python": "def valid_palindrome(s):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool validPalindrome(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "validPalindrome",
+        "class": "Solution",
+        "args": [{ "name": "s", "type": "string" }],
+        "ret": "bool"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -266,7 +321,14 @@
       "approach_optimal": "Two pointers from ends, swap, converge. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function reverseString(s) {\n  // Your code here\n}",
-        "python": "def reverse_string(s):\n    pass"
+        "python": "def reverse_string(s):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<string> reverseString(vector<string>& s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "reverseString",
+        "class": "Solution",
+        "args": [{ "name": "s", "type": "vector<string>" }],
+        "ret": "vector<string>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -301,7 +363,14 @@
       "approach_optimal": "Dutch National Flag: three pointers `low`, `mid`, `high`. Element at `mid` is 0 → swap with low, advance both; 1 → mid++; 2 → swap with high, high--. One pass, in-place. Time O(N), space O(1).",
       "starter_code": {
         "javascript": "function sortColors(nums) {\n  // Your code here\n}",
-        "python": "def sort_colors(nums):\n    pass"
+        "python": "def sort_colors(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> sortColors(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "sortColors",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(1)",
@@ -336,7 +405,14 @@
       "approach_optimal": "Two pointers from both ends. Compare absolute values; whichever is larger, place its square at the end of the output array and advance that pointer. Time O(N), space O(N) for output.",
       "starter_code": {
         "javascript": "function sortedSquares(nums) {\n  // Your code here\n}",
-        "python": "def sorted_squares(nums):\n    pass"
+        "python": "def sorted_squares(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> sortedSquares(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "sortedSquares",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<int>"
       },
       "time_complexity": "O(N)",
       "space_complexity": "O(N)",
@@ -372,7 +448,17 @@
       "approach_optimal": "Sort. Two pointers — pair the lightest with the heaviest if they fit; else the heaviest goes alone. Each iteration places at least one person in a boat. Time O(N log N).",
       "starter_code": {
         "javascript": "function numRescueBoats(people, limit) {\n  // Your code here\n}",
-        "python": "def num_rescue_boats(people, limit):\n    pass"
+        "python": "def num_rescue_boats(people, limit):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numRescueBoats(vector<int>& people, int limit) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "numRescueBoats",
+        "class": "Solution",
+        "args": [
+          { "name": "people", "type": "vector<int>" },
+          { "name": "limit", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N log N)",
       "space_complexity": "O(1)",
@@ -407,7 +493,17 @@
       "approach_optimal": "Sort. Two pointers from ends; if sum < k, record candidate and l++; else r--. Time O(N log N).",
       "starter_code": {
         "javascript": "function twoSumLessThanK(nums, k) {\n  // Your code here\n}",
-        "python": "def two_sum_less_than_k(nums, k):\n    pass"
+        "python": "def two_sum_less_than_k(nums, k):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int twoSumLessThanK(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+      },
+      "cpp_signature": {
+        "fn": "twoSumLessThanK",
+        "class": "Solution",
+        "args": [
+          { "name": "nums", "type": "vector<int>" },
+          { "name": "k", "type": "int" }
+        ],
+        "ret": "int"
       },
       "time_complexity": "O(N log N)",
       "space_complexity": "O(1)",

@@ -98,7 +98,8 @@
       ],
       "starter_code": {
         "javascript": "function maxSubArray(nums) {\n  // Your code here\n}",
-        "python": "def max_subarray(nums):\n    pass"
+        "python": "def max_subarray(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxSubArray(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
       },
       "cpp_signature": {
         "fn": "maxSubArray",
