@@ -212,8 +212,14 @@ export async function submitSolution({ userId, problemId, code, language }) {
       ? exec.results[exec.first_failed_index]
       : null;
     const fk = firstFail && firstFail.error_kind;
-    if (fk === ERROR_KIND.RUNTIME_ERROR ||
-        fk === ERROR_KIND.COMPILE_ERROR ||
+    // A compile error is its own verdict. Folding it into 'Runtime Error' told a
+    // user with a missing semicolon that their program crashed while running, which
+    // sends them debugging logic instead of syntax. The column's CHECK constraint
+    // already permits 'Compilation Error', execution-service.js already maps it that
+    // way, and the UI already styles it -- this path was the only one disagreeing.
+    if (fk === ERROR_KIND.COMPILE_ERROR) {
+      status = 'Compilation Error';
+    } else if (fk === ERROR_KIND.RUNTIME_ERROR ||
         fk === ERROR_KIND.HARNESS_ERROR) {
       status = 'Runtime Error';
     } else if (fk === ERROR_KIND.TIME_LIMIT_EXCEEDED) {
@@ -302,7 +308,7 @@ export async function submitSolution({ userId, problemId, code, language }) {
 
   const result = {
     submission_id: submission.id,
-    status,                                    // Accepted | Wrong Answer | Runtime Error | TLE
+    status,                                    // Accepted | Wrong Answer | Compilation Error | Runtime Error | TLE
     passed: status === 'Accepted',
     pass_count: exec.pass_count,
     total_cases: exec.total,
