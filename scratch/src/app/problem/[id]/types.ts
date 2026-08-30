@@ -7,7 +7,7 @@ export type LanguageId = 'javascript' | 'python' | 'cpp' | 'java' | 'c' | 'cshar
 
 export type SubmissionResult = {
   submission_id: string;
-  status: 'Accepted' | 'Wrong Answer' | 'Time Limit Exceeded' | 'Runtime Error' | string;
+  status: 'Accepted' | 'Wrong Answer' | 'Time Limit Exceeded' | 'Runtime Error' | 'Compilation Error' | string;
   passed: boolean;
   pass_count: number;
   total_cases: number;
@@ -86,13 +86,30 @@ export type PredictiveData = {
 
 export type DiffSegment = { type: 'same' | 'add' | 'remove'; text: string };
 
+/**
+ * Languages the editor offers.
+ *
+ * ONLY languages that survive the whole pipeline belong here. Offering one that
+ * does not is worse than not offering it: the user writes a correct solution and
+ * is told their code is broken by an error naming harness internals.
+ *
+ * Measured state of the other three, as of 2026-08-30:
+ *
+ *   c       rejected before reaching a compiler. Only `cpp` skips the JS/Python
+ *           entrypoint extractor, so a C submission dies at
+ *           "Unsupported language for entrypoint extraction: c".
+ *   csharp  rejected the same way. buildCsharpProgram exists but is dead code.
+ *   java    rejected earlier still -- absent from SUPPORTED_LANGUAGES, and there
+ *           is no buildJavaProgram at all.
+ *
+ * Each gets added back here as it passes its starter-and-reference suite, which
+ * is Phase 2 of the production roadmap. Keep this list and the engine's
+ * SUPPORTED_LANGUAGES honest about each other.
+ */
 export const LANGUAGES: { id: LanguageId; label: string; monacoId: string }[] = [
   { id: 'javascript', label: 'JavaScript', monacoId: 'javascript' },
   { id: 'python',     label: 'Python',     monacoId: 'python' },
   { id: 'cpp',        label: 'C++',        monacoId: 'cpp' },
-  { id: 'c',          label: 'C',          monacoId: 'c' },
-  { id: 'csharp',     label: 'C#',         monacoId: 'csharp' },
-  { id: 'java',       label: 'Java',       monacoId: 'java' },
 ];
 
 export const DEFAULT_STARTERS: Record<LanguageId, string> = {
