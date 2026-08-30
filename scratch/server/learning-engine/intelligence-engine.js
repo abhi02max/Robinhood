@@ -426,6 +426,24 @@ export function generateContextualHint(context) {
   let category = 'general';
   let message = '';
 
+  // ---- Accepted ----
+  // Must come first, and must return. Without this branch an accepted submission
+  // fell through every check below into the Wrong Answer text and told the user to
+  // "trace through your algorithm with the failing test input" when there was no
+  // failing test at all (found 2026-08-30 by the end-to-end submit check, which is
+  // the first time real verdicts existed to notice it with).
+  if (statusLower.includes('accept')) {
+    message = pattern_name
+      ? `Accepted. Now name the invariant that makes ${pattern_name} correct here, and state the time and space complexity of what you wrote.`
+      : `Accepted. State the time and space complexity of what you wrote, then look for a step you can remove.`;
+    if (attempt >= 3) {
+      message += ` It took ${attempt} attempts — write down which specific mistake cost you the earlier ones so the next problem in this pattern does not repeat it.`;
+    }
+    // The attempt-count escalation above is about being stuck, which no longer
+    // applies once the problem is solved.
+    return { message, severity: 'info', category: 'accepted' };
+  }
+
   // ---- TLE ----
   if (statusLower.includes('time limit')) {
     category = 'performance';
