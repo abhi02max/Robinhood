@@ -42,6 +42,7 @@ import {
   typeDeclaration,
 } from '../languages/registry.js';
 import { buildJavaProgram, renderJavaStarter } from '../languages/java.js';
+import { buildCProgram, renderCStarter } from '../languages/c.js';
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -332,8 +333,17 @@ function buildProgram(language, userCode, entry, cppSignature) {
   const lang = normalizeLanguage(language);
   if (lang === 'javascript') return buildJavaScriptProgram(userCode, entry);
   if (lang === 'python')     return buildPythonProgram(userCode, entry);
-  if (lang === 'cpp' || lang === 'c') return buildCppProgram(userCode, cppSignature);
+  if (lang === 'cpp')        return buildCppProgram(userCode, cppSignature);
   if (lang === 'csharp')     return buildCsharpProgram(userCode, entry);
+  if (lang === 'c') {
+    // Until now `c` fell through to buildCppProgram and the registry mapped it to
+    // Judge0 id 54 — the C++ compiler. C was a label on C++, so C++-only code
+    // compiled and genuinely C-specific behaviour was never exercised. It now has its
+    // own harness, its own parameter conventions (a length beside every array, a
+    // returnSize out-parameter for array returns) and Judge0 id 50.
+    renderCStarter(cppSignature || {});
+    return (testCase) => buildCProgram(userCode, cppSignature, testCase?.input_payload);
+  }
   if (lang === 'java') {
     // Per-case program: the arguments are literals in the source, so validate the
     // signature once here and hand back a builder the run loop calls per test case.

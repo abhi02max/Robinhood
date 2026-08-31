@@ -46,6 +46,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { inferSignature, renderCppStarter } from '../../../../scripts/lib/cpp-infer.mjs';
 import { renderJavaStarter } from '../../../../languages/java.js';
+import { renderCStarter } from '../../../../languages/c.js';
 import { languageSupportsSignature } from '../../../../languages/registry.js';
 
 const FLOAT_TOLERANCE = 1e-6;
@@ -269,6 +270,21 @@ function renderCppSignature(sig, indent) {
   ].join('\n');
 }
 
+/**
+ * The generated starters, in a fixed order, with commas between but not after.
+ *
+ * Hand-threading `${x ? ',' : ''}` through each optional line was already fragile with
+ * two languages and would not survive a third.
+ */
+const OPTIONAL_STARTER_LANGUAGES = ['cpp', 'java', 'c'];
+
+function renderOptionalStarters(starterCode, indent) {
+  const present = OPTIONAL_STARTER_LANGUAGES.filter((lang) => starterCode[lang]);
+  return present.map((lang, i) => (
+    `${indent}  ${q(lang)}: ${q(starterCode[lang])}${i < present.length - 1 ? ',' : ''}`
+  ));
+}
+
 function renderProblem(pr, indent) {
   const i2 = `${indent}  `;
   const lines = [
@@ -289,9 +305,10 @@ function renderProblem(pr, indent) {
     `${i2}"approaches": [\n${pr.approaches.map((ap) => renderApproach(ap, `${i2}  `)).join(',\n')}\n${i2}],`,
     `${i2}"starter_code": {`,
     `${i2}  "javascript": ${q(pr.starter_code.javascript)},`,
-    `${i2}  "python": ${q(pr.starter_code.python)}${pr.starter_code.cpp || pr.starter_code.java ? ',' : ''}`,
-    ...(pr.starter_code.cpp ? [`${i2}  "cpp": ${q(pr.starter_code.cpp)}${pr.starter_code.java ? ',' : ''}`] : []),
-    ...(pr.starter_code.java ? [`${i2}  "java": ${q(pr.starter_code.java)}`] : []),
+    `${i2}  "python": ${q(pr.starter_code.python)}${renderOptionalStarters(pr.starter_code, i2).length ? ',' : ''}`,
+    // Emitted in a fixed order, with the comma driven by whatever comes after, so the
+    // rendered JSON stays valid whichever languages a given problem supports.
+    ...renderOptionalStarters(pr.starter_code, i2),
     `${i2}},`,
     ...(pr.cpp_signature ? [`${i2}"cpp_signature": ${renderCppSignature(pr.cpp_signature, i2)},`] : []),
     `${i2}"time_complexity": ${q(pr.time_complexity)},`,
@@ -500,18 +517,22 @@ export function buildProblem(spec, { topic, pattern }) {
   // Java, where the signature allows it. Capability is DERIVED per problem rather
   // than assumed: a language is offered on a problem only when it can express every
   // argument and return type in that problem's signature.
-  const javaVerdict = languageSupportsSignature('java', inferred.signature);
-  if (javaVerdict.supported) {
-    const starterJava = renderJavaStarter(inferred.signature);
-    if (starterJava.error) {
-      const e = new Error(`${spec.slug}: cannot render a Java starter — ${starterJava.error}`);
+  const skippedLanguages = [];
+  for (const [language, render] of [['java', renderJavaStarter], ['c', renderCStarter]]) {
+    const verdict = languageSupportsSignature(language, inferred.signature);
+    if (!verdict.supported) {
+      skippedLanguages.push(`${language}: ${verdict.reason}`);
+      continue;
+    }
+    const starter = render(inferred.signature);
+    if (starter.error) {
+      const e = new Error(`${spec.slug}: cannot render a ${language} starter — ${starter.error}`);
       e.authoring = true;
       throw e;
     }
-    problem.starter_code.java = starterJava.code;
-  } else {
-    problem.__javaSkipped = javaVerdict.reason;
+    problem.starter_code[language] = starter.code;
   }
+  if (skippedLanguages.length) problem.__languagesSkipped = skippedLanguages;
 
   return problem;
 }

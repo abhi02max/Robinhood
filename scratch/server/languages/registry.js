@@ -307,13 +307,11 @@ export const LANGUAGES = Object.freeze({
     signatureStrategy: 'signature',
     starterGenerator: 'c-signature',
     harnessGenerator: 'c',
-    harnessImplemented: false,
+    harnessImplemented: true,
     types: C_TYPES,
-    supportsRun: false,
-    supportsSubmit: false,
-    productionEnabled: false,
-    status: 'Phase 2C. Needs its own compiler id and length-parameter conventions; '
-      + 'previously compiled as C++, which made it C in name only.',
+    supportsRun: true,
+    supportsSubmit: true,
+    productionEnabled: true,
   },
 
   csharp: {

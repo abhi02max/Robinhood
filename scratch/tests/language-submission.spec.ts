@@ -17,8 +17,20 @@ const API = 'http://127.0.0.1:3000';
 const PROBLEM_SLUG = 'house-robber';
 const CLIENT_STATE_KEY = 'robinhood_data';
 
-/** Java 8 syntax on purpose: Judge0 CE ships OpenJDK 13, not Paiza's 18. */
-const CORRECT_JAVA = `class Solution {
+/**
+ * One case per signature-driven language added in Phase 2.
+ *
+ * starterMarker is the fragment that proves the loaded starter came from THIS
+ * problem's signature rather than the generic DEFAULT_STARTERS fallback — it encodes
+ * the language's own parameter conventions, which is the thing most likely to be wrong.
+ */
+const LANGUAGES = [
+  {
+    key: 'java',
+    label: 'Java',
+    // Java 8 syntax on purpose: Judge0 CE ships OpenJDK 13, not Paiza's 18.
+    starterMarker: 'public int rob(int[] nums)',
+    solution: `class Solution {
     public int rob(int[] nums) {
         int twoBack = 0;
         int oneBack = 0;
@@ -29,7 +41,25 @@ const CORRECT_JAVA = `class Solution {
         }
         return oneBack;
     }
-}`;
+}`,
+  },
+  {
+    key: 'c',
+    label: 'C',
+    // The companion length parameter is C's whole calling convention; if the starter
+    // does not carry it, the pipeline is wrong.
+    starterMarker: 'int rob(int* nums, int numsSize)',
+    solution: `int rob(int* nums, int numsSize) {
+    int twoBack = 0, oneBack = 0, i;
+    for (i = 0; i < numsSize; i++) {
+        int best = oneBack > twoBack + nums[i] ? oneBack : twoBack + nums[i];
+        twoBack = oneBack;
+        oneBack = best;
+    }
+    return oneBack;
+}`,
+  },
+] as const;
 
 type Session = { token: string; userId: string; email: string };
 
@@ -128,8 +158,9 @@ async function setEditorCode(page: Page, code: string, marker: string): Promise<
  */
 test.describe.configure({ timeout: 240_000 });
 
-test.describe('Java through the UI', () => {
-  test('Java is offered, loads a problem-specific starter, and grades Accepted', async ({ page }) => {
+for (const lang of LANGUAGES) {
+  test.describe(`${lang.label} through the UI`, () => {
+  test(`${lang.label} is offered, loads a problem-specific starter, and grades Accepted`, async ({ page }) => {
     const session = await createSession();
     await signIn(page, session);
 
@@ -141,20 +172,12 @@ test.describe('Java through the UI', () => {
     await page.goto(`/problem/${PROBLEM_SLUG}`);
     await page.waitForSelector('.pp-editor-pane', { timeout: 30000 });
 
-    // 1. Java is selectable. This is the registry's productionEnabled flag reaching
-    //    the editor: the list is derived, not hand-maintained.
-    const selector = page.locator('.pp-lang-select');
-    await expect(selector).toBeVisible();
-    await expect(selector.locator('option[value="java"]')).toHaveCount(1);
-
-    // C and C# must NOT be offered yet — Phases 2C and 2D.
-    await expect(selector.locator('option[value="c"]')).toHaveCount(0);
-    await expect(selector.locator('option[value="csharp"]')).toHaveCount(0);
-
-    await selector.selectOption('java');
-
-    // 2. The starter is problem-specific, generated from this problem's signature —
-    //    not the generic DEFAULT_STARTERS fallback.
+    // Wait for the problem's OWN starter to land before touching the language
+    // selector. The page mounts Monaco with a generic default, then replaces it once
+    // /api/learning/problem responds, and for a signed-in user several more requests
+    // resolve after that. Switching language mid-load races those updates and the
+    // starter gets reset under the test — which is also why a real user cannot switch
+    // before the page has loaded.
     await page.waitForFunction(
       () => {
         const monaco = (window as unknown as {
@@ -162,19 +185,46 @@ test.describe('Java through the UI', () => {
         }).monaco;
         const editor = monaco?.editor.getEditors()[0];
         const model = editor ? editor.getModel() : null;
-        return Boolean(model && model.getValue().includes('public int rob(int[] nums)'));
+        return Boolean(model && model.getValue().includes('function rob(nums)'));
       },
       null,
       { timeout: 60000 },
     );
 
+    // 1. The language is selectable. This is the registry's productionEnabled flag
+    //    reaching the editor: the list is derived, not hand-maintained.
+    const selector = page.locator('.pp-lang-select');
+    await expect(selector).toBeVisible();
+    await expect(selector.locator(`option[value="${lang.key}"]`)).toHaveCount(1);
+
+    // C# must NOT be offered yet — Phase 2D.
+    await expect(selector.locator('option[value="csharp"]')).toHaveCount(0);
+
+    await selector.selectOption(lang.key);
+
+    // 2. The starter is problem-specific, generated from this problem's signature —
+    //    not the generic DEFAULT_STARTERS fallback.
+    await page.waitForFunction(
+      (needle) => {
+        const monaco = (window as unknown as {
+          monaco?: { editor: { getEditors: () => { getModel: () => { getValue: () => string } | null }[] } };
+        }).monaco;
+        const editor = monaco?.editor.getEditors()[0];
+        const model = editor ? editor.getModel() : null;
+        return Boolean(model && model.getValue().includes(needle as string));
+      },
+      lang.starterMarker,
+      { timeout: 60000 },
+    );
+
     const starter = await activeEditorValue(page);
-    expect(starter, 'starter must declare the method from the signature').toContain('public int rob(int[] nums)');
-    expect(starter, 'starter must not contain harness boilerplate').not.toContain('main(');
+    expect(starter, 'starter must declare the function from the signature').toContain(lang.starterMarker);
+    expect(starter, 'starter must not contain harness boilerplate').not.toContain('int main(');
     expect(starter, 'starter must not read stdin').not.toContain('Scanner');
+    expect(starter, 'starter must not read stdin').not.toContain('scanf');
 
     // 3. Edit, Run, Submit.
-    await setEditorCode(page, CORRECT_JAVA, 'public int rob(int[] nums)');
+    await setEditorCode(page, lang.solution, lang.starterMarker);
 
     const runBtn = page.locator('.pp-btn--run');
     await expect(runBtn).toBeEnabled({ timeout: 15000 });
@@ -188,7 +238,7 @@ test.describe('Java through the UI', () => {
     const banner = page.locator('.pp-status-banner').first();
     await expect(banner).toBeVisible({ timeout: 90000 });
     expect(unauthorized, `no /api call may 401: ${unauthorized.join(', ')}`).toHaveLength(0);
-    await expect(banner, 'Java must be graded Accepted').toContainText(/Accepted/i, { timeout: 90000 });
+    await expect(banner, `${lang.label} must be graded Accepted`).toContainText(/Accepted/i, { timeout: 90000 });
 
     // 4. Persistence and progress, read back through the API as the user.
     const api = await playwrightRequest.newContext({
@@ -198,10 +248,10 @@ test.describe('Java through the UI', () => {
 
     const detail = await (await api.get(`/api/learning/problem/${PROBLEM_SLUG}`)).json();
     const attempts = await (await api.get(`/api/learning/attempts/${detail.id}`)).json();
-    const javaAttempts = (attempts.attempts || []).filter((a: { language: string }) => a.language === 'java');
-    expect(javaAttempts.length, 'a Java attempt must be persisted').toBeGreaterThan(0);
-    expect(javaAttempts.some((a: { status: string }) => a.status === 'Accepted'),
-      'the persisted Java attempt must be Accepted').toBeTruthy();
+    const langAttempts = (attempts.attempts || []).filter((a: { language: string }) => a.language === lang.key);
+    expect(langAttempts.length, `a ${lang.label} attempt must be persisted`).toBeGreaterThan(0);
+    expect(langAttempts.some((a: { status: string }) => a.status === 'Accepted'),
+      `the persisted ${lang.label} attempt must be Accepted`).toBeTruthy();
 
     const progress = await (await api.get('/api/learning/pattern-progress')).json();
     const rows = progress.patterns || progress.progress || [];
@@ -210,4 +260,5 @@ test.describe('Java through the UI', () => {
 
     await api.dispose();
   });
-});
+  });
+}

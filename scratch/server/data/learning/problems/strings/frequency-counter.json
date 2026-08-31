@@ -90,7 +90,8 @@
         "javascript": "function isAnagram(s, t) {\n  // Your code here\n}",
         "python": "def is_anagram(s, t):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isAnagram(string s, string t) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public boolean isAnagram(String s, String t) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
+        "java": "class Solution {\n    public boolean isAnagram(String s, String t) {\n        // Write your solution here.\n        return false;\n    }\n}\n",
+        "c": "bool isAnagram(char* s, char* t) {\n    // Write your solution here.\n    return false;\n}\n"
       },
       "cpp_signature":       {
         "fn": "isAnagram",
@@ -206,7 +207,8 @@
         "javascript": "function canConstruct(ransomNote, magazine) {\n  // Your code here\n}",
         "python": "def can_construct(ransomNote, magazine):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool canConstruct(string ransomNote, string magazine) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public boolean canConstruct(String ransomNote, String magazine) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
+        "java": "class Solution {\n    public boolean canConstruct(String ransomNote, String magazine) {\n        // Write your solution here.\n        return false;\n    }\n}\n",
+        "c": "bool canConstruct(char* ransomNote, char* magazine) {\n    // Write your solution here.\n    return false;\n}\n"
       },
       "cpp_signature":       {
         "fn": "canConstruct",
@@ -321,7 +323,8 @@
         "javascript": "function firstUniqChar(s) {\n  // Your code here\n}",
         "python": "def first_uniq_char(s):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int firstUniqChar(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int firstUniqChar(String s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int firstUniqChar(String s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "c": "int firstUniqChar(char* s) {\n    // Write your solution here.\n    return 0;\n}\n"
       },
       "cpp_signature":       {
         "fn": "firstUniqChar",
@@ -433,7 +436,8 @@
         "javascript": "function frequencySort(s) {\n  // Your code here\n}",
         "python": "def frequency_sort(s):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string frequencySort(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public String frequencySort(String s) {\n        // Write your solution here.\n        return \"\";\n    }\n}\n"
+        "java": "class Solution {\n    public String frequencySort(String s) {\n        // Write your solution here.\n        return \"\";\n    }\n}\n",
+        "c": "char* frequencySort(char* s) {\n    // Write your solution here.\n    return NULL;\n}\n"
       },
       "cpp_signature":       {
         "fn": "frequencySort",

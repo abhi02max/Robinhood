@@ -94,7 +94,8 @@
         "javascript": "function numIslands(grid) {\n  // Your code here\n}",
         "python": "def num_islands(grid):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numIslands(vector<string>& grid) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int numIslands(String[] grid) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int numIslands(String[] grid) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "c": "int numIslands(char** grid, int gridSize) {\n    // Write your solution here.\n    return 0;\n}\n"
       },
       "cpp_signature":       {
         "fn": "numIslands",

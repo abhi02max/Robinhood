@@ -88,7 +88,8 @@
         "javascript": "function runningSum(nums) {\n  // Your code here\n}",
         "python": "def running_sum(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> runningSum(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int[] runningSum(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
+        "java": "class Solution {\n    public int[] runningSum(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* runningSum(int* nums, int numsSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
       },
       "cpp_signature":       {
         "fn": "runningSum",
@@ -201,7 +202,8 @@
         "javascript": "function pivotIndex(nums) {\n  // Your code here\n}",
         "python": "def pivot_index(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int pivotIndex(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int pivotIndex(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int pivotIndex(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "c": "int pivotIndex(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n"
       },
       "cpp_signature":       {
         "fn": "pivotIndex",
@@ -317,7 +319,8 @@
         "javascript": "function subarraySum(nums, k) {\n  // Your code here\n}",
         "python": "def subarray_sum(nums, k):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int subarraySum(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int subarraySum(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int subarraySum(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "c": "int subarraySum(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
       },
       "cpp_signature":       {
         "fn": "subarraySum",
@@ -434,7 +437,8 @@
         "javascript": "function productExceptSelf(nums) {\n  // Your code here\n}",
         "python": "def product_except_self(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> productExceptSelf(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int[] productExceptSelf(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
+        "java": "class Solution {\n    public int[] productExceptSelf(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* productExceptSelf(int* nums, int numsSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
       },
       "cpp_signature":       {
         "fn": "productExceptSelf",
@@ -548,7 +552,8 @@
         "javascript": "function findMaxLength(nums) {\n  // Your code here\n}",
         "python": "def find_max_length(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findMaxLength(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int findMaxLength(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int findMaxLength(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "c": "int findMaxLength(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n"
       },
       "cpp_signature":       {
         "fn": "findMaxLength",
