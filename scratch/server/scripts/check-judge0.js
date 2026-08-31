@@ -21,6 +21,7 @@
 import dotenv from 'dotenv';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { listLanguages, providerLanguageId } from '../languages/registry.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 // Resolved from this file, not from cwd: running the script from the repo root
@@ -33,16 +34,36 @@ const BASE = (process.env.JUDGE0_URL || 'https://judge0-ce.p.rapidapi.com').repl
 const KEY = process.env.JUDGE0_API_KEY || '';
 const HOST = process.env.JUDGE0_API_HOST || 'judge0-ce.p.rapidapi.com';
 
-// Keep this table in sync with JUDGE0_LANG_ID in
-// server/learning-engine/execution-engine.js.
-const EXPECTED = {
-  javascript: { id: 63, match: /^JavaScript/i },
-  python: { id: 71, match: /^Python/i },
-  cpp: { id: 54, match: /^C\+\+/i },
-  csharp: { id: 51, match: /^C#/i },
+// Ids come from server/languages/registry.js. This table used to be maintained by
+// hand with a "keep this in sync" comment, which is a promise no comment can keep --
+// and the table it was meant to mirror had itself diverged from the one in
+// server/execution/judge0.js.
+//
+// The name patterns stay here: they encode what Judge0 SHOULD report for each id, and
+// checking them is the whole point of this script. An id that resolves to a different
+// language than expected is the failure mode that silently compiles the wrong thing.
+const NAME_PATTERNS = {
+  javascript: /^JavaScript/i,
+  python: /^Python/i,
+  cpp: /^C\+\+/i,
+  csharp: /^C#/i,
+  java: /^Java\s*\(/i,
+  c: /^C\s*\(/i,
 };
-// Not wired up yet -- reported so the later phases have real IDs to use.
-const PLANNED = { java: /^Java\s*\(/i, c: /^C\s*\(/i };
+
+const EXPECTED = Object.fromEntries(
+  listLanguages()
+    .filter((l) => l.productionEnabled && typeof providerLanguageId(l.key, 'judge0') === 'number')
+    .map((l) => [l.key, { id: providerLanguageId(l.key, 'judge0'), match: NAME_PATTERNS[l.key] }]),
+);
+
+// Registered but not yet production-enabled: reported with the ids the registry now
+// holds, so Phase 2 has real values to validate rather than placeholders.
+const PLANNED = Object.fromEntries(
+  listLanguages()
+    .filter((l) => !l.productionEnabled)
+    .map((l) => [l.key, { id: providerLanguageId(l.key, 'judge0'), match: NAME_PATTERNS[l.key] }]),
+);
 
 const b64 = (s) => Buffer.from(s, 'utf8').toString('base64');
 const unb64 = (s) => (s ? Buffer.from(s, 'base64').toString('utf8') : '');
@@ -96,8 +117,12 @@ async function main() {
     else if (!match.test(name)) bad(`${lang}: id ${id} is "${name}" -- WRONG LANGUAGE`);
     else ok(`${lang}: id ${id} = "${name}"`);
   }
-  console.log('  --- IDs for languages not yet wired up ---');
-  for (const [lang, match] of Object.entries(PLANNED)) {
+  console.log('  --- registered but not yet production-enabled ---');
+  for (const [lang, { id, match }] of Object.entries(PLANNED)) {
+    const registered = byId.get(id);
+    console.log(registered
+      ? `  ${lang}: registry id ${id} is "${registered}" on this instance`
+      : `  ${lang}: registry id ${id} DOES NOT EXIST on this instance`);
     const hits = langs.filter((l) => match.test(l.name));
     console.log(hits.length
       ? `  INFO  ${lang}: ${hits.map((l) => `${l.id} = "${l.name}"`).join(', ')}`

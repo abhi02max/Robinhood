@@ -32,6 +32,15 @@
  */
 
 import { runMockExecution } from './execution-mock.js';
+import {
+  getLanguage,
+  isExecutable,
+  normalizeLanguage as registryNormalizeLanguage,
+  normalizeType,
+  providerLanguageId,
+  providerMapping,
+  typeDeclaration,
+} from '../languages/registry.js';
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -65,7 +74,10 @@ const HTTP_TIMEOUT_MS     = PER_TEST_TIMEOUT_MS + 4_000;
 const CONCURRENCY         = Math.max(1, Number(process.env.EXECUTION_CONCURRENCY) || 4);
 const MEMORY_MB           = Number(process.env.EXECUTION_MEMORY_MB) || 256;
 
-const SUPPORTED_LANGUAGES = new Set(['javascript', 'python', 'cpp', 'c', 'csharp']);
+// Language identity, provider ids and type tables all come from
+// server/languages/registry.js now. Seven modules used to answer these questions
+// independently and two of them disagreed about Judge0, so adding a language meant
+// finding every copy and getting every copy right.
 
 // Relative tolerance for comparing non-integral numbers. Problems that return a
 // double (e.g. maximum-average-subarray-i, an average) cannot be compared with
@@ -77,15 +89,18 @@ const FLOAT_TOLERANCE = Number(process.env.EXECUTION_FLOAT_TOLERANCE) || 1e-6;
  * Normalize loose user-supplied language strings ("C++", "c++", "javascript")
  * to the canonical lowercase keys this module uses internally.
  */
-function normalizeLanguage(language) {
-  const v = String(language || '').toLowerCase().trim();
-  if (v === 'c++') return 'cpp';
-  if (v === 'c#') return 'csharp';
-  return v;
-}
+const normalizeLanguage = registryNormalizeLanguage;
 
+/**
+ * Can the engine physically execute this language?
+ *
+ * This is deliberately the engine's own question, not the product's. It answers "is
+ * there a harness builder", which during Phase 2 is true for a language well before
+ * the API or the editor will accept it. Whether a *user* may submit in a language is
+ * `canSubmit` in the registry, enforced at the service and security layers.
+ */
 export function isLanguageSupported(language) {
-  return SUPPORTED_LANGUAGES.has(normalizeLanguage(language));
+  return isExecutable(language);
 }
 
 // ---------------------------------------------------------------------------
@@ -445,28 +460,35 @@ public class Program {
 // builder so the user sees "unsupported type 'X'" instead of cryptic
 // compiler output.
 // ---------------------------------------------------------------------------
-// Exported so the seed-file tooling (backfill-cpp-signatures.js,
-// backfill-cpp-starters.js) can generate only types the harness can actually
-// compile. Duplicating this list in a script means a type can be added here and
-// silently never emitted, or emitted and rejected at submit time — which is the
-// worst place for the user to find out.
-export const CPP_TYPE_MAP = Object.freeze({
-  'int':                  { decl: 'int',                 decoder: 'decodeInt'     },
-  'long':                 { decl: 'long long',           decoder: 'decodeLL'      },
-  'long long':            { decl: 'long long',           decoder: 'decodeLL'      },
-  'int64_t':              { decl: 'long long',           decoder: 'decodeLL'      },
-  'double':               { decl: 'double',              decoder: 'decodeD'       },
-  'float':                { decl: 'double',              decoder: 'decodeD'       },
-  'bool':                 { decl: 'bool',                decoder: 'decodeBool'    },
-  'string':               { decl: 'string',              decoder: 'decodeStr'     },
-  'vector<int>':          { decl: 'vector<int>',         decoder: 'decodeVecI'    },
-  'vector<long>':         { decl: 'vector<long long>',   decoder: 'decodeVecLL'   },
-  'vector<long long>':    { decl: 'vector<long long>',   decoder: 'decodeVecLL'   },
-  'vector<double>':       { decl: 'vector<double>',      decoder: 'decodeVecD'    },
-  'vector<bool>':         { decl: 'vector<bool>',        decoder: 'decodeVecBool' },
-  'vector<string>':       { decl: 'vector<string>',      decoder: 'decodeVecStr'  },
-  'vector<vector<int>>':  { decl: 'vector<vector<int>>', decoder: 'decodeMatI'    },
+/**
+ * C++ type table, projected from the registry.
+ *
+ * Still exported because the seed-file tooling (backfill-cpp-signatures.js,
+ * backfill-cpp-starters.js, lib/cpp-infer.mjs) imports it, and because a script that
+ * kept its own copy could emit a type the harness would then refuse to compile.
+ *
+ * The extra keys here are ACCEPTED SPELLINGS, not new capabilities: hand-written
+ * signatures in the seed files use `long`, `int64_t` and `float`, and they resolve to
+ * the same declarations as their canonical equivalents. The registry holds only the
+ * canonical vocabulary, so the aliasing belongs here, next to the code that parses
+ * real signatures.
+ */
+const CPP_TYPE_ALIASES = Object.freeze({
+  'long': 'long long',
+  'int64_t': 'long long',
+  'float': 'double',
+  'vector<long>': 'vector<long long>',
 });
+
+export const CPP_TYPE_MAP = Object.freeze(
+  Object.fromEntries([
+    ...['int', 'long long', 'double', 'bool', 'string',
+      'vector<int>', 'vector<long long>', 'vector<double>',
+      'vector<bool>', 'vector<string>', 'vector<vector<int>>',
+    ].map((t) => [t, typeDeclaration('cpp', t)]),
+    ...Object.entries(CPP_TYPE_ALIASES).map(([alias, canonical]) => [alias, typeDeclaration('cpp', canonical)]),
+  ]),
+);
 
 /**
  * Canonicalize a C++ type string to a CPP_TYPE_MAP key.
@@ -477,13 +499,7 @@ export const CPP_TYPE_MAP = Object.freeze({
  * and any problem whose data exceeded 32 bits was rejected with "unsupported
  * argument type". Nothing caught it because no seeded problem had values that large.
  */
-export function normalizeCppType(t) {
-  return String(t || '')
-    .replace(/\s+/g, ' ')
-    .replace(/\s*<\s*/g, '<')
-    .replace(/\s*>\s*/g, '>')
-    .trim();
-}
+export const normalizeCppType = normalizeType;
 
 function validateCppSignature(sig) {
   if (!sig || typeof sig !== 'object') {
@@ -805,14 +821,19 @@ function parseHarnessOutput(stdout) {
 // ---------------------------------------------------------------------------
 // Provider: Piston (https://emkc.org/api/v2/piston)
 // ---------------------------------------------------------------------------
-const PISTON_LANG = {
-  javascript: { language: 'javascript', version: '*', filename: 'main.js' },
-  python:     { language: 'python',     version: '*', filename: 'main.py' },
-  cpp:        { language: 'c++',        version: '*', filename: 'main.cpp' },
-};
+/**
+ * Piston wants a language name, a version spec and a source filename — a different
+ * shape from Judge0's numeric id and Paiza's slug, which is why the registry keeps
+ * per-provider mappings instead of one shared id.
+ */
+function pistonLangConfig(language) {
+  const mapping = providerMapping(language, 'piston');
+  if (!mapping) return null;
+  return { language: mapping.id, version: '*', filename: mapping.filename };
+}
 
 async function pistonRun({ language, program, stdin }) {
-  const cfg = PISTON_LANG[language];
+  const cfg = pistonLangConfig(language);
   if (!cfg) throw new Error(`Piston: unsupported language ${language}`);
 
   const body = {
@@ -875,14 +896,13 @@ async function pistonRun({ language, program, stdin }) {
 // ---------------------------------------------------------------------------
 // Provider: Judge0 (CE / RapidAPI / self-hosted)
 // ---------------------------------------------------------------------------
-const JUDGE0_LANG_ID = {
-  // Stable IDs for Judge0 1.13.x / RapidAPI CE
-  javascript: 63,   // Node.js (12.14.0)
-  python:     71,   // Python (3.8.1)
-  cpp:        54,   // C++ (GCC 9.2.0) — compiled with -std=c++17 by default
-  c:          54,   // Run C as C++ (GCC 9.2.0) to use our C++ harness!
-  csharp:     51,   // C# (Mono 6.6.0.161)
-};
+// Judge0 ids come from the registry. This table used to live here AND in
+// server/execution/judge0.js with different contents — this copy had C# but no Java,
+// that one had Java but no C# — so the same provider answered to two different maps
+// depending on which entrypoint you came through.
+//
+// Note that C no longer borrows 54 (the C++ id). Running C through a C++ compiler
+// made it C in name only, and Phase 2C gives it id 50 and a real C harness.
 
 function judge0Headers() {
   const h = { 'Content-Type': 'application/json' };
@@ -1002,7 +1022,7 @@ function describeJudge0Rejection(entry) {
  * Returns an exec object per test case, in the original order.
  */
 async function judge0RunBatch({ language, program, testCases }) {
-  const langId = JUDGE0_LANG_ID[language];
+  const langId = providerLanguageId(language, 'judge0');
   if (!langId) throw new Error(`Judge0: unsupported language ${language}`);
 
   const base = getJudge0Url().replace(/\/$/, '');
@@ -1161,16 +1181,8 @@ function getPaizaKey() {
 const PAIZA_POLL_INTERVAL_MS = Math.max(150, Number(process.env.PAIZA_POLL_INTERVAL_MS) || 500);
 const PAIZA_MAX_POLLS = Math.max(1, Number(process.env.PAIZA_MAX_POLLS) || 20);
 
-const PAIZA_LANG = {
-  javascript: 'javascript',
-  python: 'python3',
-  cpp: 'cpp',
-  c: 'c',
-  csharp: 'csharp',
-  // Accepted by Paiza today, but unreachable until buildJavaProgram exists.
-  // SUPPORTED_LANGUAGES is the gate, so listing it here is harmless.
-  java: 'java',
-};
+// Paiza slugs come from the registry. Paiza accepts all six languages; whether the
+// engine can build a program for one is `harnessImplemented`, which is the gate.
 
 // 'guest' is not a credential, but a real key would be, and Paiza takes it as a
 // request parameter rather than a header -- so keep it out of error text.
@@ -1239,7 +1251,7 @@ function paizaMapDetails(d) {
 }
 
 async function paizaRun({ language, program, stdin }) {
-  const lang = PAIZA_LANG[language];
+  const lang = providerLanguageId(language, 'paiza');
   if (!lang) throw new Error(`Paiza: unsupported language ${language}`);
 
   const created = await paizaFetch('/runners/create', {

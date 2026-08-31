@@ -18,6 +18,7 @@
 // rather than reinventing it. Left as-is deliberately: it only serves the older
 // /api/execute façade, and changing it is out of scope for the submission work.
 import axios from 'axios';
+import { providerLanguageId } from '../languages/registry.js';
 const JUDGE0_URL = process.env.JUDGE0_URL || 'http://localhost:2358';
 const JUDGE0_TIMEOUT_MS = Number(process.env.JUDGE0_TIMEOUT_MS || 15000);
 const JUDGE0_SUBMIT_MAX_CASES = Math.max(1, Number(process.env.JUDGE0_SUBMIT_MAX_CASES || 50));
@@ -60,17 +61,23 @@ function buildPayload({ language, code, stdin = '', expectedOutput = '' }) {
   };
 }
 
+/**
+ * Judge0 language id, from the single registry.
+ *
+ * This function used to carry its own hardcoded table: javascript 63, python 71,
+ * cpp 54, java 62 — and no C#. Meanwhile execution-engine.js carried a different one
+ * with C# 51 and no Java. Same provider, two answers, depending on which entrypoint
+ * a request arrived through. A numeric id is passed straight back so callers that
+ * already resolved one keep working.
+ */
 function mapJudge0Language(language) {
   if (typeof language === 'number' && Number.isFinite(language)) {
     return language;
   }
-
-  const lang = String(language || '').toLowerCase().trim();
-  if (lang === 'javascript') return 63; // Node.js
-  if (lang === 'python') return 71; // Python 3
-  if (lang === 'cpp' || lang === 'c++') return 54; // GCC C++
-  if (lang === 'java') return 62; // OpenJDK
-  return 0;
+  const id = providerLanguageId(language, 'judge0');
+  // 0 rather than null preserves this module's existing "unsupported" contract,
+  // which buildPayload checks with a falsy test.
+  return typeof id === 'number' ? id : 0;
 }
 
 function resolveJudge0Endpoint() {

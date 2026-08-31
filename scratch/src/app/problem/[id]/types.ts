@@ -3,6 +3,15 @@
  * Single source of truth — all components import from here.
  */
 
+import { productionLanguages } from '../../../../server/languages/registry.js';
+
+/**
+ * Every language the platform knows about, exposed or not.
+ *
+ * Wider than `LANGUAGES` below on purpose: `DEFAULT_STARTERS` and the per-language
+ * code cache keep entries for hidden languages so nothing has to be rebuilt when one
+ * is switched on.
+ */
 export type LanguageId = 'javascript' | 'python' | 'cpp' | 'java' | 'c' | 'csharp';
 
 export type SubmissionResult = {
@@ -87,30 +96,23 @@ export type PredictiveData = {
 export type DiffSegment = { type: 'same' | 'add' | 'remove'; text: string };
 
 /**
- * Languages the editor offers.
+ * Languages the editor offers, derived from the single language registry.
  *
- * ONLY languages that survive the whole pipeline belong here. Offering one that
- * does not is worse than not offering it: the user writes a correct solution and
- * is told their code is broken by an error naming harness internals.
+ * This list used to be maintained by hand and offered all six, including three that
+ * could not execute at all. It is now a projection of `productionEnabled` in
+ * server/languages/registry.js, so a language appears here exactly when its pipeline
+ * is finished — the editor cannot drift from what the engine can run.
  *
- * Measured state of the other three, as of 2026-08-30:
- *
- *   c       rejected before reaching a compiler. Only `cpp` skips the JS/Python
- *           entrypoint extractor, so a C submission dies at
- *           "Unsupported language for entrypoint extraction: c".
- *   csharp  rejected the same way. buildCsharpProgram exists but is dead code.
- *   java    rejected earlier still -- absent from SUPPORTED_LANGUAGES, and there
- *           is no buildJavaProgram at all.
- *
- * Each gets added back here as it passes its starter-and-reference suite, which
- * is Phase 2 of the production roadmap. Keep this list and the engine's
- * SUPPORTED_LANGUAGES honest about each other.
+ * The registry is a dependency-free data module for precisely this reason: it is
+ * imported by the Express server and by this client component, and it reads no
+ * environment and touches no node builtins.
  */
-export const LANGUAGES: { id: LanguageId; label: string; monacoId: string }[] = [
-  { id: 'javascript', label: 'JavaScript', monacoId: 'javascript' },
-  { id: 'python',     label: 'Python',     monacoId: 'python' },
-  { id: 'cpp',        label: 'C++',        monacoId: 'cpp' },
-];
+export const LANGUAGES: { id: LanguageId; label: string; monacoId: string }[] =
+  productionLanguages().map((l) => ({
+    id: l.key as LanguageId,
+    label: l.displayName,
+    monacoId: l.monacoLanguage,
+  }));
 
 export const DEFAULT_STARTERS: Record<LanguageId, string> = {
   javascript: '// Write your solution here\nfunction solve(input) {\n  return null;\n}\n',

@@ -1,5 +1,9 @@
 import { z } from 'zod';
 import { validateSqlQuery } from './sql-policy.js';
+import {
+  listLanguages,
+  normalizeLanguage as registryNormalizeLanguage,
+} from '../languages/registry.js';
 
 const CODE_MAX_BYTES = Math.max(1_024, Number(process.env.EXEC_CODE_MAX_BYTES || 120_000));
 const STDIN_MAX_BYTES = Math.max(1_024, Number(process.env.EXEC_STDIN_MAX_BYTES || 20_000));
@@ -7,23 +11,33 @@ const SQL_MAX_BYTES = Math.max(256, Number(process.env.SQL_QUERY_MAX_BYTES || 5_
 const TEST_CASE_LIMIT = Math.max(1, Number(process.env.EXEC_TESTCASE_LIMIT || 120));
 const TEST_IO_MAX_BYTES = Math.max(256, Number(process.env.EXEC_TESTCASE_IO_MAX_BYTES || 12_000));
 
-const SUPPORTED_RUN_LANGUAGES = new Set(['javascript', 'python', 'cpp', 'java', 'c', 'csharp', 'sql']);
-const SUPPORTED_SUBMIT_LANGUAGES = new Set(['javascript', 'python', 'cpp', 'java', 'c', 'csharp']);
-
-const aliasMap = {
-  js: 'javascript',
-  node: 'javascript',
-  py: 'python',
-  cplusplus: 'cpp',
-  'c++': 'cpp',
-  cs: 'csharp',
-  'c#': 'csharp',
-  postgres: 'sql',
-};
+/**
+ * Which languages this edge will accept, derived from the registry.
+ *
+ * Previously both sets listed all six languages by hand, so a Java or C# submission
+ * passed validation here and then died deep inside the engine with "Unsupported
+ * language for entrypoint extraction: java" — an error about harness internals, for a
+ * request that should have been refused at the door with a plain message.
+ *
+ * Deriving from `supportsSubmit`/`supportsRun` means a language is accepted here
+ * exactly when its pipeline is finished, and Phase 2 flips both in one place.
+ *
+ * `sql` is not a registry language — it is the SQL sandbox, a separate execution path
+ * with its own policy in ./sql-policy.js — so it is added to the run set explicitly.
+ */
+const SUPPORTED_RUN_LANGUAGES = new Set([
+  ...listLanguages().filter((l) => l.supportsRun).map((l) => l.key),
+  'sql',
+]);
+const SUPPORTED_SUBMIT_LANGUAGES = new Set(
+  listLanguages().filter((l) => l.supportsSubmit).map((l) => l.key),
+);
 
 function normalizeLanguage(value) {
   const raw = String(value || '').trim().toLowerCase();
-  return aliasMap[raw] || raw;
+  // The SQL sandbox keeps its own alias; everything else comes from the registry.
+  if (raw === 'postgres') return 'sql';
+  return registryNormalizeLanguage(raw);
 }
 
 function toSafeString(value, maxLength) {
