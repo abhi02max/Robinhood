@@ -92,7 +92,8 @@
       "starter_code": {
         "javascript": "function nextGreaterElement(nums1, nums2) {\n  // Your code here\n}",
         "python": "def next_greater_element(nums1, nums2):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] nextGreaterElement(int[] nums1, int[] nums2) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "nextGreaterElement",
@@ -207,7 +208,8 @@
       "starter_code": {
         "javascript": "function nextGreaterElements(nums) {\n  // Your code here\n}",
         "python": "def next_greater_elements(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> nextGreaterElements(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> nextGreaterElements(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] nextGreaterElements(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "nextGreaterElements",
@@ -319,7 +321,8 @@
       "starter_code": {
         "javascript": "function dailyTemperatures(temperatures) {\n  // Your code here\n}",
         "python": "def daily_temperatures(temperatures):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> dailyTemperatures(vector<int>& temperatures) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> dailyTemperatures(vector<int>& temperatures) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] dailyTemperatures(int[] temperatures) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "dailyTemperatures",
@@ -434,7 +437,8 @@
       "starter_code": {
         "javascript": "function removeKdigits(num, k) {\n  // Your code here\n}",
         "python": "def remove_kdigits(num, k):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string removeKdigits(string num, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string removeKdigits(string num, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public String removeKdigits(String num, int k) {\n        // Write your solution here.\n        return \"\";\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "removeKdigits",

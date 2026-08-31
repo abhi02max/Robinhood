@@ -107,6 +107,11 @@ async function createSession(): Promise<Session> {
   return { token: body.sessionToken, userId: body.user?.id ?? '', email };
 }
 
+// A real submission runs every test case through the provider, which on Paiza is two
+// requests per case with a per-case compile. The repo default of 30s is not enough
+// headroom for that, and a test that passes on timing luck is worse than none.
+test.describe.configure({ timeout: 240_000 });
+
 test.describe('authenticated submission through the UI', () => {
   test('Submit reaches the grader and reports a real verdict', async ({ page }) => {
     const session = await createSession();

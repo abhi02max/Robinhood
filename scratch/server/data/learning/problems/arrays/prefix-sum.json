@@ -87,7 +87,8 @@
       "starter_code": {
         "javascript": "function runningSum(nums) {\n  // Your code here\n}",
         "python": "def running_sum(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> runningSum(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> runningSum(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] runningSum(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "runningSum",
@@ -199,7 +200,8 @@
       "starter_code": {
         "javascript": "function pivotIndex(nums) {\n  // Your code here\n}",
         "python": "def pivot_index(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int pivotIndex(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int pivotIndex(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int pivotIndex(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "pivotIndex",
@@ -314,7 +316,8 @@
       "starter_code": {
         "javascript": "function subarraySum(nums, k) {\n  // Your code here\n}",
         "python": "def subarray_sum(nums, k):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int subarraySum(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int subarraySum(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int subarraySum(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "subarraySum",
@@ -430,7 +433,8 @@
       "starter_code": {
         "javascript": "function productExceptSelf(nums) {\n  // Your code here\n}",
         "python": "def product_except_self(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> productExceptSelf(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> productExceptSelf(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] productExceptSelf(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "productExceptSelf",
@@ -543,7 +547,8 @@
       "starter_code": {
         "javascript": "function findMaxLength(nums) {\n  // Your code here\n}",
         "python": "def find_max_length(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findMaxLength(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findMaxLength(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int findMaxLength(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "findMaxLength",

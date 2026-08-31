@@ -286,13 +286,11 @@ export const LANGUAGES = Object.freeze({
     signatureStrategy: 'signature',
     starterGenerator: 'java-signature',
     harnessGenerator: 'java',
-    harnessImplemented: false,
+    harnessImplemented: true,
     types: JAVA_TYPES,
-    supportsRun: false,
-    supportsSubmit: false,
-    productionEnabled: false,
-    status: 'Phase 2B. Registered so the pipeline can be built and tested; hidden '
-      + 'until check-java-starters and the browser E2E pass.',
+    supportsRun: true,
+    supportsSubmit: true,
+    productionEnabled: true,
   },
 
   c: {

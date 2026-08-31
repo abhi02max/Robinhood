@@ -65,12 +65,15 @@ test('a hidden language cannot advertise run or submit support', () => {
 // Production set — this is what the editor offers
 // ---------------------------------------------------------------------------
 
-test('exactly JavaScript, Python and C++ are production-enabled', () => {
-  assert.deepEqual(productionLanguages().map((l) => l.key), ['javascript', 'python', 'cpp']);
+test('JavaScript, Python, C++ and Java are production-enabled', () => {
+  // Java joined in Phase 2B after: 21 harness unit tests, all five verdicts observed
+  // on a real provider, 96/96 generated starters compiling, and a browser E2E that was
+  // demonstrated to fail against a broken Java configuration.
+  assert.deepEqual(productionLanguages().map((l) => l.key), ['javascript', 'python', 'cpp', 'java']);
 });
 
-test('Java, C and C# are registered but hidden', () => {
-  for (const key of ['java', 'c', 'csharp']) {
+test('C and C# are registered but still hidden', () => {
+  for (const key of ['c', 'csharp']) {
     assert.ok(getLanguage(key), `${key} must be registered`);
     assert.equal(isProductionEnabled(key), false, `${key} must be hidden`);
   }
@@ -85,10 +88,11 @@ test('every registered language names a harness generator', () => {
   }
 });
 
-test('only JavaScript, Python and C++ have an implemented harness today', () => {
-  // Phase 2B-2D flip java, c and csharp here, one at a time, each behind its own
-  // starter suite and browser E2E.
-  assert.deepEqual(executableLanguages().map((l) => l.key), ['javascript', 'python', 'cpp']);
+test('languages with an implemented harness are exactly those the engine can run', () => {
+  // Phase 2C and 2D flip c and csharp. Java's harness exists (Phase 2B) which is why
+  // the engine will execute it, while supportsSubmit/productionEnabled stay false
+  // until its gates pass — that separation is the whole point of the two flags.
+  assert.deepEqual(executableLanguages().map((l) => l.key), ['javascript', 'python', 'cpp', 'java']);
 });
 
 test('a language cannot be submittable without an implemented harness', () => {
@@ -274,18 +278,23 @@ test('a malformed signature is reported per argument', () => {
 
 test('languagesForSignature reports the production set and the reasons against', () => {
   const visible = languagesForSignature(MATRIX_SIGNATURE);
-  assert.deepEqual(visible.supported, ['javascript', 'python', 'cpp']);
+  assert.deepEqual(visible.supported, ['javascript', 'python', 'cpp', 'java']);
   assert.deepEqual(visible.unsupported, []);
 
   const all = languagesForSignature(MATRIX_SIGNATURE, { includeHidden: true });
   assert.deepEqual(all.supported, ['javascript', 'python', 'cpp', 'java', 'csharp']);
+  // C is excluded on capability, not on exposure: it has no 2-D array representation.
   assert.deepEqual(all.unsupported.map((u) => u.key), ['c']);
 });
 
 test('run and submit capability is readable per language', () => {
   assert.equal(canRun('cpp'), true);
   assert.equal(canSubmit('cpp'), true);
-  assert.equal(canRun('java'), false);
-  assert.equal(canSubmit('java'), false);
+  // Java passed its Phase 2B gates, so it may now be run and submitted.
+  assert.equal(canRun('java'), true);
+  assert.equal(canSubmit('java'), true);
+  // C and C# are still registered-but-hidden until Phases 2C and 2D.
+  assert.equal(canRun('c'), false);
+  assert.equal(canSubmit('csharp'), false);
   assert.equal(canRun('nonsense'), false);
 });

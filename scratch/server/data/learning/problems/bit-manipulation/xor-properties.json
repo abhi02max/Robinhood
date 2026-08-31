@@ -89,7 +89,8 @@
       "starter_code": {
         "javascript": "function singleNumber(nums) {\n  // Your code here\n}",
         "python": "def single_number(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int singleNumber(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int singleNumber(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int singleNumber(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "singleNumber",
@@ -200,7 +201,8 @@
       "starter_code": {
         "javascript": "function missingNumber(nums) {\n  // Your code here\n}",
         "python": "def missing_number(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int missingNumber(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int missingNumber(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int missingNumber(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "missingNumber",
@@ -310,7 +312,8 @@
       "starter_code": {
         "javascript": "function xorOperation(n, start) {\n  // Your code here\n}",
         "python": "def xor_operation(n, start):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int xorOperation(int n, int start) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int xorOperation(int n, int start) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int xorOperation(int n, int start) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "xorOperation",
@@ -425,7 +428,8 @@
       "starter_code": {
         "javascript": "function singleNumber(nums) {\n  // Your code here\n}",
         "python": "def single_number(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> singleNumber(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> singleNumber(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] singleNumber(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "singleNumber",

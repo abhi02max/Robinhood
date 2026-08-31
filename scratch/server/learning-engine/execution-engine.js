@@ -41,6 +41,7 @@ import {
   providerMapping,
   typeDeclaration,
 } from '../languages/registry.js';
+import { buildJavaProgram, renderJavaStarter } from '../languages/java.js';
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -313,13 +314,39 @@ __sys.stdout.write('<<<OUT>>>' + __json.dumps(__out) + '<<<END>>>')
 `;
 }
 
+/**
+ * Build the program to execute.
+ *
+ * Returns EITHER a string — one program reused for every test case, with the payload
+ * arriving on stdin — OR a function `(testCase) => string` for languages whose harness
+ * embeds the arguments as source literals.
+ *
+ * Java takes the second route because its inputs are tiny (largest payload across the
+ * whole curriculum: 101 bytes) and literals let its harness carry a serializer but no
+ * parser. It costs nothing: every provider recompiles per case anyway, since Paiza's
+ * create is an independent compile and Judge0's batch carries a source per submission.
+ *
+ * JavaScript, Python and C++ are untouched and still return a string.
+ */
 function buildProgram(language, userCode, entry, cppSignature) {
   const lang = normalizeLanguage(language);
   if (lang === 'javascript') return buildJavaScriptProgram(userCode, entry);
   if (lang === 'python')     return buildPythonProgram(userCode, entry);
   if (lang === 'cpp' || lang === 'c') return buildCppProgram(userCode, cppSignature);
   if (lang === 'csharp')     return buildCsharpProgram(userCode, entry);
+  if (lang === 'java') {
+    // Per-case program: the arguments are literals in the source, so validate the
+    // signature once here and hand back a builder the run loop calls per test case.
+    // Validating eagerly means a bad signature is one clear error, not one per case.
+    renderJavaStarter(cppSignature || {});
+    return (testCase) => buildJavaProgram(userCode, cppSignature, testCase?.input_payload);
+  }
   throw new Error(`Unsupported language: ${language}`);
+}
+
+/** Resolve a program for one test case, whichever shape buildProgram returned. */
+function programFor(program, testCase) {
+  return typeof program === 'function' ? program(testCase) : program;
 }
 
 function buildCsharpProgram(userCode, entry) {
@@ -1026,7 +1053,10 @@ async function judge0RunBatch({ language, program, testCases }) {
   if (!langId) throw new Error(`Judge0: unsupported language ${language}`);
 
   const base = getJudge0Url().replace(/\/$/, '');
-  const source = b64encode(program);
+  // `source_code` is per submission in the batch API, so a per-case program (Java's
+  // literal harness) costs no extra requests and no extra compiles: each submission
+  // was always going to be compiled on its own.
+  const sourceFor = (tc) => b64encode(programFor(program, tc));
   const cpuLimit = Math.max(1, Math.ceil(PER_TEST_TIMEOUT_MS / 1000));
 
   // One slot per test case: { token } once created, or { error } if rejected.
@@ -1040,7 +1070,7 @@ async function judge0RunBatch({ language, program, testCases }) {
       body: JSON.stringify({
         submissions: chunk.map((tc) => ({
           language_id: langId,
-          source_code: source,
+          source_code: sourceFor(tc),
           stdin: b64encode(JSON.stringify(tc.input_payload ?? {})),
           cpu_time_limit: cpuLimit,
           wall_time_limit: cpuLimit + 2,
@@ -1354,15 +1384,18 @@ export async function runExecution({ code, language, testCases, cpp_signature = 
   // ----- shared: parse user code once, build program once per call -----
   let entry = null;
 
-  if (lang === 'cpp') {
-    // C++ does not use the JS/Python entrypoint extractor — the harness
-    // takes its function/method shape entirely from cpp_signature.
+  // Which languages skip the JS/Python entrypoint extractor is a registry fact, not
+  // a hardcoded name. It used to read `if (lang === 'cpp')`, which is why C, C# and
+  // Java all died with "Unsupported language for entrypoint extraction" — they take
+  // their shape from a signature and have no source to parse for parameter names.
+  const languageDef = getLanguage(lang);
+  if (languageDef?.signatureStrategy === 'signature') {
     if (!cpp_signature) {
       return buildAllFailedResult({
         testCases,
         language: lang,
         kind: ERROR_KIND.COMPILE_ERROR,
-        reason: 'C++ not supported for this problem (no cpp_signature configured).',
+        reason: `${languageDef.displayName} not supported for this problem (no signature configured).`,
       });
     }
   } else {
@@ -1412,7 +1445,7 @@ export async function runExecution({ code, language, testCases, cpp_signature = 
       const stdin = JSON.stringify(tc.input_payload ?? {});
       const t0 = Date.now();
       try {
-        const exec = await runOne({ language: lang, program, stdin });
+        const exec = await runOne({ language: lang, program: programFor(program, tc), stdin });
         const elapsed = Date.now() - t0;
         return { idx, tc, exec, elapsed };
       } catch (e) {

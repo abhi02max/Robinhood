@@ -45,6 +45,8 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { inferSignature, renderCppStarter } from '../../../../scripts/lib/cpp-infer.mjs';
+import { renderJavaStarter } from '../../../../languages/java.js';
+import { languageSupportsSignature } from '../../../../languages/registry.js';
 
 const FLOAT_TOLERANCE = 1e-6;
 const PY = process.env.PYTHON_BIN || 'python';
@@ -287,8 +289,9 @@ function renderProblem(pr, indent) {
     `${i2}"approaches": [\n${pr.approaches.map((ap) => renderApproach(ap, `${i2}  `)).join(',\n')}\n${i2}],`,
     `${i2}"starter_code": {`,
     `${i2}  "javascript": ${q(pr.starter_code.javascript)},`,
-    `${i2}  "python": ${q(pr.starter_code.python)}${pr.starter_code.cpp ? ',' : ''}`,
-    ...(pr.starter_code.cpp ? [`${i2}  "cpp": ${q(pr.starter_code.cpp)}`] : []),
+    `${i2}  "python": ${q(pr.starter_code.python)}${pr.starter_code.cpp || pr.starter_code.java ? ',' : ''}`,
+    ...(pr.starter_code.cpp ? [`${i2}  "cpp": ${q(pr.starter_code.cpp)}${pr.starter_code.java ? ',' : ''}`] : []),
+    ...(pr.starter_code.java ? [`${i2}  "java": ${q(pr.starter_code.java)}`] : []),
     `${i2}},`,
     ...(pr.cpp_signature ? [`${i2}"cpp_signature": ${renderCppSignature(pr.cpp_signature, i2)},`] : []),
     `${i2}"time_complexity": ${q(pr.time_complexity)},`,
@@ -493,6 +496,22 @@ export function buildProblem(spec, { topic, pattern }) {
   }
   problem.cpp_signature = inferred.signature;
   problem.starter_code.cpp = starterCpp.code;
+
+  // Java, where the signature allows it. Capability is DERIVED per problem rather
+  // than assumed: a language is offered on a problem only when it can express every
+  // argument and return type in that problem's signature.
+  const javaVerdict = languageSupportsSignature('java', inferred.signature);
+  if (javaVerdict.supported) {
+    const starterJava = renderJavaStarter(inferred.signature);
+    if (starterJava.error) {
+      const e = new Error(`${spec.slug}: cannot render a Java starter — ${starterJava.error}`);
+      e.authoring = true;
+      throw e;
+    }
+    problem.starter_code.java = starterJava.code;
+  } else {
+    problem.__javaSkipped = javaVerdict.reason;
+  }
 
   return problem;
 }

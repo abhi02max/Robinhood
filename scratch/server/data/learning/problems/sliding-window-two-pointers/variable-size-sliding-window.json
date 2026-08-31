@@ -101,7 +101,8 @@
       "starter_code": {
         "javascript": "function lengthOfLongestSubstring(s) {\n  // Your code here\n}",
         "python": "def length_of_longest_substring(s):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int lengthOfLongestSubstring(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int lengthOfLongestSubstring(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int lengthOfLongestSubstring(String s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "lengthOfLongestSubstring",

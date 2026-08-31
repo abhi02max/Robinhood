@@ -19,7 +19,8 @@
       "starter_code": {
         "javascript": "function removeDuplicates(nums) {\n  // Your code here\n}",
         "python": "def remove_duplicates(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeDuplicates(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeDuplicates(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] removeDuplicates(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "removeDuplicates",
@@ -61,7 +62,8 @@
       "starter_code": {
         "javascript": "function removeElement(nums, val) {\n  // Your code here\n}",
         "python": "def remove_element(nums, val):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeElement(vector<int>& nums, int val) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeElement(vector<int>& nums, int val) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] removeElement(int[] nums, int val) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "removeElement",
@@ -106,7 +108,8 @@
       "starter_code": {
         "javascript": "function moveZeroes(nums) {\n  // Your code here\n}",
         "python": "def move_zeroes(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> moveZeroes(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> moveZeroes(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] moveZeroes(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "moveZeroes",
@@ -149,7 +152,8 @@
       "starter_code": {
         "javascript": "function hasCycle(head, pos) {\n  // Your code here\n}",
         "python": "def has_cycle(head, pos):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool hasCycle(vector<int>& head, int pos) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool hasCycle(vector<int>& head, int pos) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public boolean hasCycle(int[] head, int pos) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "hasCycle",
@@ -194,7 +198,8 @@
       "starter_code": {
         "javascript": "function detectCycle(head, pos) {\n  // Your code here\n}",
         "python": "def detect_cycle(head, pos):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int detectCycle(vector<int>& head, int pos) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int detectCycle(vector<int>& head, int pos) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int detectCycle(int[] head, int pos) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "detectCycle",
@@ -239,7 +244,8 @@
       "starter_code": {
         "javascript": "function middleNode(head) {\n  // Your code here\n}",
         "python": "def middle_node(head):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> middleNode(vector<int>& head) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> middleNode(vector<int>& head) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] middleNode(int[] head) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "middleNode",
@@ -282,7 +288,8 @@
       "starter_code": {
         "javascript": "function removeNthFromEnd(head, n) {\n  // Your code here\n}",
         "python": "def remove_nth_from_end(head, n):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeNthFromEnd(vector<int>& head, int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeNthFromEnd(vector<int>& head, int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] removeNthFromEnd(int[] head, int n) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "removeNthFromEnd",
@@ -327,7 +334,8 @@
       "starter_code": {
         "javascript": "function isHappy(n) {\n  // Your code here\n}",
         "python": "def is_happy(n):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isHappy(int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isHappy(int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public boolean isHappy(int n) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "isHappy",
@@ -369,7 +377,8 @@
       "starter_code": {
         "javascript": "function removeDuplicates(nums) {\n  // Your code here\n}",
         "python": "def remove_duplicates(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeDuplicates(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> removeDuplicates(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] removeDuplicates(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "removeDuplicates",
@@ -411,7 +420,8 @@
       "starter_code": {
         "javascript": "function findDuplicate(nums) {\n  // Your code here\n}",
         "python": "def find_duplicate(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findDuplicate(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findDuplicate(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int findDuplicate(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "findDuplicate",
@@ -453,7 +463,8 @@
       "starter_code": {
         "javascript": "function partitionLabels(s) {\n  // Your code here\n}",
         "python": "def partition_labels(s):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> partitionLabels(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> partitionLabels(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] partitionLabels(String s) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "partitionLabels",
@@ -495,7 +506,8 @@
       "starter_code": {
         "javascript": "function compress(chars) {\n  // Your code here\n}",
         "python": "def compress(chars):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<string> compress(vector<string>& chars) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<string> compress(vector<string>& chars) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public String[] compress(String[] chars) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "compress",

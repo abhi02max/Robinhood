@@ -19,7 +19,8 @@
       "starter_code": {
         "javascript": "function subarraysWithKDistinct(nums, k) {\n  // Your code here\n}",
         "python": "def subarrays_with_k_distinct(nums, k):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int subarraysWithKDistinct(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int subarraysWithKDistinct(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int subarraysWithKDistinct(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "subarraysWithKDistinct",
@@ -64,7 +65,8 @@
       "starter_code": {
         "javascript": "function numberOfSubarrays(nums, k) {\n  // Your code here\n}",
         "python": "def number_of_subarrays(nums, k):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numberOfSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numberOfSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int numberOfSubarrays(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numberOfSubarrays",
@@ -109,7 +111,8 @@
       "starter_code": {
         "javascript": "function numSubarraysWithSum(nums, goal) {\n  // Your code here\n}",
         "python": "def num_subarrays_with_sum(nums, goal):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numSubarraysWithSum(vector<int>& nums, int goal) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numSubarraysWithSum(vector<int>& nums, int goal) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int numSubarraysWithSum(int[] nums, int goal) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numSubarraysWithSum",
@@ -154,7 +157,8 @@
       "starter_code": {
         "javascript": "function equalSubstring(s, t, maxCost) {\n  // Your code here\n}",
         "python": "def equal_substring(s, t, max_cost):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int equalSubstring(string s, string t, int maxCost) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int equalSubstring(string s, string t, int maxCost) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int equalSubstring(String s, String t, int maxCost) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "equalSubstring",
@@ -200,7 +204,8 @@
       "starter_code": {
         "javascript": "function maxFrequency(nums, k) {\n  // Your code here\n}",
         "python": "def max_frequency(nums, k):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxFrequency(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxFrequency(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int maxFrequency(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "maxFrequency",
@@ -245,7 +250,8 @@
       "starter_code": {
         "javascript": "function maximumUniqueSubarray(nums) {\n  // Your code here\n}",
         "python": "def maximum_unique_subarray(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maximumUniqueSubarray(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maximumUniqueSubarray(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int maximumUniqueSubarray(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "maximumUniqueSubarray",
@@ -286,7 +292,8 @@
       "starter_code": {
         "javascript": "function continuousSubarrays(nums) {\n  // Your code here\n}",
         "python": "def continuous_subarrays(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int continuousSubarrays(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int continuousSubarrays(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int continuousSubarrays(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "continuousSubarrays",
@@ -328,7 +335,8 @@
       "starter_code": {
         "javascript": "function countSubarrays(nums, k) {\n  // Your code here\n}",
         "python": "def count_subarrays(nums, k):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int countSubarrays(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "countSubarrays",
@@ -373,7 +381,8 @@
       "starter_code": {
         "javascript": "function numSub(s) {\n  // Your code here\n}",
         "python": "def num_sub(s):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numSub(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numSub(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int numSub(String s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numSub",
@@ -416,7 +425,8 @@
       "starter_code": {
         "javascript": "function countVowelSubstrings(word) {\n  // Your code here\n}",
         "python": "def count_vowel_substrings(word):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countVowelSubstrings(string word) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countVowelSubstrings(string word) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int countVowelSubstrings(String word) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "countVowelSubstrings",
@@ -458,7 +468,8 @@
       "starter_code": {
         "javascript": "function numKLenSubstrNoRepeats(s, k) {\n  // Your code here\n}",
         "python": "def num_k_len_substr_no_repeats(s, k):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numKLenSubstrNoRepeats(string s, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numKLenSubstrNoRepeats(string s, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int numKLenSubstrNoRepeats(String s, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numKLenSubstrNoRepeats",
@@ -503,7 +514,8 @@
       "starter_code": {
         "javascript": "function countSubarrays(nums, k) {\n  // Your code here\n}",
         "python": "def count_subarrays(nums, k):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int countSubarrays(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "countSubarrays",

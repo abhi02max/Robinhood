@@ -86,7 +86,8 @@
       "starter_code": {
         "javascript": "function climbStairs(n) {\n  // Your code here\n}",
         "python": "def climb_stairs(n):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int climbStairs(int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int climbStairs(int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int climbStairs(int n) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "climbStairs",
@@ -197,7 +198,8 @@
       "starter_code": {
         "javascript": "function minCostClimbingStairs(cost) {\n  // Your code here\n}",
         "python": "def min_cost_climbing_stairs(cost):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minCostClimbingStairs(vector<int>& cost) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minCostClimbingStairs(vector<int>& cost) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int minCostClimbingStairs(int[] cost) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "minCostClimbingStairs",
@@ -308,7 +310,8 @@
       "starter_code": {
         "javascript": "function rob(nums) {\n  // Your code here\n}",
         "python": "def rob(nums):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int rob(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int rob(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int rob(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "rob",
@@ -423,7 +426,8 @@
       "starter_code": {
         "javascript": "function numDecodings(s) {\n  // Your code here\n}",
         "python": "def num_decodings(s):\n    pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numDecodings(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n"
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numDecodings(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int numDecodings(String s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "numDecodings",
