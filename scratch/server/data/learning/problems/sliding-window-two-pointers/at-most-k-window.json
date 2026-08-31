@@ -21,7 +21,8 @@
         "python": "def subarrays_with_k_distinct(nums, k):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int subarraysWithKDistinct(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int subarraysWithKDistinct(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int subarraysWithKDistinct(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int subarraysWithKDistinct(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int SubarraysWithKDistinct(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "subarraysWithKDistinct",
@@ -68,7 +69,8 @@
         "python": "def number_of_subarrays(nums, k):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numberOfSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int numberOfSubarrays(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int numberOfSubarrays(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int numberOfSubarrays(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int NumberOfSubarrays(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numberOfSubarrays",
@@ -115,7 +117,8 @@
         "python": "def num_subarrays_with_sum(nums, goal):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numSubarraysWithSum(vector<int>& nums, int goal) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int numSubarraysWithSum(int[] nums, int goal) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int numSubarraysWithSum(int* nums, int numsSize, int goal) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int numSubarraysWithSum(int* nums, int numsSize, int goal) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int NumSubarraysWithSum(int[] nums, int goal) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numSubarraysWithSum",
@@ -162,7 +165,8 @@
         "python": "def equal_substring(s, t, max_cost):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int equalSubstring(string s, string t, int maxCost) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int equalSubstring(String s, String t, int maxCost) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int equalSubstring(char* s, char* t, int maxCost) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int equalSubstring(char* s, char* t, int maxCost) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int EqualSubstring(string s, string t, int maxCost) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "equalSubstring",
@@ -210,7 +214,8 @@
         "python": "def max_frequency(nums, k):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxFrequency(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int maxFrequency(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int maxFrequency(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int maxFrequency(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MaxFrequency(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "maxFrequency",
@@ -257,7 +262,8 @@
         "python": "def maximum_unique_subarray(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maximumUniqueSubarray(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int maximumUniqueSubarray(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int maximumUniqueSubarray(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int maximumUniqueSubarray(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MaximumUniqueSubarray(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "maximumUniqueSubarray",
@@ -300,7 +306,8 @@
         "python": "def continuous_subarrays(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int continuousSubarrays(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int continuousSubarrays(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int continuousSubarrays(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int continuousSubarrays(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int ContinuousSubarrays(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "continuousSubarrays",
@@ -344,7 +351,8 @@
         "python": "def count_subarrays(nums, k):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int countSubarrays(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int countSubarrays(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int countSubarrays(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int CountSubarrays(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "countSubarrays",
@@ -391,7 +399,8 @@
         "python": "def num_sub(s):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numSub(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int numSub(String s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int numSub(char* s) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int numSub(char* s) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int NumSub(string s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numSub",
@@ -436,7 +445,8 @@
         "python": "def count_vowel_substrings(word):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countVowelSubstrings(string word) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int countVowelSubstrings(String word) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int countVowelSubstrings(char* word) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int countVowelSubstrings(char* word) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int CountVowelSubstrings(string word) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "countVowelSubstrings",
@@ -480,7 +490,8 @@
         "python": "def num_k_len_substr_no_repeats(s, k):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numKLenSubstrNoRepeats(string s, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int numKLenSubstrNoRepeats(String s, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int numKLenSubstrNoRepeats(char* s, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int numKLenSubstrNoRepeats(char* s, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int NumKLenSubstrNoRepeats(string s, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numKLenSubstrNoRepeats",
@@ -527,7 +538,8 @@
         "python": "def count_subarrays(nums, k):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countSubarrays(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int countSubarrays(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int countSubarrays(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int countSubarrays(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int CountSubarrays(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "countSubarrays",

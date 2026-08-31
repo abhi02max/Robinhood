@@ -326,13 +326,11 @@ export const LANGUAGES = Object.freeze({
     signatureStrategy: 'signature',
     starterGenerator: 'csharp-signature',
     harnessGenerator: 'csharp',
-    harnessImplemented: false,
+    harnessImplemented: true,
     types: CSHARP_TYPES,
-    supportsRun: false,
-    supportsSubmit: false,
-    productionEnabled: false,
-    status: 'Phase 2D. buildCsharpProgram exists but is dead code -- it was never '
-      + 'reachable because only cpp skipped the JS/Python entrypoint extractor.',
+    supportsRun: true,
+    supportsSubmit: true,
+    productionEnabled: true,
   },
 });
 

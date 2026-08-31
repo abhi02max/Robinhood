@@ -89,7 +89,8 @@
         "javascript": "function canAttendMeetings(intervals) {\n  // Your code here\n}",
         "python": "def can_attend_meetings(intervals):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool canAttendMeetings(vector<vector<int>>& intervals) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public boolean canAttendMeetings(int[][] intervals) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
+        "java": "class Solution {\n    public boolean canAttendMeetings(int[][] intervals) {\n        // Write your solution here.\n        return false;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public bool CanAttendMeetings(int[][] intervals) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "canAttendMeetings",
@@ -202,7 +203,8 @@
         "javascript": "function eraseOverlapIntervals(intervals) {\n  // Your code here\n}",
         "python": "def erase_overlap_intervals(intervals):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int eraseOverlapIntervals(vector<vector<int>>& intervals) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int eraseOverlapIntervals(int[][] intervals) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int eraseOverlapIntervals(int[][] intervals) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public int EraseOverlapIntervals(int[][] intervals) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "eraseOverlapIntervals",
@@ -316,7 +318,8 @@
         "javascript": "function findMinArrowShots(points) {\n  // Your code here\n}",
         "python": "def find_min_arrow_shots(points):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findMinArrowShots(vector<vector<int>>& points) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int findMinArrowShots(int[][] points) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int findMinArrowShots(int[][] points) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public int FindMinArrowShots(int[][] points) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "findMinArrowShots",
@@ -429,7 +432,8 @@
         "javascript": "function findLongestChain(pairs) {\n  // Your code here\n}",
         "python": "def find_longest_chain(pairs):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findLongestChain(vector<vector<int>>& pairs) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int findLongestChain(int[][] pairs) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int findLongestChain(int[][] pairs) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public int FindLongestChain(int[][] pairs) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "findLongestChain",

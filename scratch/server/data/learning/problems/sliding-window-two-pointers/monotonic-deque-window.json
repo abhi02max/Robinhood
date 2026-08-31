@@ -16,7 +16,8 @@
       "starter_code": { "javascript": "function maxSlidingWindow(nums, k) {}", "python": "def max_sliding_window(nums, k): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> maxSlidingWindow(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] maxSlidingWindow(int[] nums, int k) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* maxSlidingWindow(int* nums, int numsSize, int k, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n" },
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* maxSlidingWindow(int* nums, int numsSize, int k, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] MaxSlidingWindow(int[] nums, int k) {\n        // Write your solution here.\n        return null;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "maxSlidingWindow",
         "class": "Solution",
@@ -57,7 +58,8 @@
       "starter_code": { "javascript": "function minSlidingWindow(nums, k) {}", "python": "def min_sliding_window(nums, k): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> minSlidingWindow(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] minSlidingWindow(int[] nums, int k) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* minSlidingWindow(int* nums, int numsSize, int k, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n" },
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* minSlidingWindow(int* nums, int numsSize, int k, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] MinSlidingWindow(int[] nums, int k) {\n        // Write your solution here.\n        return null;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "minSlidingWindow",
         "class": "Solution",
@@ -98,7 +100,8 @@
       "starter_code": { "javascript": "function constrainedSubsetSum(nums, k) {}", "python": "def constrained_subset_sum(nums, k): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int constrainedSubsetSum(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int constrainedSubsetSum(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int constrainedSubsetSum(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n" },
+        "c": "int constrainedSubsetSum(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int ConstrainedSubsetSum(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "constrainedSubsetSum",
         "class": "Solution",
@@ -139,7 +142,8 @@
       "starter_code": { "javascript": "function shortestSubarray(nums, k) {}", "python": "def shortest_subarray(nums, k): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int shortestSubarray(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int shortestSubarray(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int shortestSubarray(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n" },
+        "c": "int shortestSubarray(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int ShortestSubarray(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "shortestSubarray",
         "class": "Solution",
@@ -180,7 +184,8 @@
       "starter_code": { "javascript": "function maxResult(nums, k) {}", "python": "def max_result(nums, k): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxResult(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int maxResult(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int maxResult(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n" },
+        "c": "int maxResult(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MaxResult(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "maxResult",
         "class": "Solution",
@@ -221,7 +226,8 @@
       "starter_code": { "javascript": "function longestSubarray(nums, limit) {}", "python": "def longest_subarray(nums, limit): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int longestSubarray(vector<int>& nums, int limit) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int longestSubarray(int[] nums, int limit) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int longestSubarray(int* nums, int numsSize, int limit) {\n    // Write your solution here.\n    return 0;\n}\n" },
+        "c": "int longestSubarray(int* nums, int numsSize, int limit) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int LongestSubarray(int[] nums, int limit) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "longestSubarray",
         "class": "Solution",
@@ -262,7 +268,8 @@
       "starter_code": { "javascript": "function maximumRobots(chargeTimes, runningCosts, budget) {}", "python": "def maximum_robots(charge_times, running_costs, budget): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maximumRobots(vector<int>& chargeTimes, vector<int>& runningCosts, int budget) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int maximumRobots(int[] chargeTimes, int[] runningCosts, int budget) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int maximumRobots(int* chargeTimes, int chargeTimesSize, int* runningCosts, int runningCostsSize, int budget) {\n    // Write your solution here.\n    return 0;\n}\n" },
+        "c": "int maximumRobots(int* chargeTimes, int chargeTimesSize, int* runningCosts, int runningCostsSize, int budget) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MaximumRobots(int[] chargeTimes, int[] runningCosts, int budget) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "maximumRobots",
         "class": "Solution",
@@ -303,7 +310,8 @@
       "approach_optimal": "Rewrite as (yi-xi)+(yj+xj). For each j, max(yi-xi) over x-window via monotonic decreasing deque. O(N).",
       "starter_code": { "javascript": "function findMaxValueOfEquation(points, k) {}", "python": "def find_max_value_of_equation(points, k): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int findMaxValueOfEquation(vector<vector<int>>& points, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int findMaxValueOfEquation(int[][] points, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
+        "java": "class Solution {\n    public int findMaxValueOfEquation(int[][] points, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public int FindMaxValueOfEquation(int[][] points, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "findMaxValueOfEquation",
         "class": "Solution",
@@ -344,7 +352,8 @@
       "starter_code": { "javascript": "function continuousSubarrays(nums) {}", "python": "def continuous_subarrays(nums): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int continuousSubarrays(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int continuousSubarrays(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int continuousSubarrays(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n" },
+        "c": "int continuousSubarrays(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int ContinuousSubarrays(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "continuousSubarrays",
         "class": "Solution",
@@ -382,7 +391,8 @@
       "starter_code": { "javascript": "function sumSubarrayMins(arr) {}", "python": "def sum_subarray_mins(arr): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int sumSubarrayMins(vector<int>& arr) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int sumSubarrayMins(int[] arr) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int sumSubarrayMins(int* arr, int arrSize) {\n    // Write your solution here.\n    return 0;\n}\n" },
+        "c": "int sumSubarrayMins(int* arr, int arrSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int SumSubarrayMins(int[] arr) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "sumSubarrayMins",
         "class": "Solution",
@@ -420,7 +430,8 @@
       "starter_code": { "javascript": "function largestRectangleArea(heights) {}", "python": "def largest_rectangle_area(heights): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int largestRectangleArea(vector<int>& heights) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int largestRectangleArea(int[] heights) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int largestRectangleArea(int* heights, int heightsSize) {\n    // Write your solution here.\n    return 0;\n}\n" },
+        "c": "int largestRectangleArea(int* heights, int heightsSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int LargestRectangleArea(int[] heights) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "largestRectangleArea",
         "class": "Solution",
@@ -458,7 +469,8 @@
       "starter_code": { "javascript": "function maxSumMinProduct(nums) {}", "python": "def max_sum_min_product(nums): pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxSumMinProduct(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int maxSumMinProduct(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int maxSumMinProduct(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n" },
+        "c": "int maxSumMinProduct(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MaxSumMinProduct(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
       "cpp_signature": {
         "fn": "maxSumMinProduct",
         "class": "Solution",

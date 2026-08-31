@@ -99,7 +99,8 @@
         "python": "def is_valid(s):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isValid(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public boolean isValid(String s) {\n        // Write your solution here.\n        return false;\n    }\n}\n",
-        "c": "bool isValid(char* s) {\n    // Write your solution here.\n    return false;\n}\n"
+        "c": "bool isValid(char* s) {\n    // Write your solution here.\n    return false;\n}\n",
+        "csharp": "public class Solution {\n    public bool IsValid(string s) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "isValid",

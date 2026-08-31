@@ -12,11 +12,13 @@ import { getLanguage, listLanguages } from './registry.js';
 import { renderCppStarter } from '../scripts/lib/cpp-infer.mjs';
 import { renderJavaStarter } from './java.js';
 import { renderCStarter } from './c.js';
+import { renderCsharpStarter } from './csharp.js';
 
 const RENDERERS = Object.freeze({
   'cpp-signature': renderCppStarter,
   'java-signature': renderJavaStarter,
   'c-signature': renderCStarter,
+  'csharp-signature': renderCsharpStarter,
 });
 
 /**

@@ -44,7 +44,7 @@ compilers than Paiza, so code that compiles on Paiza can fail on Judge0.
 | C++ | Clang 18, C++20 | GCC 9.2.0, C++17 | C++20 constructs in a harness or a user solution would fail |
 | Java | OpenJDK 18 | OpenJDK 13 | records, sealed types, and `var` in lambda params would fail |
 | C | Clang 14, C17 | GCC 9.2.0 | mostly compatible; check `<stdbool.h>` and designated initialisers |
-| C# | Mono | Mono 6.6.0.161 | LINQ and modern C# syntax need checking |
+| C# | Mono 6.8.0.105 | Mono 6.6.0.161 | closest pair of the six, but `double`/`bool` formatting is locale- and culture-dependent, not version-dependent — see §4 |
 
 **The generated harnesses must target the older dialect, not the newer one.** Any
 harness written against Paiza's compiler and never checked against Judge0's is an
@@ -89,8 +89,46 @@ Filled in as each language lands in Phase 2.
 
 ### C# (Phase 2D)
 
-- Mono version parity between the two providers is assumed; C# is the language where
-  Paiza's and Judge0's runtimes are most likely to be genuinely equivalent.
+The 2A placeholder in this section guessed that the two Mono runtimes were "most likely
+genuinely equivalent." A direct probe of Paiza disproved that, so the entry is rewritten
+with what was actually observed:
+
+```
+Paiza:     Mono 6.8.0.105 (Debian 6.8.0.105+dfsg-3.6ubuntu2), CLR 4.0.30319.42000
+Judge0 CE: Mono 6.6.0.161
+```
+
+Two minor versions apart, in the same direction as every other language: **we develop on
+the newer runtime and ship to the older one.** The harness therefore stays on syntax
+Mono 6.6's `mcs` accepts — no default interface members, no nullable reference types, no
+`switch` expressions, no range/index operators.
+
+The three hazards below are handled in the generated code, not left to the runtime. Each
+is asserted by a unit test because none of them fails loudly, and two of them are
+environment-dependent, meaning Judge0 could behave differently from Paiza without any
+code change:
+
+- **`bool.ToString()` returns `"True"`, not `"true"`.** Version-independent, but it is
+  the failure that looks most like a logic bug: every boolean problem grades Wrong
+  Answer while the candidate's solution is correct. The serializer emits lowercase
+  explicitly rather than relying on `ToString()`.
+- **`double.ToString()` is culture-dependent.** A container whose locale uses a comma
+  decimal separator emits `3,5` and every `double` problem breaks. Pinned to
+  `CultureInfo.InvariantCulture` with the `"R"` round-trip format. **This is the one to
+  retest first on Judge0** — it depends on the image's locale, not on Mono's version, so
+  Paiza passing says nothing about Judge0.
+- **Jagged array literals must be spelled out.** Java's `new int[][]{{1,2},{3,4}}` is
+  invalid C#; it must be
+  `new int[][] { new int[] { 1, 2 }, new int[] { 3, 4 } }`. This one at least fails
+  visibly, as a compile error, and it is what the controlled-regression proof for the
+  browser E2E deliberately breaks.
+
+Still assumed, not verified:
+
+- That Mono 6.6 accepts the same `public class Main` / user `class Solution` single-file
+  layout that Paiza accepts, as with Java.
+- That Judge0 id 51 compiles with `mcs` and the same default language version. Only the
+  reported language *name* has been checked, by `check-judge0.js`.
 
 ## 5. How to close this out
 

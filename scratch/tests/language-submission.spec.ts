@@ -44,6 +44,23 @@ const LANGUAGES = [
 }`,
   },
   {
+    key: 'csharp',
+    label: 'C#',
+    // PascalCase, per LeetCode's C# convention and what the generated starter declares.
+    starterMarker: 'public int Rob(int[] nums)',
+    solution: `public class Solution {
+    public int Rob(int[] nums) {
+        int twoBack = 0, oneBack = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            int best = Math.Max(oneBack, twoBack + nums[i]);
+            twoBack = oneBack;
+            oneBack = best;
+        }
+        return oneBack;
+    }
+}`,
+  },
+  {
     key: 'c',
     label: 'C',
     // The companion length parameter is C's whole calling convention; if the starter
@@ -197,8 +214,9 @@ for (const lang of LANGUAGES) {
     await expect(selector).toBeVisible();
     await expect(selector.locator(`option[value="${lang.key}"]`)).toHaveCount(1);
 
-    // C# must NOT be offered yet — Phase 2D.
-    await expect(selector.locator('option[value="csharp"]')).toHaveCount(0);
+    // All six languages the platform knows about are now offered. Any language the
+    // registry has not cleared would be absent, which is the property this asserts.
+    await expect(selector.locator('option')).toHaveCount(6);
 
     await selector.selectOption(lang.key);
 

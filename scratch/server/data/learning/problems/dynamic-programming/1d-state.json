@@ -88,7 +88,8 @@
         "python": "def climb_stairs(n):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int climbStairs(int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int climbStairs(int n) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int climbStairs(int n) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int climbStairs(int n) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int ClimbStairs(int n) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "climbStairs",
@@ -201,7 +202,8 @@
         "python": "def min_cost_climbing_stairs(cost):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minCostClimbingStairs(vector<int>& cost) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int minCostClimbingStairs(int[] cost) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int minCostClimbingStairs(int* cost, int costSize) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int minCostClimbingStairs(int* cost, int costSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MinCostClimbingStairs(int[] cost) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "minCostClimbingStairs",
@@ -314,7 +316,8 @@
         "python": "def rob(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int rob(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int rob(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int rob(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int rob(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int Rob(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "rob",
@@ -431,7 +434,8 @@
         "python": "def num_decodings(s):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numDecodings(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int numDecodings(String s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int numDecodings(char* s) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int numDecodings(char* s) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int NumDecodings(string s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "numDecodings",

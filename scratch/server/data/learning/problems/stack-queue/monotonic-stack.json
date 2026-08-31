@@ -94,7 +94,8 @@
         "python": "def next_greater_element(nums1, nums2):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] nextGreaterElement(int[] nums1, int[] nums2) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* nextGreaterElement(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* nextGreaterElement(int* nums1, int nums1Size, int* nums2, int nums2Size, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] NextGreaterElement(int[] nums1, int[] nums2) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "nextGreaterElement",
@@ -211,7 +212,8 @@
         "python": "def next_greater_elements(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> nextGreaterElements(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] nextGreaterElements(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* nextGreaterElements(int* nums, int numsSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* nextGreaterElements(int* nums, int numsSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] NextGreaterElements(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "nextGreaterElements",
@@ -325,7 +327,8 @@
         "python": "def daily_temperatures(temperatures):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> dailyTemperatures(vector<int>& temperatures) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] dailyTemperatures(int[] temperatures) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* dailyTemperatures(int* temperatures, int temperaturesSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* dailyTemperatures(int* temperatures, int temperaturesSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] DailyTemperatures(int[] temperatures) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "dailyTemperatures",
@@ -442,7 +445,8 @@
         "python": "def remove_kdigits(num, k):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string removeKdigits(string num, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public String removeKdigits(String num, int k) {\n        // Write your solution here.\n        return \"\";\n    }\n}\n",
-        "c": "char* removeKdigits(char* num, int k) {\n    // Write your solution here.\n    return NULL;\n}\n"
+        "c": "char* removeKdigits(char* num, int k) {\n    // Write your solution here.\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public string RemoveKdigits(string num, int k) {\n        // Write your solution here.\n        return \"\";\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "removeKdigits",

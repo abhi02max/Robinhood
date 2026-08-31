@@ -21,7 +21,8 @@
         "python": "def two_sum(numbers, target):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> twoSum(vector<int>& numbers, int target) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] twoSum(int[] numbers, int target) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* twoSum(int* numbers, int numbersSize, int target, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* twoSum(int* numbers, int numbersSize, int target, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] TwoSum(int[] numbers, int target) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "twoSum",
@@ -68,7 +69,8 @@
         "javascript": "function threeSum(nums) {\n  // Your code here\n}",
         "python": "def three_sum(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<vector<int>> threeSum(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int[][] threeSum(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
+        "java": "class Solution {\n    public int[][] threeSum(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public int[][] ThreeSum(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "threeSum",
@@ -111,7 +113,8 @@
         "javascript": "function fourSum(nums, target) {\n  // Your code here\n}",
         "python": "def four_sum(nums, target):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<vector<int>> fourSum(vector<int>& nums, int target) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int[][] fourSum(int[] nums, int target) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
+        "java": "class Solution {\n    public int[][] fourSum(int[] nums, int target) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public int[][] FourSum(int[] nums, int target) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "fourSum",
@@ -158,7 +161,8 @@
         "python": "def max_area(height):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxArea(vector<int>& height) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int maxArea(int[] height) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int maxArea(int* height, int heightSize) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int maxArea(int* height, int heightSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MaxArea(int[] height) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "maxArea",
@@ -202,7 +206,8 @@
         "python": "def trap(height):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int trap(vector<int>& height) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int trap(int[] height) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int trap(int* height, int heightSize) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int trap(int* height, int heightSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int Trap(int[] height) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "trap",
@@ -247,7 +252,8 @@
         "python": "def is_palindrome(s):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool isPalindrome(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public boolean isPalindrome(String s) {\n        // Write your solution here.\n        return false;\n    }\n}\n",
-        "c": "bool isPalindrome(char* s) {\n    // Write your solution here.\n    return false;\n}\n"
+        "c": "bool isPalindrome(char* s) {\n    // Write your solution here.\n    return false;\n}\n",
+        "csharp": "public class Solution {\n    public bool IsPalindrome(string s) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "isPalindrome",
@@ -292,7 +298,8 @@
         "python": "def valid_palindrome(s):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool validPalindrome(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public boolean validPalindrome(String s) {\n        // Write your solution here.\n        return false;\n    }\n}\n",
-        "c": "bool validPalindrome(char* s) {\n    // Write your solution here.\n    return false;\n}\n"
+        "c": "bool validPalindrome(char* s) {\n    // Write your solution here.\n    return false;\n}\n",
+        "csharp": "public class Solution {\n    public bool ValidPalindrome(string s) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "validPalindrome",
@@ -336,7 +343,8 @@
         "python": "def reverse_string(s):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<string> reverseString(vector<string>& s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public String[] reverseString(String[] s) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nchar** reverseString(char** s, int sSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nchar** reverseString(char** s, int sSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public string[] ReverseString(string[] s) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "reverseString",
@@ -380,7 +388,8 @@
         "python": "def sort_colors(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> sortColors(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] sortColors(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* sortColors(int* nums, int numsSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* sortColors(int* nums, int numsSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] SortColors(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "sortColors",
@@ -424,7 +433,8 @@
         "python": "def sorted_squares(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> sortedSquares(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] sortedSquares(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* sortedSquares(int* nums, int numsSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* sortedSquares(int* nums, int numsSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] SortedSquares(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "sortedSquares",
@@ -469,7 +479,8 @@
         "python": "def num_rescue_boats(people, limit):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numRescueBoats(vector<int>& people, int limit) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int numRescueBoats(int[] people, int limit) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int numRescueBoats(int* people, int peopleSize, int limit) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int numRescueBoats(int* people, int peopleSize, int limit) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int NumRescueBoats(int[] people, int limit) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numRescueBoats",
@@ -516,7 +527,8 @@
         "python": "def two_sum_less_than_k(nums, k):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int twoSumLessThanK(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int twoSumLessThanK(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int twoSumLessThanK(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int twoSumLessThanK(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int TwoSumLessThanK(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "twoSumLessThanK",

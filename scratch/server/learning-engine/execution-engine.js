@@ -43,6 +43,7 @@ import {
 } from '../languages/registry.js';
 import { buildJavaProgram, renderJavaStarter } from '../languages/java.js';
 import { buildCProgram, renderCStarter } from '../languages/c.js';
+import { buildCsharpProgram, renderCsharpStarter } from '../languages/csharp.js';
 
 // ---------------------------------------------------------------------------
 // Configuration
@@ -334,7 +335,10 @@ function buildProgram(language, userCode, entry, cppSignature) {
   if (lang === 'javascript') return buildJavaScriptProgram(userCode, entry);
   if (lang === 'python')     return buildPythonProgram(userCode, entry);
   if (lang === 'cpp')        return buildCppProgram(userCode, cppSignature);
-  if (lang === 'csharp')     return buildCsharpProgram(userCode, entry);
+  if (lang === 'csharp') {
+    renderCsharpStarter(cppSignature || {});
+    return (testCase) => buildCsharpProgram(userCode, cppSignature, testCase?.input_payload);
+  }
   if (lang === 'c') {
     // Until now `c` fell through to buildCppProgram and the registry mapped it to
     // Judge0 id 54 — the C++ compiler. C was a label on C++, so C++-only code
@@ -359,120 +363,12 @@ function programFor(program, testCase) {
   return typeof program === 'function' ? program(testCase) : program;
 }
 
-function buildCsharpProgram(userCode, entry) {
-  // Use a tiny JSON parser embedded in the C# harness for Judge0 Mono 6.6 compatibility
-  return `
-using System;
-using System.Collections.Generic;
-using System.Reflection;
+// The C# harness lives in ../languages/csharp.js. The 116-line builder that used
+// to sit here was unreachable dead code: it consumed the entrypoint produced by
+// the JavaScript/Python source parser, which signature-driven languages never
+// reach, and it decoded stdin with a hand-rolled parser that called int.Parse and
+// double.Parse without a CultureInfo.
 
-public class TinyJson {
-    public static object Parse(string s, Type t) {
-        s = s.Trim();
-        if (t == typeof(int)) return int.Parse(s);
-        if (t == typeof(double)) return double.Parse(s);
-        if (t == typeof(bool)) return s == "true";
-        if (t == typeof(string)) {
-            if(s.StartsWith("\\"") && s.EndsWith("\\"")) return s.Substring(1, s.Length - 2);
-            return s;
-        }
-        if (t.IsArray) {
-            var elType = t.GetElementType();
-            s = s.Substring(1, s.Length - 2).Trim();
-            if (s == "") return Array.CreateInstance(elType, 0);
-            var parts = SplitJsonArray(s);
-            var arr = Array.CreateInstance(elType, parts.Count);
-            for(int i=0; i<parts.Count; i++) {
-                arr.SetValue(Parse(parts[i], elType), i);
-            }
-            return arr;
-        }
-        return null;
-    }
-    static List<string> SplitJsonArray(string s) {
-        var res = new List<string>();
-        int d = 0; bool q = false; int last = 0;
-        for(int i=0; i<s.Length; i++) {
-            if (s[i] == '"' && (i == 0 || s[i-1] != '\\\\')) q = !q;
-            else if (!q) {
-                if (s[i] == '[' || s[i] == '{') d++;
-                else if (s[i] == ']' || s[i] == '}') d--;
-                else if (s[i] == ',' && d == 0) {
-                    res.Add(s.Substring(last, i - last));
-                    last = i + 1;
-                }
-            }
-        }
-        res.Add(s.Substring(last));
-        return res;
-    }
-    public static string Stringify(object o) {
-        if (o == null) return "null";
-        if (o is int || o is double) return o.ToString();
-        if (o is bool) return ((bool)o) ? "true" : "false";
-        if (o is string) return "\\"" + o.ToString() + "\\"";
-        if (o.GetType().IsArray) {
-            var arr = (Array)o;
-            var parts = new List<string>();
-            foreach(var it in arr) parts.Add(Stringify(it));
-            return "[" + string.Join(",", parts) + "]";
-        }
-        return o.ToString();
-    }
-    public static Dictionary<string, string> ParseDict(string s) {
-        var d = new Dictionary<string, string>();
-        s = s.Trim();
-        if (s.Length < 2) return d;
-        s = s.Substring(1, s.Length - 2).Trim();
-        if (s == "") return d;
-        var parts = SplitJsonArray(s);
-        foreach(var p in parts) {
-            int colon = -1; bool q = false;
-            for(int i=0; i<p.Length; i++) {
-                if (p[i] == '"' && (i == 0 || p[i-1] != '\\\\')) q = !q;
-                else if (!q && p[i] == ':') { colon = i; break; }
-            }
-            if (colon != -1) {
-                string k = p.Substring(0, colon).Trim();
-                if(k.StartsWith("\\"") && k.EndsWith("\\"")) k = k.Substring(1, k.Length - 2);
-                string v = p.Substring(colon+1).Trim();
-                d[k] = v;
-            }
-        }
-        return d;
-    }
-}
-
-\${userCode}
-
-public class Program {
-    public static void Main() {
-        string raw = Console.In.ReadToEnd().Trim();
-        var dict = TinyJson.ParseDict(raw);
-        var sol = new Solution();
-        var method = typeof(Solution).GetMethod("\${entry ? entry.name : "Solve"}");
-        if (method == null) {
-            var methods = typeof(Solution).GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly);
-            if (methods.Length > 0) method = methods[0];
-        }
-        if (method == null) throw new Exception("No method found");
-        var parameters = method.GetParameters();
-        var args = new object[parameters.Length];
-        for(int i = 0; i < parameters.Length; i++) {
-            var p = parameters[i];
-            if (dict.ContainsKey(p.Name)) {
-                args[i] = TinyJson.Parse(dict[p.Name], p.ParameterType);
-            }
-        }
-        try {
-            var result = method.Invoke(sol, args);
-            Console.WriteLine("<<<OUT>>>" + TinyJson.Stringify(result) + "<<<END>>>");
-        } catch (TargetInvocationException e) {
-            Console.Error.WriteLine("RuntimeError: " + e.InnerException);
-            Environment.Exit(1);
-}
-`;
-}
 
 // ---------------------------------------------------------------------------
 // C++ harness — gated on per-problem cpp_signature.

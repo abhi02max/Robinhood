@@ -103,7 +103,8 @@
         "python": "def length_of_longest_substring(s):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int lengthOfLongestSubstring(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int lengthOfLongestSubstring(String s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int lengthOfLongestSubstring(char* s) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int lengthOfLongestSubstring(char* s) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int LengthOfLongestSubstring(string s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "lengthOfLongestSubstring",

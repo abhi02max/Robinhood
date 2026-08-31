@@ -47,6 +47,7 @@ import path from 'node:path';
 import { inferSignature, renderCppStarter } from '../../../../scripts/lib/cpp-infer.mjs';
 import { renderJavaStarter } from '../../../../languages/java.js';
 import { renderCStarter } from '../../../../languages/c.js';
+import { renderCsharpStarter } from '../../../../languages/csharp.js';
 import { languageSupportsSignature } from '../../../../languages/registry.js';
 
 const FLOAT_TOLERANCE = 1e-6;
@@ -276,7 +277,7 @@ function renderCppSignature(sig, indent) {
  * Hand-threading `${x ? ',' : ''}` through each optional line was already fragile with
  * two languages and would not survive a third.
  */
-const OPTIONAL_STARTER_LANGUAGES = ['cpp', 'java', 'c'];
+const OPTIONAL_STARTER_LANGUAGES = ['cpp', 'java', 'c', 'csharp'];
 
 function renderOptionalStarters(starterCode, indent) {
   const present = OPTIONAL_STARTER_LANGUAGES.filter((lang) => starterCode[lang]);
@@ -518,7 +519,7 @@ export function buildProblem(spec, { topic, pattern }) {
   // than assumed: a language is offered on a problem only when it can express every
   // argument and return type in that problem's signature.
   const skippedLanguages = [];
-  for (const [language, render] of [['java', renderJavaStarter], ['c', renderCStarter]]) {
+  for (const [language, render] of [['java', renderJavaStarter], ['c', renderCStarter], ['csharp', renderCsharpStarter]]) {
     const verdict = languageSupportsSignature(language, inferred.signature);
     if (!verdict.supported) {
       skippedLanguages.push(`${language}: ${verdict.reason}`);

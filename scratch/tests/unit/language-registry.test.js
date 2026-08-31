@@ -52,8 +52,8 @@ test('a language that is not production-enabled explains why', () => {
 });
 
 test('a hidden language cannot advertise run or submit support', () => {
-  // Exposure and capability are separate flags, but "hidden yet submittable" would
-  // let the editor offer a language the release gate has not cleared.
+  // Vacuous today, since nothing is hidden — kept because it is the invariant that
+  // matters the moment a seventh language is registered mid-development.
   for (const def of listLanguages()) {
     if (def.productionEnabled) continue;
     assert.equal(def.supportsRun, false, `${def.key}: supportsRun while hidden`);
@@ -65,16 +65,21 @@ test('a hidden language cannot advertise run or submit support', () => {
 // Production set — this is what the editor offers
 // ---------------------------------------------------------------------------
 
-test('five languages are production-enabled; C# is not', () => {
-  // Java joined in 2B and C in 2C, each after: harness unit tests, all five verdicts
-  // observed on a real provider, every generated starter compiling, and a browser E2E
-  // demonstrated to fail against a deliberately broken configuration.
-  assert.deepEqual(productionLanguages().map((l) => l.key), ['javascript', 'python', 'cpp', 'java', 'c']);
-});
-
-test('C# is registered but still hidden', () => {
-  assert.ok(getLanguage('csharp'), 'csharp must be registered');
-  assert.equal(isProductionEnabled('csharp'), false, 'csharp must be hidden');
+test('all six languages are production-enabled', () => {
+  // Java (2B), C (2C) and C# (2D) each joined only after: harness unit tests, all five
+  // verdicts observed on a real provider, every generated starter compiling, and a
+  // browser E2E demonstrated to FAIL against a deliberately broken configuration.
+  assert.deepEqual(
+    productionLanguages().map((l) => l.key),
+    ['javascript', 'python', 'cpp', 'java', 'c', 'csharp'],
+  );
+  // Nothing is registered-but-hidden any more, so exposure is no longer what keeps a
+  // broken language out of the editor — the gates are.
+  assert.equal(listLanguages().length, 6);
+  for (const def of listLanguages()) {
+    assert.ok(getLanguage(def.key), `${def.key} must be registered`);
+    assert.equal(isProductionEnabled(def.key), true, `${def.key} must be enabled`);
+  }
 });
 
 test('every registered language names a harness generator', () => {
@@ -86,11 +91,14 @@ test('every registered language names a harness generator', () => {
   }
 });
 
-test('languages with an implemented harness are exactly those the engine can run', () => {
-  // Phase 2D flips csharp. The flag exists separately from productionEnabled so a
-  // harness can be built and driven by the verification scripts while the API and the
-  // editor still refuse the language.
-  assert.deepEqual(executableLanguages().map((l) => l.key), ['javascript', 'python', 'cpp', 'java', 'c']);
+test('every registered language has an implemented harness', () => {
+  // harnessImplemented stays separate from productionEnabled even though they now
+  // agree: it is what let Java, C and C# be executed by the verification scripts while
+  // the API and the editor still refused them.
+  assert.deepEqual(
+    executableLanguages().map((l) => l.key),
+    ['javascript', 'python', 'cpp', 'java', 'c', 'csharp'],
+  );
 });
 
 test('a language cannot be submittable without an implemented harness', () => {
@@ -279,12 +287,14 @@ test('languagesForSignature excludes a production language it cannot express', (
   // C is production-enabled AND excluded from this problem, with the type named. That
   // is what stops a matrix problem offering C and then refusing the submission.
   const visible = languagesForSignature(MATRIX_SIGNATURE);
-  assert.deepEqual(visible.supported, ['javascript', 'python', 'cpp', 'java']);
+  assert.deepEqual(visible.supported, ['javascript', 'python', 'cpp', 'java', 'csharp']);
   assert.deepEqual(visible.unsupported.map((u) => u.key), ['c']);
   assert.match(visible.unsupported[0].reason, /cannot express vector<vector<int>>/);
 
+  // Now that nothing is hidden, includeHidden changes nothing — capability is the only
+  // thing excluding C, which is the distinction this whole mechanism exists to make.
   const all = languagesForSignature(MATRIX_SIGNATURE, { includeHidden: true });
-  assert.deepEqual(all.supported, ['javascript', 'python', 'cpp', 'java', 'csharp']);
+  assert.deepEqual(all.supported, visible.supported);
   assert.deepEqual(all.unsupported.map((u) => u.key), ['c']);
 });
 
@@ -294,11 +304,9 @@ test('run and submit capability is readable per language', () => {
   // Java passed its Phase 2B gates, so it may now be run and submitted.
   assert.equal(canRun('java'), true);
   assert.equal(canSubmit('java'), true);
-  // C passed its Phase 2C gates.
   assert.equal(canRun('c'), true);
   assert.equal(canSubmit('c'), true);
-  // C# is still registered-but-hidden until Phase 2D.
-  assert.equal(canRun('csharp'), false);
-  assert.equal(canSubmit('csharp'), false);
+  assert.equal(canRun('csharp'), true);
+  assert.equal(canSubmit('csharp'), true);
   assert.equal(canRun('nonsense'), false);
 });

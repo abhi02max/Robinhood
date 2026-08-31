@@ -92,7 +92,8 @@
         "python": "def search(nums, target):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int search(vector<int>& nums, int target) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int search(int[] nums, int target) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int search(int* nums, int numsSize, int target) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int search(int* nums, int numsSize, int target) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int Search(int[] nums, int target) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "search",
@@ -209,7 +210,8 @@
         "python": "def search_insert(nums, target):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int searchInsert(vector<int>& nums, int target) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int searchInsert(int[] nums, int target) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int searchInsert(int* nums, int numsSize, int target) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int searchInsert(int* nums, int numsSize, int target) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int SearchInsert(int[] nums, int target) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "searchInsert",
@@ -325,7 +327,8 @@
         "python": "def next_greatest_letter(letters, target):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    string nextGreatestLetter(vector<string>& letters, string target) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public String nextGreatestLetter(String[] letters, String target) {\n        // Write your solution here.\n        return \"\";\n    }\n}\n",
-        "c": "char* nextGreatestLetter(char** letters, int lettersSize, char* target) {\n    // Write your solution here.\n    return NULL;\n}\n"
+        "c": "char* nextGreatestLetter(char** letters, int lettersSize, char* target) {\n    // Write your solution here.\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public string NextGreatestLetter(string[] letters, string target) {\n        // Write your solution here.\n        return \"\";\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "nextGreatestLetter",
@@ -444,7 +447,8 @@
         "python": "def single_non_duplicate(nums):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int singleNonDuplicate(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int singleNonDuplicate(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int singleNonDuplicate(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int singleNonDuplicate(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int SingleNonDuplicate(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "singleNonDuplicate",

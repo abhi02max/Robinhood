@@ -95,7 +95,8 @@
         "python": "def num_islands(grid):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numIslands(vector<string>& grid) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int numIslands(String[] grid) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int numIslands(char** grid, int gridSize) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int numIslands(char** grid, int gridSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int NumIslands(string[] grid) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "numIslands",
@@ -209,7 +210,8 @@
         "javascript": "function maxAreaOfIsland(grid) {\n  // Your code here\n}",
         "python": "def max_area_of_island(grid):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxAreaOfIsland(vector<vector<int>>& grid) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int maxAreaOfIsland(int[][] grid) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int maxAreaOfIsland(int[][] grid) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public int MaxAreaOfIsland(int[][] grid) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "maxAreaOfIsland",
@@ -326,7 +328,8 @@
         "javascript": "function validPath(n, edges, source, destination) {\n  // Your code here\n}",
         "python": "def valid_path(n, edges, source, destination):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool validPath(int n, vector<vector<int>>& edges, int source, int destination) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public boolean validPath(int n, int[][] edges, int source, int destination) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
+        "java": "class Solution {\n    public boolean validPath(int n, int[][] edges, int source, int destination) {\n        // Write your solution here.\n        return false;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public bool ValidPath(int n, int[][] edges, int source, int destination) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "validPath",
@@ -447,7 +450,8 @@
         "javascript": "function countComponents(n, edges) {\n  // Your code here\n}",
         "python": "def count_components(n, edges):\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countComponents(int n, vector<vector<int>>& edges) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int countComponents(int n, int[][] edges) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+        "java": "class Solution {\n    public int countComponents(int n, int[][] edges) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public int CountComponents(int n, int[][] edges) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature":       {
         "fn": "countComponents",

@@ -21,7 +21,8 @@
         "python": "from typing import List\n\ndef find_max_average(nums: List[int], k: int) -> float:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    double findMaxAverage(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public double findMaxAverage(int[] nums, int k) {\n        // Write your solution here.\n        return 0.0;\n    }\n}\n",
-        "c": "double findMaxAverage(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0.0;\n}\n"
+        "c": "double findMaxAverage(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0.0;\n}\n",
+        "csharp": "public class Solution {\n    public double FindMaxAverage(int[] nums, int k) {\n        // Write your solution here.\n        return 0.0D;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "findMaxAverage",
@@ -68,7 +69,8 @@
         "python": "from typing import List\n\ndef find_anagrams(s: str, p: str) -> List[int]:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> findAnagrams(string s, string p) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] findAnagrams(String s, String p) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* findAnagrams(char* s, char* p, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* findAnagrams(char* s, char* p, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] FindAnagrams(string s, string p) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "findAnagrams",
@@ -115,7 +117,8 @@
         "python": "def check_inclusion(s1: str, s2: str) -> bool:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    bool checkInclusion(string s1, string s2) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public boolean checkInclusion(String s1, String s2) {\n        // Write your solution here.\n        return false;\n    }\n}\n",
-        "c": "bool checkInclusion(char* s1, char* s2) {\n    // Write your solution here.\n    return false;\n}\n"
+        "c": "bool checkInclusion(char* s1, char* s2) {\n    // Write your solution here.\n    return false;\n}\n",
+        "csharp": "public class Solution {\n    public bool CheckInclusion(string s1, string s2) {\n        // Write your solution here.\n        return false;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "checkInclusion",
@@ -163,7 +166,8 @@
         "python": "def max_vowels(s: str, k: int) -> int:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxVowels(string s, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int maxVowels(String s, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int maxVowels(char* s, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int maxVowels(char* s, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MaxVowels(string s, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "maxVowels",
@@ -210,7 +214,8 @@
         "python": "from typing import List\n\ndef num_of_subarrays(arr: List[int], k: int, threshold: int) -> int:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int numOfSubarrays(vector<int>& arr, int k, int threshold) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int numOfSubarrays(int[] arr, int k, int threshold) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int numOfSubarrays(int* arr, int arrSize, int k, int threshold) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int numOfSubarrays(int* arr, int arrSize, int k, int threshold) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int NumOfSubarrays(int[] arr, int k, int threshold) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "numOfSubarrays",
@@ -259,7 +264,8 @@
         "python": "from typing import List\n\ndef decrypt(code: List[int], k: int) -> List[int]:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> decrypt(vector<int>& code, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] decrypt(int[] code, int k) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* decrypt(int* code, int codeSize, int k, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* decrypt(int* code, int codeSize, int k, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] Decrypt(int[] code, int k) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "decrypt",
@@ -306,7 +312,8 @@
         "python": "from typing import List\n\ndef diet_plan_performance(calories: List[int], k: int, lower: int, upper: int) -> int:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int dietPlanPerformance(vector<int>& calories, int k, int lower, int upper) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int dietPlanPerformance(int[] calories, int k, int lower, int upper) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int dietPlanPerformance(int* calories, int caloriesSize, int k, int lower, int upper) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int dietPlanPerformance(int* calories, int caloriesSize, int k, int lower, int upper) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int DietPlanPerformance(int[] calories, int k, int lower, int upper) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "dietPlanPerformance",
@@ -354,7 +361,8 @@
         "python": "from typing import List\n\ndef max_satisfied(customers: List[int], grumpy: List[int], minutes: int) -> int:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxSatisfied(vector<int>& customers, vector<int>& grumpy, int minutes) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int maxSatisfied(int[] customers, int[] grumpy, int minutes) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int maxSatisfied(int* customers, int customersSize, int* grumpy, int grumpySize, int minutes) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int maxSatisfied(int* customers, int customersSize, int* grumpy, int grumpySize, int minutes) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MaxSatisfied(int[] customers, int[] grumpy, int minutes) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "maxSatisfied",
@@ -402,7 +410,8 @@
         "python": "from typing import List\n\ndef get_averages(nums: List[int], k: int) -> List[int]:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> getAverages(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int[] getAverages(int[] nums, int k) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
-        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* getAverages(int* nums, int numsSize, int k, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n"
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* getAverages(int* nums, int numsSize, int k, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] GetAverages(int[] nums, int k) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "getAverages",
@@ -449,7 +458,8 @@
         "python": "from typing import List\n\ndef max_score(card_points: List[int], k: int) -> int:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int maxScore(vector<int>& cardPoints, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int maxScore(int[] cardPoints, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int maxScore(int* cardPoints, int cardPointsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int maxScore(int* cardPoints, int cardPointsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MaxScore(int[] cardPoints, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "maxScore",
@@ -496,7 +506,8 @@
         "python": "def count_good_substrings(s: str) -> int:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countGoodSubstrings(string s) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int countGoodSubstrings(String s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int countGoodSubstrings(char* s) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int countGoodSubstrings(char* s) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int CountGoodSubstrings(string s) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "countGoodSubstrings",
@@ -540,7 +551,8 @@
         "python": "from typing import List\n\ndef minimum_difference(nums: List[int], k: int) -> int:\n    pass",
         "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int minimumDifference(vector<int>& nums, int k) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
         "java": "class Solution {\n    public int minimumDifference(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int minimumDifference(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n"
+        "c": "int minimumDifference(int* nums, int numsSize, int k) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int MinimumDifference(int[] nums, int k) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
       },
       "cpp_signature": {
         "fn": "minimumDifference",
