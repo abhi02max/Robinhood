@@ -13,6 +13,8 @@
     "check:java-starters": "node server/scripts/check-starters.js --language java",
     "check:cpp-starters": "node server/scripts/check-starters.js --language cpp",
     "check:authored": "node server/scripts/check-authored-problems.js",
+    "check:languages": "node server/scripts/check-all-starters.js",
+    "check:languages:release": "node server/scripts/check-all-starters.js --release --json server/scripts/language-gate-report.json",
     "verify:journeys": "node scripts/verify-journeys.mjs",
     "start": "next start -p 5173",
     "predev:all": "npx --yes kill-port 3000 5173",

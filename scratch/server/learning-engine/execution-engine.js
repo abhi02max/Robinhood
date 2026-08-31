@@ -219,7 +219,29 @@ function extractEntrypoint(code, language) {
       }
     }
   } else if (lang === 'python') {
-    const re = /^[ \t]*def\s+([A-Za-z_][\w]*)\s*\(([^)]*)\)\s*:/gm;
+    // The return annotation is OPTIONAL and must be skipped (defect D9).
+    //
+    // This pattern used to be `\)\s*:` — a closing paren followed directly by a colon.
+    // That does not match the most ordinary annotated Python there is:
+    //
+    //     def find_max_average(nums: List[int], k: int) -> float:
+    //
+    // because `-> float` sits between the two. Extraction failed, and `runExecution`
+    // turns an extraction failure into `compile_error` for every case, so the user was
+    // told "Could not find a top-level function" about code that is perfectly valid —
+    // and on 12 seeded problems it was code WE had put in the editor for them.
+    //
+    // Parameter type hints were already stripped further down, which is what made this
+    // hard to spot: hints were clearly anticipated, just not on the return.
+    //
+    // `[^:\n]+` for the annotation is deliberate. Every annotation the curriculum uses
+    // (`float`, `List[int]`, `Optional[str]`, `Dict[str, int]`) is colon-free, and
+    // stopping at the first colon guarantees the `:` that opens the body is the one that
+    // terminates the match rather than something inside a nested type.
+    //
+    // `async def` is accepted for the same reason: it costs one optional token, and
+    // refusing it would be another valid-Python-rejected report.
+    const re = /^[ \t]*(?:async\s+)?def\s+([A-Za-z_][\w]*)\s*\(([^)]*)\)\s*(?:->[^:\n]+)?\s*:/gm;
     let m;
     while ((m = re.exec(code)) !== null) {
       matches.push({ index: m.index, name: m[1], paramsRaw: m[2] });
@@ -361,6 +383,29 @@ function buildProgram(language, userCode, entry, cppSignature) {
 /** Resolve a program for one test case, whichever shape buildProgram returned. */
 function programFor(program, testCase) {
   return typeof program === 'function' ? program(testCase) : program;
+}
+
+/**
+ * Generate the complete program for ONE test case, without executing anything.
+ *
+ * Exists for the release gate (`check-all-starters.js`), which needs to prove that every
+ * problem/language pair produces a harness at all — and it needs to prove that for all
+ * 96 problems across four typed languages, which is 374 provider executions if the only
+ * way to build a program is to run one.
+ *
+ * This is the same `buildProgram` the executor uses, including the JavaScript/Python
+ * entrypoint extraction, so a pass here means the real path works rather than a
+ * reimplementation of it. It is a read-only helper: no network, no provider, no state.
+ *
+ * Throws exactly what the executor would throw, which is the point — the gate reports
+ * the message.
+ */
+export function buildHarnessProgram({ language, code, cpp_signature = null, testCase = null }) {
+  const lang = normalizeLanguage(language);
+  const def = getLanguage(lang);
+  if (!def) throw new Error(`Unsupported language: ${language}`);
+  const entry = def.signatureStrategy === 'signature' ? null : extractEntrypoint(code, lang);
+  return programFor(buildProgram(lang, code, entry, cpp_signature), testCase);
 }
 
 // The C# harness lives in ../languages/csharp.js. The 116-line builder that used
@@ -1376,7 +1421,8 @@ export async function runExecution({ code, language, testCases, cpp_signature = 
 
   // ----- compare each result against expected_output -----
   const results = raw.map((entry) => {
-    const { idx, tc, exec, elapsed } = entry;
+    const { idx, tc, elapsed } = entry;
+    const exec = { ...entry.exec, kind: reclassifyParseFailure(entry.exec, languageDef) };
     const isHidden = !!tc.is_hidden;
 
     // Respect a fatal timed-out / runtime error first.
@@ -1454,6 +1500,43 @@ function trim(s, max) {
   if (!s) return '';
   const str = String(s);
   return str.length > max ? str.slice(0, max) + '…[truncated]' : str;
+}
+
+/**
+ * A parse failure in JavaScript or Python is a COMPILE error, not a runtime one (D10).
+ *
+ * Defect D3, fixed in Phase 1b, was a compile error reported as "Runtime Error" for
+ * C++. Interpreted languages had the same bug and it survived, because they have no
+ * compile step for the provider to report on: Node and CPython fail at parse time and
+ * write to stderr with a non-zero exit, which looks exactly like a crash. So a candidate
+ * with a missing brace was told "Runtime Error" and went looking for a logic bug.
+ *
+ * THE DISCRIMINATOR IS RELIABLE, WHICH IS WHY THIS IS SAFE TO DO
+ * -------------------------------------------------------------
+ * Sniffing stderr for "SyntaxError" alone would be wrong: `JSON.parse("{oops")` throws a
+ * genuine runtime SyntaxError, and calling that a compile error just swaps one wrong
+ * verdict for another. Both were measured against the live provider:
+ *
+ *   parse-time   /workspace/Main.js:1 ... ^ SyntaxError: Unexpected token '}'
+ *   runtime      RuntimeError: SyntaxError: Unexpected token o in JSON at position 1
+ *
+ * The harness wraps everything it calls in try/catch and prefixes what it catches with
+ * `RuntimeError: `. A parse failure kills the process before that try/catch exists, so
+ * the prefix CANNOT be present. Its absence is the signal, and the name of the exception
+ * only narrows which absences count.
+ *
+ * Scoped to source-parsed languages on purpose. C++, Java, C and C# have real compilers
+ * whose failures already arrive as `build_result: "failure"`, and they use the same
+ * `RuntimeError: ` prefix, so widening this would add risk and no coverage.
+ */
+function reclassifyParseFailure(exec, languageDef) {
+  if (!exec || exec.kind !== ERROR_KIND.RUNTIME_ERROR) return exec?.kind ?? null;
+  if (!languageDef || languageDef.signatureStrategy !== 'source-parse') return exec.kind;
+  const stderr = String(exec.stderr || '');
+  if (stderr.includes('RuntimeError:')) return exec.kind;
+  return /\b(SyntaxError|IndentationError|TabError)\b/.test(stderr)
+    ? ERROR_KIND.COMPILE_ERROR
+    : exec.kind;
 }
 
 /**

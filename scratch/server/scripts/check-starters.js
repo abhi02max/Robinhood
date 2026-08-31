@@ -34,7 +34,6 @@
  *   node server/scripts/check-starters.js --language cpp --slug 3sum
  *   node server/scripts/check-starters.js --language java --shapes
  */
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import dotenv from 'dotenv';
@@ -51,8 +50,9 @@ if (String(process.env.EXECUTION_PROVIDER || '').toLowerCase() === 'mock') {
 
 const { runExecution } = await import('../learning-engine/execution-engine.js');
 const { executableLanguages, getLanguage, languageSupportsSignature } = await import('../languages/registry.js');
-
-const PROBLEMS_DIR = path.join(__dirname, '..', 'data', 'learning', 'problems');
+// Shared with check-all-starters.js. Two copies of "which files are problems" is exactly
+// the kind of duplication that fragmented the language definitions before Phase 2A.
+const { loadSeededProblems, signatureShape, representativeCase } = await import('./lib/seeded-problems.mjs');
 
 const argv = process.argv.slice(2);
 const flagValues = (name) => argv.reduce((acc, a, i) => (a === name && argv[i + 1] ? [...acc, argv[i + 1]] : acc), []);
@@ -84,28 +84,9 @@ if (!languages.length) {
   process.exit(1);
 }
 
-// ---------------------------------------------------------------------------
-// Collect problems from the seed files — the source of truth, and it means this
-// runs before a seed and needs no DATABASE_URL.
-// ---------------------------------------------------------------------------
-function seedFiles() {
-  const out = [];
-  for (const topic of fs.readdirSync(PROBLEMS_DIR)) {
-    const dir = path.join(PROBLEMS_DIR, topic);
-    if (!fs.statSync(dir).isDirectory()) continue;
-    for (const file of fs.readdirSync(dir)) {
-      if (file.endsWith('.json')) out.push(path.join(dir, file));
-    }
-  }
-  return out.sort();
-}
-
-const allProblems = [];
-for (const file of seedFiles()) {
-  const doc = JSON.parse(fs.readFileSync(file, 'utf8'));
-  const list = Array.isArray(doc.problems) ? doc.problems : Array.isArray(doc) ? doc : [doc];
-  for (const p of list) allProblems.push(p);
-}
+// Problems come from the seed files — the source of truth, and it means this runs before
+// a seed and needs no DATABASE_URL.
+const allProblems = loadSeededProblems();
 
 const BAD_KINDS = new Set(['compile_error', 'harness_error']);
 
@@ -121,8 +102,6 @@ async function runPool(items, size, fn) {
   }));
   return results;
 }
-
-const shapeOf = (sig) => `${sig.ret} <- ${(sig.args || []).map((a) => a.type).join(',')}`;
 
 const summary = [];
 let totalFailures = 0;
@@ -140,15 +119,14 @@ for (const language of languages) {
     if (!verdict.supported) { excluded.push({ slug: p.slug, reason: verdict.reason }); continue; }
     const starter = p.starter_code?.[language];
     if (!starter) { noStarter.push(p.slug); continue; }
-    const cases = Array.isArray(p.test_cases) ? p.test_cases : [];
-    const tcase = cases.find((t) => t.is_hidden === false) || cases[0];
+    const tcase = representativeCase(p);
     if (!tcase) { noStarter.push(p.slug); continue; }
     targets.push({
       slug: p.slug,
       starter,
       sig: p.cpp_signature,
-      shape: shapeOf(p.cpp_signature),
-      testCase: { ...tcase, id: `${p.slug}-1`, order_index: tcase.order_index ?? 1 },
+      shape: signatureShape(p.cpp_signature),
+      testCase: tcase,
     });
   }
 

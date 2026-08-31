@@ -1,0 +1,2171 @@
+{
+  "generated_at": "2026-08-31T18:43:06.473Z",
+  "provider": "paiza",
+  "tiers": {
+    "local": true,
+    "canonical": true,
+    "verdicts": true,
+    "starters": true,
+    "exhaustive": true
+  },
+  "languages": {
+    "javascript": {
+      "display_name": "JavaScript",
+      "production_enabled": true,
+      "harness_implemented": true,
+      "supports_run": true,
+      "supports_submit": true,
+      "signature_strategy": "source-parse",
+      "monaco": "javascript",
+      "extension": "js",
+      "providers": {
+        "paiza": {
+          "id": "javascript",
+          "verified": true,
+          "runtime": "Node 16.17.1"
+        },
+        "judge0": {
+          "id": 63,
+          "verified": false,
+          "runtime": "Node 12.14.0 on CE 1.13.x"
+        },
+        "piston": {
+          "id": "javascript",
+          "verified": false,
+          "runtime": null
+        }
+      },
+      "issues": []
+    },
+    "python": {
+      "display_name": "Python",
+      "production_enabled": true,
+      "harness_implemented": true,
+      "supports_run": true,
+      "supports_submit": true,
+      "signature_strategy": "source-parse",
+      "monaco": "python",
+      "extension": "py",
+      "providers": {
+        "paiza": {
+          "id": "python3",
+          "verified": true,
+          "runtime": "Python 3.11.13"
+        },
+        "judge0": {
+          "id": 71,
+          "verified": false,
+          "runtime": "Python 3.8.1 on CE 1.13.x"
+        },
+        "piston": {
+          "id": "python",
+          "verified": false,
+          "runtime": null
+        }
+      },
+      "issues": []
+    },
+    "cpp": {
+      "display_name": "C++",
+      "production_enabled": true,
+      "harness_implemented": true,
+      "supports_run": true,
+      "supports_submit": true,
+      "signature_strategy": "signature",
+      "monaco": "cpp",
+      "extension": "cpp",
+      "providers": {
+        "paiza": {
+          "id": "cpp",
+          "verified": true,
+          "runtime": "Clang 18, C++20"
+        },
+        "judge0": {
+          "id": 54,
+          "verified": false,
+          "runtime": "GCC 9.2.0, -std=c++17 on CE 1.13.x"
+        },
+        "piston": {
+          "id": "c++",
+          "verified": false,
+          "runtime": null
+        }
+      },
+      "issues": []
+    },
+    "java": {
+      "display_name": "Java",
+      "production_enabled": true,
+      "harness_implemented": true,
+      "supports_run": true,
+      "supports_submit": true,
+      "signature_strategy": "signature",
+      "monaco": "java",
+      "extension": "java",
+      "providers": {
+        "paiza": {
+          "id": "java",
+          "verified": false,
+          "runtime": "OpenJDK 18"
+        },
+        "judge0": {
+          "id": 62,
+          "verified": false,
+          "runtime": "OpenJDK 13.0.1 on CE 1.13.x"
+        }
+      },
+      "issues": []
+    },
+    "c": {
+      "display_name": "C",
+      "production_enabled": true,
+      "harness_implemented": true,
+      "supports_run": true,
+      "supports_submit": true,
+      "signature_strategy": "signature",
+      "monaco": "c",
+      "extension": "c",
+      "providers": {
+        "paiza": {
+          "id": "c",
+          "verified": false,
+          "runtime": "Clang 14, C17"
+        },
+        "judge0": {
+          "id": 50,
+          "verified": false,
+          "runtime": "GCC 9.2.0 on CE 1.13.x"
+        }
+      },
+      "issues": []
+    },
+    "csharp": {
+      "display_name": "C#",
+      "production_enabled": true,
+      "harness_implemented": true,
+      "supports_run": true,
+      "supports_submit": true,
+      "signature_strategy": "signature",
+      "monaco": "csharp",
+      "extension": "cs",
+      "providers": {
+        "paiza": {
+          "id": "csharp",
+          "verified": false,
+          "runtime": "Mono"
+        },
+        "judge0": {
+          "id": 51,
+          "verified": false,
+          "runtime": "Mono 6.6.0.161 on CE 1.13.x"
+        }
+      },
+      "issues": []
+    }
+  },
+  "capability": {
+    "javascript": {
+      "total": 96,
+      "capable": 96,
+      "excluded": 0,
+      "exclusions": []
+    },
+    "python": {
+      "total": 96,
+      "capable": 96,
+      "excluded": 0,
+      "exclusions": []
+    },
+    "cpp": {
+      "total": 96,
+      "capable": 96,
+      "excluded": 0,
+      "exclusions": []
+    },
+    "java": {
+      "total": 96,
+      "capable": 96,
+      "excluded": 0,
+      "exclusions": []
+    },
+    "c": {
+      "total": 96,
+      "capable": 86,
+      "excluded": 10,
+      "exclusions": [
+        {
+          "slug": "max-area-of-island",
+          "reason": "argument \"grid\": C cannot express vector<vector<int>>"
+        },
+        {
+          "slug": "find-if-path-exists-in-graph",
+          "reason": "argument \"edges\": C cannot express vector<vector<int>>"
+        },
+        {
+          "slug": "number-of-connected-components-in-an-undirected-graph",
+          "reason": "argument \"edges\": C cannot express vector<vector<int>>"
+        },
+        {
+          "slug": "meeting-rooms",
+          "reason": "argument \"intervals\": C cannot express vector<vector<int>>"
+        },
+        {
+          "slug": "non-overlapping-intervals",
+          "reason": "argument \"intervals\": C cannot express vector<vector<int>>"
+        },
+        {
+          "slug": "minimum-number-of-arrows-to-burst-balloons",
+          "reason": "argument \"points\": C cannot express vector<vector<int>>"
+        },
+        {
+          "slug": "maximum-length-of-pair-chain",
+          "reason": "argument \"pairs\": C cannot express vector<vector<int>>"
+        },
+        {
+          "slug": "max-value-of-equation",
+          "reason": "argument \"points\": C cannot express vector<vector<int>>"
+        },
+        {
+          "slug": "3sum",
+          "reason": "return type: C cannot express vector<vector<int>>"
+        },
+        {
+          "slug": "4sum",
+          "reason": "return type: C cannot express vector<vector<int>>"
+        }
+      ]
+    },
+    "csharp": {
+      "total": 96,
+      "capable": 96,
+      "excluded": 0,
+      "exclusions": []
+    }
+  },
+  "local": {
+    "starters_javascript": {
+      "checked": 0,
+      "skipped": "source-parse"
+    },
+    "starters_python": {
+      "checked": 0,
+      "skipped": "source-parse"
+    },
+    "starters_cpp": {
+      "checked": 96,
+      "rendered": 96,
+      "missing": 0,
+      "drifted": 0,
+      "errors": []
+    },
+    "starters_java": {
+      "checked": 96,
+      "rendered": 96,
+      "missing": 0,
+      "drifted": 0,
+      "errors": []
+    },
+    "starters_c": {
+      "checked": 86,
+      "rendered": 86,
+      "missing": 0,
+      "drifted": 0,
+      "errors": []
+    },
+    "starters_csharp": {
+      "checked": 96,
+      "rendered": 96,
+      "missing": 0,
+      "drifted": 0,
+      "errors": []
+    },
+    "harness_javascript": {
+      "built": 96,
+      "errors": []
+    },
+    "harness_python": {
+      "built": 96,
+      "errors": []
+    },
+    "harness_cpp": {
+      "built": 96,
+      "errors": []
+    },
+    "harness_java": {
+      "built": 96,
+      "errors": []
+    },
+    "harness_c": {
+      "built": 86,
+      "errors": []
+    },
+    "harness_csharp": {
+      "built": 96,
+      "errors": []
+    },
+    "corpus": {
+      "entries": 12,
+      "cases": 38,
+      "types_covered": [
+        "int",
+        "long long",
+        "double",
+        "bool",
+        "string",
+        "vector<int>",
+        "vector<long long>",
+        "vector<double>",
+        "vector<bool>",
+        "vector<string>",
+        "vector<vector<int>>"
+      ],
+      "types_missing": [],
+      "edges_covered": [
+        "zero",
+        "negative",
+        "numeric-bound",
+        "empty",
+        "escaped-string",
+        "non-ascii",
+        "singleton",
+        "ragged-matrix",
+        "multi-arg-order"
+      ],
+      "edges_missing": [],
+      "capability_mismatches": []
+    },
+    "literal_grid": {
+      "javascript": {
+        "int": "ok",
+        "long-long": "ok",
+        "double": "ok",
+        "bool": "ok",
+        "string": "ok",
+        "vector-int": "ok",
+        "vector-long-long": "ok",
+        "vector-double": "ok",
+        "vector-bool": "ok",
+        "vector-string": "ok",
+        "matrix": "ok",
+        "mixed-args": "ok"
+      },
+      "python": {
+        "int": "ok",
+        "long-long": "ok",
+        "double": "ok",
+        "bool": "ok",
+        "string": "ok",
+        "vector-int": "ok",
+        "vector-long-long": "ok",
+        "vector-double": "ok",
+        "vector-bool": "ok",
+        "vector-string": "ok",
+        "matrix": "ok",
+        "mixed-args": "ok"
+      },
+      "cpp": {
+        "int": "ok",
+        "long-long": "ok",
+        "double": "ok",
+        "bool": "ok",
+        "string": "ok",
+        "vector-int": "ok",
+        "vector-long-long": "ok",
+        "vector-double": "ok",
+        "vector-bool": "ok",
+        "vector-string": "ok",
+        "matrix": "ok",
+        "mixed-args": "ok"
+      },
+      "java": {
+        "int": "ok",
+        "long-long": "ok",
+        "double": "ok",
+        "bool": "ok",
+        "string": "ok",
+        "vector-int": "ok",
+        "vector-long-long": "ok",
+        "vector-double": "ok",
+        "vector-bool": "ok",
+        "vector-string": "ok",
+        "matrix": "ok",
+        "mixed-args": "ok"
+      },
+      "c": {
+        "int": "ok",
+        "long-long": "ok",
+        "double": "ok",
+        "bool": "ok",
+        "string": "ok",
+        "vector-int": "ok",
+        "vector-long-long": "ok",
+        "vector-double": "ok",
+        "vector-bool": "ok",
+        "vector-string": "ok",
+        "matrix": "n/a",
+        "mixed-args": "ok"
+      },
+      "csharp": {
+        "int": "ok",
+        "long-long": "ok",
+        "double": "ok",
+        "bool": "ok",
+        "string": "ok",
+        "vector-int": "ok",
+        "vector-long-long": "ok",
+        "vector-double": "ok",
+        "vector-bool": "ok",
+        "vector-string": "ok",
+        "matrix": "ok",
+        "mixed-args": "ok"
+      }
+    }
+  },
+  "canonical": {
+    "c/matrix": {
+      "result": "UNSUPPORTED_SIGNATURE",
+      "reason": "argument \"grid\": C cannot express vector<vector<int>>; return type: C cannot express vector<vector<int>>"
+    },
+    "javascript/double": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "double"
+      ],
+      "edges": [
+        "negative",
+        "zero"
+      ],
+      "http_requests": 12
+    },
+    "javascript/bool": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 7
+    },
+    "javascript/int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 4
+    },
+    "javascript/bool#control": {
+      "result": "PASS",
+      "reason": "0/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 6
+    },
+    "javascript/string": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "string"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 10
+    },
+    "javascript/vector-int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 7
+    },
+    "javascript/int#control": {
+      "result": "PASS",
+      "reason": "0/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 5
+    },
+    "javascript/vector-int#control": {
+      "result": "PASS",
+      "reason": "2/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 4
+    },
+    "javascript/vector-long-long": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<long long>"
+      ],
+      "edges": [
+        "empty",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 6
+    },
+    "javascript/vector-double": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<double>"
+      ],
+      "edges": [
+        "empty",
+        "negative"
+      ],
+      "http_requests": 6
+    },
+    "javascript/vector-bool": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<bool>"
+      ],
+      "edges": [
+        "empty",
+        "singleton"
+      ],
+      "http_requests": 8
+    },
+    "javascript/long-long": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "long long"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 3
+    },
+    "javascript/vector-string": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<string>"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 3
+    },
+    "javascript/mixed-args": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 13
+    },
+    "javascript/matrix": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<vector<int>>"
+      ],
+      "edges": [
+        "empty",
+        "ragged-matrix",
+        "negative"
+      ],
+      "http_requests": 4
+    },
+    "javascript/mixed-args#control": {
+      "result": "PASS",
+      "reason": "0/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 4
+    },
+    "python/int#control": {
+      "result": "PASS",
+      "reason": "0/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 17
+    },
+    "python/int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 2
+    },
+    "python/long-long": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "long long"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 2
+    },
+    "python/bool": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 11
+    },
+    "python/double": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "double"
+      ],
+      "edges": [
+        "negative",
+        "zero"
+      ],
+      "http_requests": 4
+    },
+    "python/bool#control": {
+      "result": "PASS",
+      "reason": "0/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 5
+    },
+    "python/string": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "string"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 12
+    },
+    "python/vector-int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 2
+    },
+    "python/vector-long-long": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<long long>"
+      ],
+      "edges": [
+        "empty",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 7
+    },
+    "python/vector-int#control": {
+      "result": "PASS",
+      "reason": "2/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 3
+    },
+    "python/vector-double": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<double>"
+      ],
+      "edges": [
+        "empty",
+        "negative"
+      ],
+      "http_requests": 10
+    },
+    "python/vector-bool": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<bool>"
+      ],
+      "edges": [
+        "empty",
+        "singleton"
+      ],
+      "http_requests": 3
+    },
+    "python/vector-string": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<string>"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 4
+    },
+    "python/mixed-args#control": {
+      "result": "PASS",
+      "reason": "0/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 12
+    },
+    "python/mixed-args": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 4
+    },
+    "python/matrix": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<vector<int>>"
+      ],
+      "edges": [
+        "empty",
+        "ragged-matrix",
+        "negative"
+      ],
+      "http_requests": 4
+    },
+    "cpp/int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 49
+    },
+    "cpp/int#control": {
+      "result": "PASS",
+      "reason": "0/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 12
+    },
+    "cpp/long-long": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "long long"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 2
+    },
+    "cpp/double": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "double"
+      ],
+      "edges": [
+        "negative",
+        "zero"
+      ],
+      "http_requests": 13
+    },
+    "cpp/bool": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 30
+    },
+    "cpp/bool#control": {
+      "result": "PASS",
+      "reason": "0/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 13
+    },
+    "cpp/string": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "string"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 8
+    },
+    "cpp/vector-int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 11
+    },
+    "cpp/vector-int#control": {
+      "result": "PASS",
+      "reason": "1/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 27
+    },
+    "cpp/vector-long-long": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<long long>"
+      ],
+      "edges": [
+        "empty",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 9
+    },
+    "cpp/vector-double": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<double>"
+      ],
+      "edges": [
+        "empty",
+        "negative"
+      ],
+      "http_requests": 7
+    },
+    "cpp/vector-bool": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<bool>"
+      ],
+      "edges": [
+        "empty",
+        "singleton"
+      ],
+      "http_requests": 13
+    },
+    "cpp/vector-string": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<string>"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 29
+    },
+    "cpp/matrix": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<vector<int>>"
+      ],
+      "edges": [
+        "empty",
+        "ragged-matrix",
+        "negative"
+      ],
+      "http_requests": 11
+    },
+    "cpp/mixed-args": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 11
+    },
+    "java/int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 14
+    },
+    "cpp/mixed-args#control": {
+      "result": "PASS",
+      "reason": "0/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 4
+    },
+    "java/int#control": {
+      "result": "PASS",
+      "reason": "0/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 11
+    },
+    "java/long-long": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "long long"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 2
+    },
+    "java/double": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "double"
+      ],
+      "edges": [
+        "negative",
+        "zero"
+      ],
+      "http_requests": 12
+    },
+    "java/bool": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 13
+    },
+    "java/bool#control": {
+      "result": "PASS",
+      "reason": "0/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 4
+    },
+    "java/string": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "string"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 11
+    },
+    "java/vector-int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 2
+    },
+    "java/vector-int#control": {
+      "result": "PASS",
+      "reason": "0/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 11
+    },
+    "java/vector-long-long": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<long long>"
+      ],
+      "edges": [
+        "empty",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 9
+    },
+    "java/vector-double": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<double>"
+      ],
+      "edges": [
+        "empty",
+        "negative"
+      ],
+      "http_requests": 9
+    },
+    "java/vector-bool": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<bool>"
+      ],
+      "edges": [
+        "empty",
+        "singleton"
+      ],
+      "http_requests": 7
+    },
+    "java/vector-string": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<string>"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 8
+    },
+    "java/matrix": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<vector<int>>"
+      ],
+      "edges": [
+        "empty",
+        "ragged-matrix",
+        "negative"
+      ],
+      "http_requests": 11
+    },
+    "c/int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 10
+    },
+    "java/mixed-args": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 12
+    },
+    "java/mixed-args#control": {
+      "result": "PASS",
+      "reason": "0/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 4
+    },
+    "c/int#control": {
+      "result": "PASS",
+      "reason": "0/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 2
+    },
+    "c/long-long": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "long long"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 10
+    },
+    "c/double": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "double"
+      ],
+      "edges": [
+        "negative",
+        "zero"
+      ],
+      "http_requests": 4
+    },
+    "c/bool": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 12
+    },
+    "c/string": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "string"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 5
+    },
+    "c/bool#control": {
+      "result": "PASS",
+      "reason": "0/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 2
+    },
+    "c/vector-int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 9
+    },
+    "c/vector-int#control": {
+      "result": "PASS",
+      "reason": "0/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 3
+    },
+    "c/vector-long-long": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<long long>"
+      ],
+      "edges": [
+        "empty",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 10
+    },
+    "c/vector-double": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<double>"
+      ],
+      "edges": [
+        "empty",
+        "negative"
+      ],
+      "http_requests": 3
+    },
+    "c/vector-bool": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<bool>"
+      ],
+      "edges": [
+        "empty",
+        "singleton"
+      ],
+      "http_requests": 3
+    },
+    "c/mixed-args": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 14
+    },
+    "c/vector-string": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<string>"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 4
+    },
+    "c/mixed-args#control": {
+      "result": "PASS",
+      "reason": "0/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 4
+    },
+    "csharp/long-long": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "long long"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 17
+    },
+    "csharp/int#control": {
+      "result": "PASS",
+      "reason": "0/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 2
+    },
+    "csharp/int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "int"
+      ],
+      "edges": [
+        "zero",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 2
+    },
+    "csharp/bool": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 11
+    },
+    "csharp/double": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "double"
+      ],
+      "edges": [
+        "negative",
+        "zero"
+      ],
+      "http_requests": 4
+    },
+    "csharp/bool#control": {
+      "result": "PASS",
+      "reason": "0/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "bool"
+      ],
+      "edges": [],
+      "http_requests": 13
+    },
+    "csharp/vector-int": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 3
+    },
+    "csharp/string": {
+      "result": "PASS",
+      "reason": "4/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "string"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 2
+    },
+    "csharp/vector-int#control": {
+      "result": "PASS",
+      "reason": "0/4 cases passed",
+      "attempts": 1,
+      "cases": 4,
+      "covers": [
+        "vector<int>"
+      ],
+      "edges": [
+        "empty",
+        "singleton",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 9
+    },
+    "csharp/vector-long-long": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<long long>"
+      ],
+      "edges": [
+        "empty",
+        "negative",
+        "numeric-bound"
+      ],
+      "http_requests": 3
+    },
+    "csharp/vector-double": {
+      "result": "PASS",
+      "reason": "2/2 cases passed",
+      "attempts": 1,
+      "cases": 2,
+      "covers": [
+        "vector<double>"
+      ],
+      "edges": [
+        "empty",
+        "negative"
+      ],
+      "http_requests": 9
+    },
+    "csharp/vector-bool": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<bool>"
+      ],
+      "edges": [
+        "empty",
+        "singleton"
+      ],
+      "http_requests": 3
+    },
+    "csharp/vector-string": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<string>"
+      ],
+      "edges": [
+        "empty",
+        "escaped-string",
+        "non-ascii"
+      ],
+      "http_requests": 10
+    },
+    "csharp/matrix": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "vector<vector<int>>"
+      ],
+      "edges": [
+        "empty",
+        "ragged-matrix",
+        "negative"
+      ],
+      "http_requests": 11
+    },
+    "csharp/mixed-args#control": {
+      "result": "PASS",
+      "reason": "0/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 14
+    },
+    "csharp/mixed-args": {
+      "result": "PASS",
+      "reason": "3/3 cases passed",
+      "attempts": 1,
+      "cases": 3,
+      "covers": [
+        "int",
+        "vector<int>",
+        "string",
+        "bool"
+      ],
+      "edges": [
+        "multi-arg-order",
+        "empty",
+        "negative"
+      ],
+      "http_requests": 15
+    }
+  },
+  "verdicts": {
+    "javascript/wrong_answer": {
+      "expected": "wrong_answer",
+      "observed": "wrong_answer",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "javascript/accepted": {
+      "expected": "accepted",
+      "observed": "accepted",
+      "ok": true,
+      "pass_count": 2,
+      "total": 2,
+      "provider_result": "PASS",
+      "attempts": 1
+    },
+    "javascript/compile_error": {
+      "expected": "compile_error",
+      "observed": "compile_error",
+      "ok": true,
+      "compile_error_source": "Node parse failure, reclassified from runtime_error (D10)",
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "HARNESS_FAILURE",
+      "attempts": 1
+    },
+    "javascript/runtime_error": {
+      "expected": "runtime_error",
+      "observed": "runtime_error",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "python/accepted": {
+      "expected": "accepted",
+      "observed": "accepted",
+      "ok": true,
+      "pass_count": 2,
+      "total": 2,
+      "provider_result": "PASS",
+      "attempts": 1
+    },
+    "python/wrong_answer": {
+      "expected": "wrong_answer",
+      "observed": "wrong_answer",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "python/compile_error": {
+      "expected": "compile_error",
+      "observed": "compile_error",
+      "ok": true,
+      "compile_error_source": "CPython parse failure, reclassified from runtime_error (D10)",
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "HARNESS_FAILURE",
+      "attempts": 1
+    },
+    "javascript/time_limit_exceeded": {
+      "expected": "time_limit_exceeded",
+      "observed": "time_limit_exceeded",
+      "ok": true,
+      "pass_count": 0,
+      "total": 1,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "python/runtime_error": {
+      "expected": "runtime_error",
+      "observed": "runtime_error",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "python/time_limit_exceeded": {
+      "expected": "time_limit_exceeded",
+      "observed": "time_limit_exceeded",
+      "ok": true,
+      "pass_count": 0,
+      "total": 1,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "cpp/compile_error": {
+      "expected": "compile_error",
+      "observed": "compile_error",
+      "ok": true,
+      "compile_error_source": "provider compiler (build_result: failure)",
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "HARNESS_FAILURE",
+      "attempts": 1
+    },
+    "cpp/accepted": {
+      "expected": "accepted",
+      "observed": "accepted",
+      "ok": true,
+      "pass_count": 2,
+      "total": 2,
+      "provider_result": "PASS",
+      "attempts": 1
+    },
+    "cpp/wrong_answer": {
+      "expected": "wrong_answer",
+      "observed": "wrong_answer",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "java/accepted": {
+      "expected": "accepted",
+      "observed": "accepted",
+      "ok": true,
+      "pass_count": 2,
+      "total": 2,
+      "provider_result": "PASS",
+      "attempts": 1
+    },
+    "cpp/runtime_error": {
+      "expected": "runtime_error",
+      "observed": "runtime_error",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "java/wrong_answer": {
+      "expected": "wrong_answer",
+      "observed": "wrong_answer",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "java/compile_error": {
+      "expected": "compile_error",
+      "observed": "compile_error",
+      "ok": true,
+      "compile_error_source": "provider compiler (build_result: failure)",
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "HARNESS_FAILURE",
+      "attempts": 1
+    },
+    "c/accepted": {
+      "expected": "accepted",
+      "observed": "accepted",
+      "ok": true,
+      "pass_count": 2,
+      "total": 2,
+      "provider_result": "PASS",
+      "attempts": 1
+    },
+    "cpp/time_limit_exceeded": {
+      "expected": "time_limit_exceeded",
+      "observed": "time_limit_exceeded",
+      "ok": true,
+      "pass_count": 0,
+      "total": 1,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "java/runtime_error": {
+      "expected": "runtime_error",
+      "observed": "runtime_error",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "c/wrong_answer": {
+      "expected": "wrong_answer",
+      "observed": "wrong_answer",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "c/compile_error": {
+      "expected": "compile_error",
+      "observed": "compile_error",
+      "ok": true,
+      "compile_error_source": "provider compiler (build_result: failure)",
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "HARNESS_FAILURE",
+      "attempts": 1
+    },
+    "java/time_limit_exceeded": {
+      "expected": "time_limit_exceeded",
+      "observed": "time_limit_exceeded",
+      "ok": true,
+      "pass_count": 0,
+      "total": 1,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "c/runtime_error": {
+      "expected": "runtime_error",
+      "observed": "runtime_error",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "csharp/accepted": {
+      "expected": "accepted",
+      "observed": "accepted",
+      "ok": true,
+      "pass_count": 2,
+      "total": 2,
+      "provider_result": "PASS",
+      "attempts": 1
+    },
+    "c/time_limit_exceeded": {
+      "expected": "time_limit_exceeded",
+      "observed": "time_limit_exceeded",
+      "ok": true,
+      "pass_count": 0,
+      "total": 1,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "csharp/compile_error": {
+      "expected": "compile_error",
+      "observed": "compile_error",
+      "ok": true,
+      "compile_error_source": "provider compiler (build_result: failure)",
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "HARNESS_FAILURE",
+      "attempts": 1
+    },
+    "csharp/runtime_error": {
+      "expected": "runtime_error",
+      "observed": "runtime_error",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "csharp/wrong_answer": {
+      "expected": "wrong_answer",
+      "observed": "wrong_answer",
+      "ok": true,
+      "pass_count": 0,
+      "total": 2,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    },
+    "csharp/time_limit_exceeded": {
+      "expected": "time_limit_exceeded",
+      "observed": "time_limit_exceeded",
+      "ok": true,
+      "pass_count": 0,
+      "total": 1,
+      "provider_result": "PRODUCT_FAILURE",
+      "attempts": 1
+    }
+  },
+  "starters": {
+    "cpp": {
+      "mode": "exhaustive",
+      "checked": 96,
+      "shapes": 32,
+      "excluded": 0,
+      "failed": [],
+      "throttled": []
+    },
+    "java": {
+      "mode": "exhaustive",
+      "checked": 96,
+      "shapes": 32,
+      "excluded": 0,
+      "failed": [],
+      "throttled": []
+    },
+    "c": {
+      "mode": "exhaustive",
+      "checked": 86,
+      "shapes": 25,
+      "excluded": 10,
+      "failed": [],
+      "throttled": []
+    },
+    "csharp": {
+      "mode": "exhaustive",
+      "checked": 96,
+      "shapes": 32,
+      "excluded": 0,
+      "failed": [],
+      "throttled": []
+    }
+  },
+  "provider_stats": {
+    "executions": 499,
+    "passes": 499,
+    "failures": 0,
+    "throttles": 0,
+    "retries": 0,
+    "provider_seconds": 1133,
+    "by_result": {
+      "PASS": 499,
+      "UNSUPPORTED_SIGNATURE": 0,
+      "PROVIDER_THROTTLED": 0,
+      "PROVIDER_FAILURE": 0,
+      "PRODUCT_FAILURE": 0,
+      "HARNESS_FAILURE": 0
+    }
+  },
+  "not_covered": [
+    "authenticated submission, attempt persistence and progress update (browser suite: tests/language-submission.spec.ts)",
+    "Judge0 as the execution provider (never live-validated; see docs/judge0-revalidation.md)",
+    "signature types beyond the canonical vocabulary"
+  ],
+  "failures": []
+}
