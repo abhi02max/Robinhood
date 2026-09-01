@@ -2,6 +2,16 @@ import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './scratch/tests',
+  /**
+   * Browser specs only.
+   *
+   * Playwright's default `testMatch` is `**\/*.@(spec|test).?(c|m)[jt]s?(x)`, which also
+   * catches `tests/unit/*.test.js` — the node:test suite. Those files were being LOADED by
+   * every Playwright run: their output interleaved with the report, and because they
+   * register with node:test rather than Playwright, a failing unit test could not fail the
+   * run it was printing into. `npm test` owns them; this owns `*.spec.ts`.
+   */
+  testMatch: '**/*.spec.ts',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,

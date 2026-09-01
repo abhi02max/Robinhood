@@ -1,4 +1,5 @@
-import { test, expect, request as playwrightRequest, type Page } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
+import { authedRequest, collectUnauthorized, createSession, signIn } from './helpers/session';
 
 /**
  * The six-language browser gate (Phase 2E).
@@ -41,9 +42,9 @@ import { test, expect, request as playwrightRequest, type Page } from '@playwrig
  * jagged-array literal shorthand gave "Compilation Error 0/13".
  */
 
-const API = 'http://127.0.0.1:3000';
+// Pinned deliberately, unlike the platform suite which derives its problem: every
+// reference solution below is written for THIS problem's signature.
 const PROBLEM_SLUG = 'house-robber';
-const CLIENT_STATE_KEY = 'robinhood_data';
 const RUN_ROUTE = '/api/execute/run';
 const SUBMIT_ROUTE = '/api/learning/submit';
 
@@ -160,35 +161,10 @@ public:
   },
 ] as const;
 
-type Session = { token: string; userId: string; email: string };
-
-async function createSession(label: string): Promise<Session> {
-  const api = await playwrightRequest.newContext({ baseURL: API });
-  // A fresh user per language, so the progress assertion cannot pass on a solve some
-  // other language in this same suite recorded.
-  const email = `lang-e2e-${label}-${Date.now()}@example.com`;
-  const password = 'Str0ng-Passw0rd!';
-  const signup = await api.post('/api/auth/signup', { data: { email, password, name: 'Language E2E' } });
-  expect(signup.status(), 'signup must succeed').toBeLessThan(300);
-  const login = await api.post('/api/auth/login', { data: { email, password } });
-  expect(login.ok(), 'login must succeed').toBeTruthy();
-  const body = await login.json();
-  expect(body.sessionToken).toBeTruthy();
-  await api.dispose();
-  return { token: body.sessionToken, userId: body.user?.id ?? '', email };
-}
-
-async function signIn(page: Page, session: Session): Promise<void> {
-  await page.addInitScript(
-    ([key, token, userId, email]) => {
-      window.localStorage.setItem(key as string, JSON.stringify({
-        sessionToken: token,
-        user: { id: userId, email, name: 'Language E2E' },
-      }));
-    },
-    [CLIENT_STATE_KEY, session.token, session.userId, session.email],
-  );
-}
+// createSession / signIn / collectUnauthorized live in ./helpers/session. Three specs had
+// their own copies, and the specs that did NOT sign in are exactly the ones that could not
+// detect defect D0 — so there is now one implementation. A fresh user per language keeps
+// the progress assertion from passing on a solve another language in this suite recorded.
 
 /**
  * Replace the editor contents.
@@ -265,10 +241,7 @@ for (const lang of LANGUAGES) {
     const session = await createSession(lang.key);
     await signIn(page, session);
 
-    const unauthorized: string[] = [];
-    page.on('response', (res) => {
-      if (res.status() === 401 && res.url().includes('/api/')) unauthorized.push(res.url());
-    });
+    const unauthorized = collectUnauthorized(page);
 
     // Every execution request the page makes, so Run and Submit can be told apart by the
     // route they actually hit rather than by what the button is labelled.
@@ -285,10 +258,7 @@ for (const lang of LANGUAGES) {
     });
 
     // An authenticated API client for the same user, used to read back consequences.
-    const api = await playwrightRequest.newContext({
-      baseURL: API,
-      extraHTTPHeaders: { Authorization: `Bearer ${session.token}` },
-    });
+    const api = await authedRequest(session);
     const problemId = (await (await api.get(`/api/learning/problem/${PROBLEM_SLUG}`)).json()).id as string;
     const attemptsNow = async () => {
       const body = await (await api.get(`/api/learning/attempts/${problemId}`)).json();

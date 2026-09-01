@@ -630,15 +630,28 @@ provider limit we are trying to measure and would charge a user's wall-clock tim
 quota problem. Covered by `tests/unit/provider-gate.test.js`, including that a compiler
 diagnostic is never mistaken for a throttle.
 
-### D12 — `platform.spec.ts` is stale (P2, false confidence, OPEN)
+### D12 — `platform.spec.ts` was stale (P2, false confidence, FIXED in Phase 2F)
 
-18 of 29 tests fail. They assert a `two-sum` slug that is not seeded, "500+ problems"
-against a 96-problem curriculum, and a mock-era `FAIL` marker. This is the same family as
-D8 and it is **not** a Phase 2 regression: the identical 18 failures were reproduced with
-Phase 2E's only server-side change stashed. Phase 1 recorded the full Playwright suite as
-`not tested`, so this is the first time it has been run to completion.
+18 of 29 tests failed. They asserted a `two-sum` slug that is not seeded, "500+ problems"
+against a 96-problem curriculum, and a mock-era `FAIL` marker. Same family as D8, and
+**not** a Phase 2 regression: the identical 18 failures were reproduced with Phase 2E's
+only server-side change stashed. Phase 1 recorded the full Playwright suite as
+`not tested`, so Phase 2E was the first time it had been run to completion.
 
-Rewrite or delete. Carried forward with D4 and D8.
+**The failures were the smaller half of the problem.** Four of the eleven *passing* tests
+were passing against `/problem/two-sum` — the unseeded slug — because they only waited for
+layout containers, which render on an empty page too. And 8 of the suite's 50 tests were
+permanently `skipped`: six in `problem-page.spec.ts` called
+`test.skip(true, 'No problem links found')` because the homepage has no problem links, and
+two in `panel-hierarchy.spec.ts` called `test.skip(true, 'Submit button not enabled')`
+because they never signed in. A skip that can never not happen is a deleted test that
+still appears in the report.
+
+**Fixed in Phase 2F.** See section 16 for the full per-test audit. `npm run test:e2e` is
+**38 passed, 0 failed, 0 skipped**.
+
+Closes the D8 remainder as well. **D4 remains open** — `smoke:api` and `smoke:flows` are
+separate Node scripts, not Playwright specs, and were not touched.
 
 ## 12. Phase 2 test and gate results
 
@@ -659,7 +672,7 @@ Rewrite or delete. Carried forward with D4 and D8.
 | Lint | `npm run lint` | **verified** — clean |
 | Types | `npm run typecheck` | **verified** — clean |
 | Production build | `npm run build` | **verified** — compiled |
-| Full Playwright suite | `npm run test:e2e` | **failing** — 18 stale tests in `platform.spec.ts`, see D12 |
+| Full Playwright suite | `npm run test:e2e` | **verified** as of Phase 2F — 38 passed, 0 failed, 0 skipped. Was 24 passed / 18 failed / 8 skipped, see D12 and section 16 |
 
 ## 13. Still not verified after Phase 2
 
@@ -685,7 +698,7 @@ In priority order. Every item below is **open**.
 | 1 | **D2 remainder** — provision Redis, then verify a session survives a restart and works across two processes | infrastructure, not code |
 | 2 | **D5** — wire a mail provider so password reset and email verification work | a provider account |
 | 3 | **Live Judge0** — stand up a host, revalidate all six languages, exercise the batch path | a Linux VM with cgroup v1 |
-| 4 | **D12 / D8 / D4** — rewrite or delete `platform.spec.ts`, `submission-flow.spec.ts`, `smoke:api`, `smoke:flows` | nothing |
+| 4 | **D4** — rewrite `smoke:api` and `smoke:flows` to authenticate, or delete them. (D12 and the D8 remainder are closed by Phase 2F.) | nothing |
 | 5 | **D7** — migrate the 5 legacy v1 problem files to v2 so the validator covers all 96 | nothing |
 | 6 | **D6** — delete the dead Piston path in `server/index.js` and the orphaned mock `/submit` handler | nothing |
 | 7 | **Backup and restore** — never exercised against Neon | nothing |
@@ -706,3 +719,172 @@ the `linked-list-cycle` defect where the answer is derivable without the algorit
 What Phase 2 changed is how many ways each problem can be solved: 96 problems are now
 reachable in 6 languages rather than 3, which is 566 problem/language pairs, 86 of the 96
 in all six and the other 10 in five.
+
+---
+
+# Phase 2F — E2E test debt (D12)
+
+`npm run test:e2e` went from **24 passed / 18 failed / 8 skipped** to
+**38 passed / 0 failed / 0 skipped**. No production behaviour was changed to satisfy a
+test, and no assertion was weakened to make one green.
+
+## 16. Per-test audit
+
+Ground truth measured against the running product first, because every stale assumption in
+the suite was a content fact that had drifted:
+
+```
+problems-index      96 problems      (suite asserted 500+)
+difficulty split    Easy 34 / Medium 52 / Hard 10   (suite asserted >50 / >100 / >30)
+topics              17
+two-sum             NOT seeded       (4 tests drove it, 4 more asserted its title)
+merge-two-sorted-lists  NOT seeded
+valid-parentheses   seeded
+topics[0]           Basics — a documented-EMPTY topic, all 6 patterns hold 0 problems
+private endpoints   pattern-progress, mastery, predictions, profile, attempts -> 401
+knowledge-graph     public, 200
+/api/learning/submit    401 without a Bearer token
+/api/execute/run    public, 200
+```
+
+### KEPT — 3
+
+| Test | Why |
+| --- | --- |
+| 1.1 topics from the database | Real invariant, still passing. Strengthened: every topic must have id, name and slug. |
+| 1.2 patterns resolve for a topic | Real invariant, still passing. |
+| 5.1 every topic has ≥1 pattern | Real invariant that nothing else covers. |
+
+### MIGRATED — 14
+
+Valid behaviour, but the test was asserting it against the wrong world. Every migration is
+strictly stronger than what it replaced.
+
+| Test | Was | Now |
+| --- | --- | --- |
+| 1.3 | hardcoded `two-sum`, asserted the literal title "Two Sum" | problem derived from the index; title and difficulty must agree with the index; every case must carry `input_payload` and `expected_output`; **and no hidden case may be delivered to the client** |
+| 1.7 → 1.6 | unauthenticated empty-code submit, asserted only `passed === false` | authenticated; asserts `pass_count === 0` and that the status is present and is not `Accepted` |
+| 2.x dashboard | clicked the first five patterns of the auto-selected topic and waited 8s each for rows; guarded its tail in `if (foundRows)` | topic **and** pattern derived from the API, so it selects a pattern that actually holds problems; row count must equal the API's count for that pattern; all assertions unconditional |
+| 3.1 | `two-sum`, literal "Two Sum" | derived problem; title must equal what the API reports |
+| 3.2 | "a badge is visible" — true of an empty page | badge **text** must equal the problem's difficulty |
+| 3.3 + 3.4 + 3.6 → 3.3 | three tests that waited only for `.pp-right-split`, which renders for a nonexistent problem — all three passed against `two-sum` | merged; real problem; editor, selector and both buttons present **and** the editor must contain this problem's own starter |
+| 4.1 | unauthenticated, asserted `attempt_number > 0` | authenticated; submits twice and asserts exactly 1 then 2, so a hardcoded value fails |
+| 4.2 | unauthenticated | authenticated; time and space complexity must both be reported |
+| 4.3 | produced its wrong answer with a `// FAIL` comment the mock honours | authenticated; wrong on the merits; asserts rejection **and** the hint |
+| 5.3 | looped 3 hardcoded slugs inside `if (found)` — 2 are unseeded, so it checked one and reported three | every problem in the index, unconditionally |
+| 5.4–5.6, 5.8, 5.9 → 5.4 + 5.5 | asserted `res.ok()` with no credentials — i.e. the pre-hardening behaviour, which would only pass again if the hardening were undone | split in two: every private endpoint must **refuse** an anonymous caller with 401, and must **answer** a signed-in one |
+| 5.7 | bare `res.ok()` | graph must have nodes; a 200 with an empty graph is not a working endpoint |
+| 6.3 | `two-sum`; passed because the back control renders regardless | derived problem that must actually load first |
+| 1.5 (replaced) | asserted an unauthenticated submit **succeeds** | asserts it is refused with 401 — the inverse, and the D0 guard at API level |
+
+### DELETED — 5 tests in `platform.spec.ts`
+
+**1.5 — submit returns Accepted with `provider === 'mock'`**
+Asserted: an unauthenticated POST to `/api/learning/submit` returns `Accepted`,
+`passed: true`, and `provider === 'mock'`, using a `return [0, 1]` answer hardcoded for
+`two-sum`.
+Obsolete on four counts: submit now requires authentication; the provider is Paiza, not
+mock; `two-sum` is not seeded; and the "solution" was a constant that only the mock's
+pass-everything rule would accept.
+Equivalent coverage: `language-submission.spec.ts` grades all six languages end to end
+through the UI and verifies persistence and progress; `verify-journeys.mjs` asserts
+Accepted 13/13; the new 1.5 asserts the anonymous case is refused.
+
+**1.6 — a `// FAIL` comment forces Wrong Answer**
+Asserted: code containing `// FAIL` returns `Wrong Answer` with `pass_count === 0`.
+Obsolete: `FAIL_MARKER` exists only in `server/learning-engine/execution-mock.js`. Under a
+real provider the comment is a comment, so this tested the mock, not the product.
+Equivalent coverage: the canonical corpus controls and `check-authored-problems.js` reject
+solutions that are wrong on the merits; `verify-journeys.mjs` proves a
+visible-answer-hardcoding solution fails on a hidden case; the new 4.3 covers the hint on a
+genuine wrong answer.
+
+**1.4 — "problems-index contains 500+ problems"**
+Asserted: `problems.length >= 500`.
+Obsolete: the curriculum has 96. The number came from a static-data era the product left
+behind. Raising 500 to 96 would just re-break at the next content batch.
+Replaced by the new 1.4, which asserts invariants that hold at any size: slugs are unique,
+every row is structurally complete, and all three difficulty tiers are present.
+
+**5.2 — "Easy > 50, Medium > 100, Hard > 30"**
+Asserted: those difficulty counts.
+Obsolete: actual split is 34 / 52 / 10. Same static-data era as 1.4.
+Folded into the new 1.4's "all three tiers present" assertion. Difficulty *balance* is a
+curriculum planning concern and belongs in the coverage report, not in a pass/fail gate
+that has to be edited every time content lands.
+
+**3.5 — "test cases panel exists"**
+Asserted: `if (await testCaseLabel.count() > 0) expect(visible)` — nothing at all when the
+element was absent, which is the only case worth catching.
+Equivalent coverage: `problem-page.spec.ts` asserts the Test Cases tab unconditionally, and
+now also that it is the default and that switching deactivates it.
+
+**3.6 and 6.2** were deleted as duplicates: 3.6 (language selector exists) is covered by
+`problem-page.spec.ts`, `panel-hierarchy.spec.ts` and `language-submission.spec.ts` — the
+last of which additionally asserts the option *count* — and 6.2 became assertion-for-
+assertion identical to 3.1 once both stopped hardcoding a slug.
+
+### DELETED — the whole of `submission-flow.spec.ts`
+
+Asserted: Run shows a spinner then results; Submit activates the Result tab; the status
+banner carries a verdict modifier class.
+
+Obsolete for the four reasons already recorded under D8, all still true: it drove
+`/problem/two-sum`; it never signed in, so a 401 was indistinguishable from expected
+behaviour; every assertion sat inside `if (await button.isEnabled())`, so it passed
+vacuously whenever the button stayed disabled — which it always did; and it waited for
+`.pp-status-banner`, which renders for failures too.
+
+It was reporting 3 passes while checking nothing.
+
+Equivalent coverage, all of it stronger: `authenticated-submission.spec.ts` (signs in,
+asserts the verdict, asserts Run's route), `language-submission.spec.ts` (six languages,
+persistence, progress, route separation), and `panel-hierarchy.spec.ts`, which now asserts
+the banner's verdict modifier class unconditionally — the one assertion in
+`submission-flow.spec.ts` that was worth keeping.
+
+### FIXED — the 8 permanent skips
+
+`problem-page.spec.ts` (6) loaded `/` and hunted `a[href*="/problem/"]`, skipping when none
+were found; the homepage has no such links. `panel-hierarchy.spec.ts` (2) needed a
+completed submission but never signed in, so Submit never enabled.
+
+Both now derive a seeded problem from the API and sign in where a submission is required.
+The conditional assertions went with the skips: `if (await runBtn.isEnabled())`,
+`if (await badge.count() > 0)` and `if (count > 0)` are all gone.
+
+### DEFECT FOUND WHILE FIXING — the same pattern once more
+
+`problem-page.spec.ts`'s "tab switching works" used a bare `.pp-tab` locator. That class is
+used by **three** tab groups: LeftPane's Description/Approaches, LeftPane's Brute
+Force/Optimal, and RightPane's Test Cases/Result. Unscoped, `.pp-tab` first resolves to
+`Description`.
+
+It had passed only because it ran against an unseeded slug where the left pane never
+rendered — the same "assertion works because the page is broken" shape as the four
+false-positive tests above, found in a spec that was not part of the original D12 report.
+Now scoped to `.pp-right .pp-tab`, with the tab count asserted.
+
+## 17. Test infrastructure changes
+
+**Playwright was loading the unit tests.** Its default `testMatch` is
+`**/*.@(spec|test).?(c|m)[jt]s?(x)`, which caught `tests/unit/*.test.js` — the `node:test`
+suite. Those files were being executed by every Playwright run: their output interleaved
+with the report, and because they register with `node:test` rather than Playwright, a
+failing unit test could not fail the run it was printing into. `testMatch` is now
+`**/*.spec.ts`. `npm test` owns the unit suite; `npm run test:e2e` owns the browser suite.
+
+**Three specs had their own copy of "sign in".** The specs that did *not* sign in are
+exactly the ones that could not detect D0, so there is now one implementation:
+
+- `tests/helpers/session.ts` — `createSession`, `authedRequest`, `signIn`,
+  `collectUnauthorized`. `signIn` uses `addInitScript` rather than a post-load `evaluate`,
+  because the app reads that state during hydration.
+- `tests/helpers/seeded.ts` — `problemsIndex`, `topics`, `anySeededProblem`,
+  `topicWithProblems`, `problemDetail`. The point is to stop having content constants at
+  all rather than to keep updating them. `anySeededProblem` sorts by slug and takes the
+  first, so failures are reproducible rather than dependent on API ordering.
+
+`language-submission.spec.ts` and `authenticated-submission.spec.ts` still pin
+`house-robber` deliberately — their reference solutions are written for that specific
+signature — and that is now the documented exception rather than the norm.

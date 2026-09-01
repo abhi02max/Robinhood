@@ -1,4 +1,5 @@
-import { test, expect, request as playwrightRequest } from '@playwright/test';
+import { test, expect } from '@playwright/test';
+import { collectUnauthorized, createSession, signIn } from './helpers/session';
 
 /**
  * Regression cover for a P0 the existing suite could not detect.
@@ -20,9 +21,7 @@ import { test, expect, request as playwrightRequest } from '@playwright/test';
  * asserts on the VERDICT rather than on the presence of a banner.
  */
 
-const API = 'http://127.0.0.1:3000';
 const PROBLEM_SLUG = 'house-robber';
-const CLIENT_STATE_KEY = 'robinhood_data';
 
 const CORRECT_JS = `function rob(nums) {
   let twoBack = 0, oneBack = 0;
@@ -33,8 +32,6 @@ const CORRECT_JS = `function rob(nums) {
   }
   return oneBack;
 }`;
-
-type Session = { token: string; userId: string; email: string };
 
 /**
  * Replace the editor contents with `code`.
@@ -90,22 +87,9 @@ async function setEditorCode(page: import('@playwright/test').Page, code: string
   );
 }
 
-async function createSession(): Promise<Session> {
-  const api = await playwrightRequest.newContext({ baseURL: API });
-  const email = `e2e-${Date.now()}@example.com`;
-  const password = 'Str0ng-Passw0rd!';
-
-  const signup = await api.post('/api/auth/signup', { data: { email, password, name: 'E2E Bot' } });
-  expect(signup.status(), 'signup must succeed').toBeLessThan(300);
-
-  const login = await api.post('/api/auth/login', { data: { email, password } });
-  expect(login.ok(), 'login must succeed').toBeTruthy();
-  const body = await login.json();
-  expect(body.sessionToken, 'login must return a session token').toBeTruthy();
-
-  await api.dispose();
-  return { token: body.sessionToken, userId: body.user?.id ?? '', email };
-}
+// createSession / signIn / collectUnauthorized come from ./helpers/session. This spec had
+// its own copies, as did two others; the specs that did NOT sign in are exactly the ones
+// that could not detect D0, so there is now a single implementation.
 
 // A real submission runs every test case through the provider, which on Paiza is two
 // requests per case with a per-case compile. The repo default of 30s is not enough
@@ -116,23 +100,11 @@ test.describe('authenticated submission through the UI', () => {
   test('Submit reaches the grader and reports a real verdict', async ({ page }) => {
     const session = await createSession();
 
-    // Prime localStorage exactly as src/store.js persists it, before any app code
-    // runs. This is what a signed-in browser looks like.
-    await page.addInitScript(
-      ([key, token, userId, email]) => {
-        window.localStorage.setItem(key as string, JSON.stringify({
-          sessionToken: token,
-          user: { id: userId, email, name: 'E2E Bot' },
-        }));
-      },
-      [CLIENT_STATE_KEY, session.token, session.userId, session.email],
-    );
+    // Prime localStorage exactly as src/store.js persists it, before any app code runs.
+    await signIn(page, session);
 
     // Fail loudly on an auth error rather than waiting for a timeout.
-    const unauthorized: string[] = [];
-    page.on('response', (res) => {
-      if (res.status() === 401 && res.url().includes('/api/')) unauthorized.push(res.url());
-    });
+    const unauthorized = collectUnauthorized(page);
 
     await page.goto(`/problem/${PROBLEM_SLUG}`);
     await page.waitForSelector('.pp-editor-pane', { timeout: 30000 });
@@ -157,16 +129,7 @@ test.describe('authenticated submission through the UI', () => {
 
   test('Run grades only the visible cases and records no attempt', async ({ page }) => {
     const session = await createSession();
-
-    await page.addInitScript(
-      ([key, token, userId, email]) => {
-        window.localStorage.setItem(key as string, JSON.stringify({
-          sessionToken: token,
-          user: { id: userId, email, name: 'E2E Bot' },
-        }));
-      },
-      [CLIENT_STATE_KEY, session.token, session.userId, session.email],
-    );
+    await signIn(page, session);
 
     // Run must go to /api/execute/run, not /api/learning/submit. Using the submit
     // endpoint is what made every exploratory Run persist an attempt and grade
