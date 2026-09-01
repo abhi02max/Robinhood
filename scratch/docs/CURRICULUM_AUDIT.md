@@ -3,7 +3,7 @@
 **Generated** by `node server/scripts/curriculum-audit.mjs`. Do not edit by hand — every
 number below is recomputed from `topics.json`, `patterns/*.json` and `problems/`.
 
-Generated at `2026-09-01T19:48:25.241Z`.
+Generated at `2026-09-01T20:17:34.847Z`.
 
 Sections 1–4 are **repository facts**. Sections 5 onward are **engineering judgement**,
 kept separate on purpose. No company-frequency figures are used anywhere.
@@ -12,18 +12,18 @@ kept separate on purpose. No company-frequency figures are used anywhere.
 
 | | |
 | --- | ---: |
-| Problems | 120 |
-| Easy | 42 |
-| Medium | 68 |
+| Problems | 123 |
+| Easy | 43 |
+| Medium | 70 |
 | Hard | 10 |
-| Test cases | 1538 |
+| Test cases | 1597 |
 | Topics | 17 |
 | Patterns | 108 |
 | Empty topics | 5 |
-| Empty patterns | 83 (76.9%) |
+| Empty patterns | 82 (75.9%) |
 | Patterns with exactly 1 problem | 2 (1.9%) |
 | Patterns with exactly 2 problems | 4 |
-| Patterns with 2 or more | 23 (21.3%) |
+| Patterns with 2 or more | 24 (22.2%) |
 
 ### Coverage by pattern KIND — the meaningful KPI
 
@@ -42,18 +42,18 @@ Of the coding-capable patterns:
 
 | Problems | Patterns |
 | --- | ---: |
-| 0 (empty) | 54 |
+| 0 (empty) | 53 |
 | 1 | 2 |
-| 2–4 | 16 |
+| 2–4 | 17 |
 | 5+ | 7 |
 
-Populated: **25 of 79 (31.6%)**.
+Populated: **26 of 79 (32.9%)**.
 
 ### Concentration
 
 The single most populated topic is **sliding-window-two-pointers** with 
-**57 of 120 problems (47.5%)**. 
-The five largest patterns hold **46.7%** of everything.
+**57 of 123 problems (46.3%)**. 
+The five largest patterns hold **45.5%** of everything.
 
 ## 2. Topic distribution
 
@@ -62,7 +62,7 @@ The five largest patterns hold **46.7%** of everything.
 | 1 | Basics | 6 | 3 | 9 | 6 | 3 | 0 | — |
 | 2 | Sorting | 6 | 3 | 6 | 2 | 4 | 0 | basics |
 | 3 | Arrays | 7 | 3 | 11 | 2 | 9 | 0 | basics, sorting |
-| 4 | Binary Search | 6 | 1 | 4 | 3 | 1 | 0 | basics, sorting |
+| 4 | Binary Search | 6 | 2 | 7 | 4 | 3 | 0 | basics, sorting |
 | 5 | Strings | 6 | 1 | 4 | 3 | 1 | 0 | arrays |
 | 6 | Linked List | 6 | 0 | **0** | 0 | 0 | 0 | basics |
 | 7 | Recursion | 6 | 2 | 5 | 0 | 5 | 0 | basics |
@@ -113,12 +113,12 @@ The five largest patterns hold **46.7%** of everything.
 | 6 | Dutch National Flag (3-Way Partition) | **0** | 0 | 0 | 0 | CORE_INTERVIEW | — |
 | 7 | Interval Manipulation | 3 | 0 | 3 | 0 | CORE_INTERVIEW | merge-overlapping-intervals (M), insert-interval (M), minimum-meeting-rooms (M) |
 
-### 4. Binary Search `binary-search` — 4 problem(s)
+### 4. Binary Search `binary-search` — 7 problem(s)
 
 | # | Pattern | Count | E | M | H | Tier | Problems |
 | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
 | 1 | Classic Binary Search on Sorted Array | 4 | 3 | 1 | 0 | FOUNDATION | binary-search (E), search-insert-position (E), find-smallest-letter-greater-than-target (E), single-element-in-a-sorted-array (M) |
-| 2 | Lower Bound & Upper Bound | **0** | 0 | 0 | 0 | FOUNDATION | — |
+| 2 | Lower Bound & Upper Bound | 3 | 1 | 2 | 0 | FOUNDATION | leftmost-insert-index-with-duplicates (E), first-and-last-index-of-target (M), count-values-below-each-query (M) |
 | 3 | Binary Search on Rotated Sorted Array | **0** | 0 | 0 | 0 | CORE_INTERVIEW | — |
 | 4 | Binary Search on 2D Matrix | **0** | 0 | 0 | 0 | IMPORTANT | — |
 | 5 | Binary Search on the Answer Space | **0** | 0 | 0 | 0 | CORE_INTERVIEW | — |
@@ -287,13 +287,14 @@ function. Neither counts as a missing coding problem; see section 6.
 - **NO_ENTRY_PROBLEM** `sliding-window-two-pointers/monotonic-deque-window` — 8 problems, none Easy (M2 H6) — a learner meets this pattern for the first time at Medium.
 - **SEEDER_HAS_NO_DELETE_PASS** `pipeline` — seed-learning.js is upsert-only (INSERT ... ON CONFLICT (slug) DO UPDATE) and has no delete pass. Removing a problem from a seed file therefore leaves the row in the database, and problems-index keeps serving it. The divergence is silent: no gate compares the database against the seed files. CONSEQUENCE: Any content deletion has to be done twice, and forgetting the second half ships a problem that exists for users but has no source of truth. FIX: Either a reconciling delete pass in the seeder, or a drift check that fails when the database holds a problem slug no seed file declares. Not built in 3A.2A: it is infrastructure and that phase is content.
 
-### low (6)
+### low (7)
 
 - **DUPLICATE_CONCEPT** `stack-queue/monotonic-deque vs sliding-window-two-pointers/monotonic-deque-window` — Two patterns for the same technique in different topics. The stack-queue one is empty; the sliding-window one holds the repo's largest concentration of Hard problems. [measured: stack-queue/monotonic-deque=0, sliding-window-two-pointers/monotonic-deque-window=8]
 - **DUPLICATE_CONCEPT** `arrays/dutch-national-flag vs sliding-window-two-pointers/opposite-direction-two-pointers` — Three-way partition. The arrays pattern is empty, but sort-colors — the canonical Dutch-flag problem — is already authored under opposite-direction-two-pointers. [measured: arrays/dutch-national-flag=0, sliding-window-two-pointers/opposite-direction-two-pointers=12]
 - **MISPLACED_PROBLEM** `sliding-window-two-pointers/same-direction-two-pointers vs linked-list/*` — Four linked-list problems are authored under a two-pointer pattern because the linked-list topic is harness-blocked. NOT relocated in 3A.1 — see REQUIRES_REAUTHOR_AFTER_NODE_ENCODING: relocation alone is insufficient because a cycle cannot be represented in a flat array at all. [measured: sliding-window-two-pointers/same-direction-two-pointers=12]
 - **WIDE_TYPES_UNREACHABLE_VIA_LARGE_INPUTS** `pipeline` — The literal-based harness embeds each argument as source, capped at MAX_LITERAL_BYTES = 24,000 bytes, which is roughly 4,000 integers. Any problem that reaches `long long` only because the INPUT is large is therefore unauthorable: inversion counting needs n > 65,536 to exceed int32, and that array renders to about 400KB of Java or C source. CONSEQUENCE: `long long`, `vector<long long>`, `vector<double>` and `vector<bool>` are still implemented, unit-tested, and never executed on a provider. The 3A.1 blueprint expected inversion counting to close that gap and it cannot. FIX: Reach the wide types with a SMALL input and a large answer instead — a product over a handful of values, or a bit-shift result — rather than a large input and a counted answer. Recommended for 3A.2B; not invented during 3A.2A because it is not a blueprint slot.
 - **V2_FILES_WITHOUT_AUTHORING_SPECS** `pipeline` — Three v2 problem files have no authoring spec: arrays/kadane-maximum-subarray, stack-queue/parenthesis-matching, sliding-window-two-pointers/variable-size-sliding-window. build-authored-problems.js rewrites `<pattern>.json` wholesale from the spec, so creating a spec for one of those patterns would ERASE the existing problem unless it is re-authored into the spec at the same time. CONSEQUENCE: A trap for exactly the patterns the 150 milestone tops up. Hit deliberately rather than accidentally: the kadane spec re-authors maximum-subarray so it is not lost. FIX: Bring all v2 files under the pipeline, which is the same work as defect D7.
+- **CONTRADICTORY_ORDERING_PROSE** `count-values-below-each-query` — the statement says the answer may be returned "in any order" and then requires a specific one. The grader compares with an exact deepEqual, so only the specific order is accepted and the first clause is false. Wording fix, no behaviour change.
 - **CONTRADICTORY_ORDERING_PROSE** `4sum` — the statement says the answer may be returned "in any order" and then requires a specific one. The grader compares with an exact deepEqual, so only the specific order is accepted and the first clause is false. Wording fix, no behaviour change.
 
 ## 5. Classification
@@ -308,7 +309,7 @@ Judgement. Tier definitions:
 
 | Tier | Patterns | Populated | Empty |
 | --- | ---: | ---: | ---: |
-| FOUNDATION | 23 | 14 | 9 |
+| FOUNDATION | 23 | 15 | 8 |
 | CORE_INTERVIEW | 34 | 9 | 25 |
 | IMPORTANT | 29 | 1 | 28 |
 | ADVANCED | 14 | 1 | 13 |
@@ -431,12 +432,12 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 
 | | |
 | --- | ---: |
-| Current total | 120 |
+| Current total | 123 |
 | Proposed additions | 55 |
-| Resulting total | 175 |
+| Resulting total | 178 |
 | Patterns touched | 23 |
-| — newly opened | 11 |
-| — topped up | 12 |
+| — newly opened | 10 |
+| — topped up | 13 |
 | Patterns populated after | 36 of 108 (33.3%) |
 | Patterns still empty after | 72 |
 | Additions: Easy / Medium / Hard | 14 / 38 / 3 |
@@ -457,7 +458,7 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 | `recursion/backtracking-with-restore` | CORE_INTERVIEW | 2 | +2 | 4 | Medium → Medium |
 | `arrays/intervals` | CORE_INTERVIEW | 3 | +3 | 6 | Medium → Medium → Medium |
 | `arrays/kadane-maximum-subarray` | CORE_INTERVIEW | 3 | +2 | 5 | Medium → Medium |
-| `binary-search/lower-upper-bound` | FOUNDATION | 0 | +3 | 3 | Easy → Medium → Medium |
+| `binary-search/lower-upper-bound` | FOUNDATION | 3 | +3 | 6 | Easy → Medium → Medium |
 | `binary-search/binary-search-on-answer` | CORE_INTERVIEW | 0 | +2 | 2 | Medium → Medium |
 | `sliding-window-two-pointers/variable-size-sliding-window` | FOUNDATION | 1 | +3 | 4 | Medium → Medium → Hard |
 | `strings/palindrome-expansion` | CORE_INTERVIEW | 0 | +2 | 2 | Medium → Medium |

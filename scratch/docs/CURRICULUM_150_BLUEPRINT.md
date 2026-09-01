@@ -5,18 +5,18 @@
 The final approved additions for the 150 milestone. **No full problem specifications** — no
 descriptions, examples, constraints, reference solutions or test cases. Those are Phase 3A.2.
 
-Generated at `2026-09-01T19:48:25.241Z`.
+Generated at `2026-09-01T20:17:34.847Z`.
 
 ## Totals
 
 | | |
 | --- | ---: |
-| Current total | 120 |
+| Current total | 123 |
 | Additions | 55 |
-| Resulting total | 175 |
-| Patterns touched | 23 (11 opened, 12 topped up) |
+| Resulting total | 178 |
+| Patterns touched | 23 (10 opened, 13 topped up) |
 | Coding-capable patterns | 79 |
-| Coding-capable populated, before | 25 (31.6%) |
+| Coding-capable populated, before | 26 (32.9%) |
 | Coding-capable populated, after | 36 (45.6%) |
 | Conceptual patterns | 2 |
 | Structurally blocked patterns | 27 |
@@ -28,10 +28,10 @@ Coding-capable pattern distribution after the milestone:
 
 | Problems | Before | After |
 | --- | ---: | ---: |
-| 0 (empty) | 54 | 43 |
+| 0 (empty) | 53 | 43 |
 | 1 | 2 | 0 |
-| 2–4 | 16 | 23 |
-| 5+ | 7 | 13 |
+| 2–4 | 17 | 22 |
+| 5+ | 7 | 14 |
 
 ## Learner order
 
@@ -579,7 +579,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** binary-search/classic-binary-search
 - **Learning objective** Make the loop return a boundary, not a hit
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** leftmost-insert-index-with-duplicates (Easy), first-and-last-index-of-target (Medium), count-values-below-each-query (Medium)
 - **Non-redundant because** The existing search-insert-position assumes distinct values, so it never exercises the duplicate boundary that makes lower-bound different from a plain search.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -594,7 +594,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** binary-search/lower-upper-bound (leftmost insert)
 - **Learning objective** Compose lower and upper bound into a range
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** leftmost-insert-index-with-duplicates (Easy), first-and-last-index-of-target (Medium), count-values-below-each-query (Medium)
 - **Non-redundant because** Requires both boundaries, which no existing problem does.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -609,7 +609,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** binary-search/lower-upper-bound (first and last)
 - **Learning objective** Reuse one sorted structure across many queries
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** leftmost-insert-index-with-duplicates (Easy), first-and-last-index-of-target (Medium), count-values-below-each-query (Medium)
 - **Non-redundant because** Introduces amortising a precomputation over a query set.
 - **Output ordering** Determined: one answer per query, in query order.
 - **64-bit risk** none
