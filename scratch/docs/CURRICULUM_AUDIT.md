@@ -3,7 +3,7 @@
 **Generated** by `node server/scripts/curriculum-audit.mjs`. Do not edit by hand — every
 number below is recomputed from `topics.json`, `patterns/*.json` and `problems/`.
 
-Generated at `2026-09-01T18:31:43.650Z`.
+Generated at `2026-09-01T19:16:59.866Z`.
 
 Sections 1–4 are **repository facts**. Sections 5 onward are **engineering judgement**,
 kept separate on purpose. No company-frequency figures are used anywhere.
@@ -12,18 +12,18 @@ kept separate on purpose. No company-frequency figures are used anywhere.
 
 | | |
 | --- | ---: |
-| Problems | 110 |
+| Problems | 115 |
 | Easy | 42 |
-| Medium | 58 |
+| Medium | 63 |
 | Hard | 10 |
-| Test cases | 1369 |
+| Test cases | 1441 |
 | Topics | 17 |
 | Patterns | 108 |
-| Empty topics | 6 |
-| Empty patterns | 86 (79.6%) |
+| Empty topics | 5 |
+| Empty patterns | 84 (77.8%) |
 | Patterns with exactly 1 problem | 3 (2.8%) |
-| Patterns with exactly 2 problems | 3 |
-| Patterns with 2 or more | 19 (17.6%) |
+| Patterns with exactly 2 problems | 4 |
+| Patterns with 2 or more | 21 (19.4%) |
 
 ### Coverage by pattern KIND — the meaningful KPI
 
@@ -42,18 +42,18 @@ Of the coding-capable patterns:
 
 | Problems | Patterns |
 | --- | ---: |
-| 0 (empty) | 57 |
+| 0 (empty) | 55 |
 | 1 | 3 |
-| 2–4 | 12 |
+| 2–4 | 14 |
 | 5+ | 7 |
 
-Populated: **22 of 79 (27.8%)**.
+Populated: **24 of 79 (30.4%)**.
 
 ### Concentration
 
 The single most populated topic is **sliding-window-two-pointers** with 
-**57 of 110 problems (51.8%)**. 
-The five largest patterns hold **50.9%** of everything.
+**57 of 115 problems (49.6%)**. 
+The five largest patterns hold **48.7%** of everything.
 
 ## 2. Topic distribution
 
@@ -65,7 +65,7 @@ The five largest patterns hold **50.9%** of everything.
 | 4 | Binary Search | 6 | 1 | 4 | 3 | 1 | 0 | basics, sorting |
 | 5 | Strings | 6 | 1 | 4 | 3 | 1 | 0 | arrays |
 | 6 | Linked List | 6 | 0 | **0** | 0 | 0 | 0 | basics |
-| 7 | Recursion | 6 | 0 | **0** | 0 | 0 | 0 | basics |
+| 7 | Recursion | 6 | 2 | 5 | 0 | 5 | 0 | basics |
 | 8 | Bit Manipulation | 6 | 1 | 4 | 3 | 1 | 0 | basics |
 | 9 | Stack & Queue | 7 | 2 | 8 | 2 | 5 | 1 | arrays |
 | 10 | Sliding Window & Two Pointers | 7 | 6 | 57 | 17 | 31 | 9 | arrays, strings |
@@ -146,13 +146,13 @@ The five largest patterns hold **50.9%** of everything.
 | 5 | Merge & Split | **0** | 0 | 0 | 0 | IMPORTANT ⛔ | — |
 | 6 | K-th Node & Rearrangement | **0** | 0 | 0 | 0 | IMPORTANT ⛔ | — |
 
-### 7. Recursion `recursion` — 0 problem(s)
+### 7. Recursion `recursion` — 5 problem(s)
 
 | # | Pattern | Count | E | M | H | Tier | Problems |
 | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
-| 1 | Subset Generation (Include / Exclude) | **0** | 0 | 0 | 0 | FOUNDATION | — |
+| 1 | Subset Generation (Include / Exclude) | 3 | 0 | 3 | 0 | FOUNDATION | all-subsets-of-distinct-values (M), all-subsets-with-duplicates (M), count-subsets-with-target-sum (M) |
 | 2 | Permutations (Swap-Based) | **0** | 0 | 0 | 0 | CORE_INTERVIEW | — |
-| 3 | Backtracking with State Restore | **0** | 0 | 0 | 0 | CORE_INTERVIEW | — |
+| 3 | Backtracking with State Restore | 2 | 0 | 2 | 0 | CORE_INTERVIEW | combinations-summing-to-target (M), phone-keypad-letter-combinations (M) |
 | 4 | Divide & Conquer | **0** | 0 | 0 | 0 | IMPORTANT | — |
 | 5 | Decision Tree Recursion | **0** | 0 | 0 | 0 | IMPORTANT | — |
 | 6 | Recursion on Linked Structures | **0** | 0 | 0 | 0 | FOUNDATION ⛔ | — |
@@ -281,7 +281,7 @@ function. Neither counts as a missing coding problem; see section 6.
 
 - **INVERTED_TEACHING_ORDER** `bit-manipulation/basic-bit-ops` — "bit-manipulation/basic-bit-ops" holds 0 problems while "bit-manipulation/xor-properties" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `greedy/sort-then-greedy` — "greedy/sort-then-greedy" holds 0 problems while "greedy/interval-scheduling" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
-- **INVERTED_TEACHING_ORDER** `recursion/subset-include-exclude` — "recursion/subset-include-exclude" holds 0 problems while "dynamic-programming/1d-state" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
+- **NO_ENTRY_PROBLEM** `recursion/subset-include-exclude` — 3 problems, none Easy (M3 H0) — a learner meets this pattern for the first time at Medium.
 - **NO_ENTRY_PROBLEM** `sliding-window-two-pointers/monotonic-deque-window` — 8 problems, none Easy (M2 H6) — a learner meets this pattern for the first time at Medium.
 - **SEEDER_HAS_NO_DELETE_PASS** `pipeline` — seed-learning.js is upsert-only (INSERT ... ON CONFLICT (slug) DO UPDATE) and has no delete pass. Removing a problem from a seed file therefore leaves the row in the database, and problems-index keeps serving it. The divergence is silent: no gate compares the database against the seed files. CONSEQUENCE: Any content deletion has to be done twice, and forgetting the second half ships a problem that exists for users but has no source of truth. FIX: Either a reconciling delete pass in the seeder, or a drift check that fails when the database holds a problem slug no seed file declares. Not built in 3A.2A: it is infrastructure and that phase is content.
 
@@ -306,8 +306,8 @@ Judgement. Tier definitions:
 
 | Tier | Patterns | Populated | Empty |
 | --- | ---: | ---: | ---: |
-| FOUNDATION | 23 | 13 | 10 |
-| CORE_INTERVIEW | 34 | 7 | 27 |
+| FOUNDATION | 23 | 14 | 9 |
+| CORE_INTERVIEW | 34 | 8 | 26 |
 | IMPORTANT | 29 | 1 | 28 |
 | ADVANCED | 14 | 1 | 13 |
 | SPECIALIZED | 8 | 0 | 8 |
@@ -429,12 +429,12 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 
 | | |
 | --- | ---: |
-| Current total | 110 |
+| Current total | 115 |
 | Proposed additions | 55 |
-| Resulting total | 165 |
+| Resulting total | 170 |
 | Patterns touched | 23 |
-| — newly opened | 14 |
-| — topped up | 9 |
+| — newly opened | 12 |
+| — topped up | 11 |
 | Patterns populated after | 36 of 108 (33.3%) |
 | Patterns still empty after | 72 |
 | Additions: Easy / Medium / Hard | 14 / 38 / 3 |
@@ -451,8 +451,8 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 | `sorting/comparison-sorts-elementary` | FOUNDATION | 2 | +2 | 4 | Easy → Easy |
 | `sorting/merge-sort-divide-conquer` | CORE_INTERVIEW | 2 | +2 | 4 | Medium → Medium |
 | `sorting/custom-comparator-and-stability` | CORE_INTERVIEW | 2 | +2 | 4 | Medium → Medium |
-| `recursion/subset-include-exclude` | FOUNDATION | 0 | +3 | 3 | Medium → Medium → Medium |
-| `recursion/backtracking-with-restore` | CORE_INTERVIEW | 0 | +2 | 2 | Medium → Medium |
+| `recursion/subset-include-exclude` | FOUNDATION | 3 | +3 | 6 | Medium → Medium → Medium |
+| `recursion/backtracking-with-restore` | CORE_INTERVIEW | 2 | +2 | 4 | Medium → Medium |
 | `arrays/intervals` | CORE_INTERVIEW | 0 | +3 | 3 | Medium → Medium → Medium |
 | `arrays/kadane-maximum-subarray` | CORE_INTERVIEW | 1 | +2 | 3 | Medium → Medium |
 | `binary-search/lower-upper-bound` | FOUNDATION | 0 | +3 | 3 | Easy → Medium → Medium |

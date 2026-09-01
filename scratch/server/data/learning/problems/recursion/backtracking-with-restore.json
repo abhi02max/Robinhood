@@ -1,0 +1,247 @@
+{
+  "$schema": "../../problem.schema.json",
+  "schema_version": "2.0",
+  "topic_slug": "recursion",
+  "pattern_slug": "backtracking-with-restore",
+  "problems": [
+    {
+      "slug": "combinations-summing-to-target",
+      "title": "Combinations Summing to a Target",
+      "difficulty": "Medium",
+      "tags": ["recursion", "backtracking-with-restore", "backtracking", "combinations", "state-restoration"],
+      "description": "Given an array `candidates` of distinct positive integers and a positive integer `target`, return every combination of candidates that sums to exactly `target`. The same candidate may be used any number of times, and two combinations are different only if they use different multiplicities — so `[2, 3]` and `[3, 2]` are the same combination and only one of them may appear.\n\n**Output ordering.** Each combination must be listed in non-decreasing order, and the outer list must be sorted by length first, then compared element by element. Combinations have no natural order, so the ordering is part of the specification.",
+      "real_world_analogy": "Making up an exact postage amount from an unlimited supply of a few stamp denominations. You can use as many of each as you like, and a handful of stamps is the same handful however you arrange it on the envelope.",
+      "examples": [
+        {
+          "input": "candidates = [2,3,6,7], target = 7",
+          "output": "[[7],[2,2,3]]",
+          "explanation": "Two combinations reach 7. They are ordered by length, so the single 7 comes before the three-element one."
+        },
+        {
+          "input": "candidates = [2,3,5], target = 8",
+          "output": "[[3,5],[2,3,3],[2,2,2,2]]",
+          "explanation": "Three combinations of lengths two, three and four. Several viable branches at the same level means a missing undo would corrupt the later ones."
+        },
+        {
+          "input": "candidates = [2], target = 1",
+          "output": "[]",
+          "explanation": "The target is smaller than the only candidate, so nothing reaches it and the answer is empty."
+        },
+        {
+          "input": "candidates = [3], target = 9",
+          "output": "[[3,3,3]]",
+          "explanation": "A single candidate dividing the target gives exactly one combination, made of repeats — which is only possible because the recursion may reuse the same index."
+        }
+      ],
+      "constraints": [
+        "1 <= candidates.length <= 8",
+        "2 <= candidates[i] <= 40",
+        "all values in candidates are distinct",
+        "1 <= target <= 40"
+      ],
+      "edge_cases": [
+        "No combination reaches the target, so the answer is an empty list",
+        "A candidate equal to the target, giving a one-element combination",
+        "A single candidate that divides the target, giving one combination of repeats",
+        "A target smaller than every candidate, which admits nothing",
+        "Several combinations of the same length, where the element-by-element ordering decides"
+      ],
+      "hints": [
+        "Sort the candidates first. Then a combination built by only ever moving forward is automatically non-decreasing, and you never produce a reordering of one you have already found.",
+        "Recurse with a start index and the amount still needed. Because reuse is allowed, recursing on the SAME index rather than the next one is what permits repeats.",
+        "Two base cases: the remaining amount hits zero, which means record a copy of the path; or it goes below zero, which means abandon this branch.",
+        "After the recursive call returns, remove the value you appended. If you forget, the next candidate at that level starts from a path that already contains the previous one."
+      ],
+      "approaches": [
+        {
+          "name": "Bounded Multiplicity Enumeration",
+          "summary": "Work out the maximum useful count of each candidate, then try every combination of counts.",
+          "intuition": "Reframe the problem as choosing a multiplicity for each candidate. Candidate `c` can appear at most `target / c` times, so the search space is a product of small ranges and can be walked with a plain nested enumeration over count vectors — no path to maintain and therefore nothing to restore.\n\nThat is exactly why it makes a good reference. Its correctness does not depend on getting an undo right, so if the backtracking version disagrees with it the fault is in the backtracking. The cost is that it explores count vectors that overshoot the target long before the last candidate is even considered, doing work the pruned recursion skips.",
+          "steps": [
+            "Sort the candidates.",
+            "For each candidate compute the maximum number of copies that could fit in the target.",
+            "Enumerate every vector of counts within those bounds.",
+            "Keep the vectors whose weighted sum equals the target, expanding each into a combination.",
+            "Sort the result by length and then element by element."
+          ],
+          "code": {
+            "javascript": "function compareLists(a, b) {\n  if (a.length !== b.length) return a.length - b.length;\n  for (let i = 0; i < a.length; i++) {\n    if (a[i] !== b[i]) return a[i] - b[i];\n  }\n  return 0;\n}\n\nfunction enumerateCounts(values, target, index, counts, out) {\n  if (index === values.length) {\n    let sum = 0;\n    for (let i = 0; i < values.length; i++) sum += values[i] * counts[i];\n    if (sum !== target) return;\n    const combo = [];\n    for (let i = 0; i < values.length; i++) {\n      for (let k = 0; k < counts[i]; k++) combo.push(values[i]);\n    }\n    out.push(combo);\n    return;\n  }\n  const most = Math.floor(target / values[index]);\n  for (let c = 0; c <= most; c++) {\n    counts[index] = c;\n    enumerateCounts(values, target, index + 1, counts, out);\n  }\n  counts[index] = 0;\n}\n\nfunction combinationSum(candidates, target) {\n  const values = candidates.slice().sort((a, b) => a - b);\n  const out = [];\n  enumerateCounts(values, target, 0, new Array(values.length).fill(0), out);\n  out.sort(compareLists);\n  return out;\n}",
+            "python": "def combination_sum(candidates, target):\n    values = sorted(candidates)\n    out = []\n\n    def walk(index, counts):\n        if index == len(values):\n            total = sum(v * c for v, c in zip(values, counts))\n            if total == target:\n                combo = []\n                for v, c in zip(values, counts):\n                    combo.extend([v] * c)\n                out.append(combo)\n            return\n        most = target // values[index]\n        for c in range(most + 1):\n            walk(index + 1, counts + [c])\n\n    walk(0, [])\n    out.sort(key=lambda s: (len(s), s))\n    return out"
+          },
+          "time_complexity": "O(product of target/c over all candidates)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Backtracking With an Explicit Undo",
+          "summary": "Append a candidate, recurse on the reduced target, then remove it before trying the next.",
+          "intuition": "Keep one shared path array and one number, the amount still needed. At each level, loop over the candidates from the current start index onwards: append the candidate, recurse with the target reduced by it, then remove it. Because reuse is allowed the recursion passes the SAME index rather than the next one, and because it never moves backwards each combination is generated in non-decreasing order exactly once.\n\nThe undo is the load-bearing line. The path is shared across every branch, so after the recursive call returns it has to be back to what it was or the next candidate at this level inherits the previous candidate's choice. That failure is invisible on inputs where only one branch ever succeeds, which is why the hidden cases include targets with several viable combinations of the same length.\n\nSorting first buys the other half. It makes each path non-decreasing for free, and it means that once a candidate exceeds the remaining target every later candidate does too — so the loop can stop rather than continue. That is the pruning the count-vector enumeration cannot express.",
+          "steps": [
+            "Sort the candidates ascending.",
+            "Recurse with a start index, the remaining target, and a shared path.",
+            "When the remaining target is zero, record a copy of the path and return.",
+            "Loop candidates from the start index; stop early once a candidate exceeds the remaining target.",
+            "Append the candidate, recurse with the same index and the reduced target, then remove it.",
+            "Sort the collected combinations by length and element by element."
+          ],
+          "code": {
+            "javascript": "function compareLists(a, b) {\n  if (a.length !== b.length) return a.length - b.length;\n  for (let i = 0; i < a.length; i++) {\n    if (a[i] !== b[i]) return a[i] - b[i];\n  }\n  return 0;\n}\n\nfunction buildCombinations(values, start, remaining, path, out) {\n  if (remaining === 0) {\n    out.push(path.slice());\n    return;\n  }\n  for (let i = start; i < values.length; i++) {\n    if (values[i] > remaining) break;\n    path.push(values[i]);\n    buildCombinations(values, i, remaining - values[i], path, out);\n    path.pop();\n  }\n}\n\nfunction combinationSum(candidates, target) {\n  const values = candidates.slice().sort((a, b) => a - b);\n  const out = [];\n  buildCombinations(values, 0, target, [], out);\n  out.sort(compareLists);\n  return out;\n}",
+            "python": "def combination_sum(candidates, target):\n    values = sorted(candidates)\n    reachable = {0: [[]]}\n    for total in range(1, target + 1):\n        found = []\n        for value in values:\n            if value > total:\n                break\n            for combo in reachable.get(total - value, []):\n                if combo and combo[-1] > value:\n                    continue\n                found.append(combo + [value])\n        reachable[total] = found\n    out = [list(c) for c in reachable.get(target, [])]\n    out.sort(key=lambda s: (len(s), s))\n    return out"
+          },
+          "time_complexity": "O(N^(target/min) )",
+          "space_complexity": "O(target/min)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function combinationSum(candidates, target) {\n  // Your code here\n}",
+        "python": "def combination_sum(candidates, target):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<vector<int>> combinationSum(vector<int>& candidates, int target) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[][] combinationSum(int[] candidates, int target) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
+        "csharp": "public class Solution {\n    public int[][] CombinationSum(int[] candidates, int target) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
+      },
+      "cpp_signature":       {
+        "fn": "combinationSum",
+        "class": "Solution",
+        "args": [
+          { "name": "candidates", "type": "vector<int>" },
+          { "name": "target", "type": "int" }
+        ],
+        "ret": "vector<vector<int>>"
+      },
+      "time_complexity": "O(N^(target/min) )",
+      "space_complexity": "O(target/min)",
+      "test_cases": [
+        { "input_payload": {"candidates":[2,3,6,7],"target":7}, "expected_output": [[7],[2,2,3]], "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"candidates":[2,3,5],"target":8}, "expected_output": [[3,5],[2,3,3],[2,2,2,2]], "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"candidates":[2],"target":1}, "expected_output": [], "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"candidates":[3],"target":9}, "expected_output": [[3,3,3]], "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"candidates":[2],"target":2}, "expected_output": [[2]], "is_hidden": true, "order_index": 5, "label": "candidate equals the target" },
+        { "input_payload": {"candidates":[5],"target":4}, "expected_output": [], "is_hidden": true, "order_index": 6, "label": "target below the only candidate, empty answer" },
+        { "input_payload": {"candidates":[2,4],"target":3}, "expected_output": [], "is_hidden": true, "order_index": 7, "label": "no combination reaches an odd target from even candidates" },
+        { "input_payload": {"candidates":[2,3],"target":6}, "expected_output": [[3,3],[2,2,2]], "is_hidden": true, "order_index": 8, "label": "two combinations of different lengths" },
+        { "input_payload": {"candidates":[2,3,4],"target":6}, "expected_output": [[2,4],[3,3],[2,2,2]], "is_hidden": true, "order_index": 9, "label": "four viable branches at the top level, so a missing undo corrupts later siblings" },
+        { "input_payload": {"candidates":[7,3,2],"target":9}, "expected_output": [[2,7],[3,3,3],[2,2,2,3]], "is_hidden": true, "order_index": 10, "label": "unsorted candidates, which the sort must normalise" },
+        { "input_payload": {"candidates":[40],"target":40}, "expected_output": [[40]], "is_hidden": true, "order_index": 11, "label": "constraint ceiling, single candidate" },
+        { "input_payload": {"candidates":[2],"target":40}, "expected_output": [[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]], "is_hidden": true, "order_index": 12, "label": "twenty repeats of one candidate, the longest path" },
+        { "input_payload": {"candidates":[2,3,5,7,11,13,17,19],"target":20}, "expected_output": [[3,17],[7,13],[2,5,13],[2,7,11],[2,2,3,13],[2,2,5,11],[3,3,3,11],[3,3,7,7],[3,5,5,7],[5,5,5,5],[2,2,2,3,11],[2,2,2,7,7],[2,3,3,5,7],[2,3,5,5,5],[2,2,2,2,5,7],[2,2,3,3,3,7],[2,2,3,3,5,5],[3,3,3,3,3,5],[2,2,2,2,2,3,7],[2,2,2,2,2,5,5],[2,2,2,3,3,3,5],[2,3,3,3,3,3,3],[2,2,2,2,2,2,3,5],[2,2,2,2,3,3,3,3],[2,2,2,2,2,2,2,3,3],[2,2,2,2,2,2,2,2,2,2]], "is_hidden": true, "order_index": 13, "label": "eight candidates with many combinations, the heaviest branching case" },
+        { "input_payload": {"candidates":[4,6,8],"target":7}, "expected_output": [], "is_hidden": true, "order_index": 14, "label": "all candidates even, odd target, empty answer" },
+        { "input_payload": {"candidates":[3,5],"target":11}, "expected_output": [[3,3,5]], "is_hidden": true, "order_index": 15, "label": "reachable only as 3 + 3 + 5" }
+      ]
+    },
+    {
+      "slug": "phone-keypad-letter-combinations",
+      "title": "Phone Keypad Letter Combinations",
+      "difficulty": "Medium",
+      "tags": ["recursion", "backtracking-with-restore", "backtracking", "strings", "cartesian-product"],
+      "description": "On a traditional telephone keypad each digit from 2 to 9 carries a group of letters: 2 is `abc`, 3 is `def`, 4 is `ghi`, 5 is `jkl`, 6 is `mno`, 7 is `pqrs`, 8 is `tuv`, and 9 is `wxyz`.\n\nGiven a string `digits` containing only the characters 2 to 9, return every letter string it could spell, choosing one letter per digit in order.\n\nAn empty input spells nothing, so the answer is an empty list rather than a list holding the empty string.\n\n**Output ordering.** Lexicographic. This is also what a straightforward recursion produces if the letters of each digit are tried in the order given above, so the ordering costs nothing to satisfy.",
+      "real_world_analogy": "Reading out a phone number to someone who only knows the letters printed on the buttons. Each button they hear narrows the next character to one of three or four, and the set of words they might write down is every path through those choices.",
+      "examples": [
+        {
+          "input": "digits = \"23\"",
+          "output": "[\"ad\",\"ae\",\"af\",\"bd\",\"be\",\"bf\",\"cd\",\"ce\",\"cf\"]",
+          "explanation": "Three letters on 2 times three on 3 gives nine strings, in lexicographic order because each group is tried in printed order."
+        },
+        {
+          "input": "digits = \"\"",
+          "output": "[]",
+          "explanation": "No digits spell nothing. The answer is an empty list, not a list containing the empty string — which is what an unguarded recursion would produce."
+        },
+        {
+          "input": "digits = \"2\"",
+          "output": "[\"a\",\"b\",\"c\"]",
+          "explanation": "A single digit gives one string per letter on that button."
+        },
+        {
+          "input": "digits = \"7\"",
+          "output": "[\"p\",\"q\",\"r\",\"s\"]",
+          "explanation": "The 7 button carries four letters rather than three, so the branching factor is not constant across digits."
+        }
+      ],
+      "constraints": [
+        "0 <= digits.length <= 4",
+        "digits contains only the characters 2 through 9"
+      ],
+      "edge_cases": [
+        "An empty input, whose answer is an empty list and NOT a list containing the empty string",
+        "A single digit, giving one string per letter on that button",
+        "A digit with four letters, 7 or 9, rather than three",
+        "Repeated digits, where the same letter group is branched over more than once",
+        "The maximum length of four, all fours letters, giving 256 strings"
+      ],
+      "hints": [
+        "Map each digit character to its letters once, up front. The recursion then only deals with positions.",
+        "Recurse on the index into the digit string. At each level, loop over the letters of that digit, append one, recurse, then remove it.",
+        "The base case is reaching the end of the digit string: the accumulated path is one complete answer.",
+        "Handle the empty input before you start. An empty digit string reaches the base case immediately and would otherwise record the empty string as an answer."
+      ],
+      "approaches": [
+        {
+          "name": "Iterative Product Expansion",
+          "summary": "Start with one empty prefix and extend every prefix by every letter of the next digit.",
+          "intuition": "The answer is the Cartesian product of the letter groups, so build it a digit at a time: hold the list of prefixes for the digits consumed so far, and replace it with every prefix extended by every letter of the next digit. No recursion, no shared state, nothing to restore.\n\nThat absence is precisely why it is the reference. It cannot fail through a missing undo, so if the backtracking version disagrees with it the fault is definitely in the backtracking. It also allocates a new list at every step where the recursion reuses one buffer, which is the trade the recursive version is making.",
+          "steps": [
+            "Return an empty list immediately when the input is empty.",
+            "Start with a list containing just the empty prefix.",
+            "For each digit, replace the list with every prefix extended by every letter of that digit.",
+            "Return the final list."
+          ],
+          "code": {
+            "javascript": "function letterCombinations(digits) {\n  if (digits.length === 0) return [];\n  const keypad = { 2: \"abc\", 3: \"def\", 4: \"ghi\", 5: \"jkl\", 6: \"mno\", 7: \"pqrs\", 8: \"tuv\", 9: \"wxyz\" };\n  let prefixes = [\"\"];\n  for (const digit of digits) {\n    const next = [];\n    for (const prefix of prefixes) {\n      for (const letter of keypad[digit]) next.push(prefix + letter);\n    }\n    prefixes = next;\n  }\n  return prefixes;\n}",
+            "python": "def letter_combinations(digits):\n    if not digits:\n        return []\n    keypad = {\"2\": \"abc\", \"3\": \"def\", \"4\": \"ghi\", \"5\": \"jkl\", \"6\": \"mno\", \"7\": \"pqrs\", \"8\": \"tuv\", \"9\": \"wxyz\"}\n    prefixes = [\"\"]\n    for digit in digits:\n        prefixes = [prefix + letter for prefix in prefixes for letter in keypad[digit]]\n    return prefixes"
+          },
+          "time_complexity": "O(4^N * N)",
+          "space_complexity": "O(4^N * N)"
+        },
+        {
+          "name": "Backtracking Over the Mapping",
+          "summary": "Walk the digit string, appending one letter per level and removing it after recursing.",
+          "intuition": "The branching factor comes from the keypad rather than from the input array, which is the difference from every previous problem in this topic. The path is a buffer of chosen letters, one per digit consumed, and the recursion index says which digit is next.\n\nThe undo is the same discipline as combination sum and it is easier to see here because the path is a fixed length: at level `i` the buffer always holds exactly `i` letters, so failing to remove the appended letter makes the buffer grow past the digit count and the recorded strings come out too long. That is a loud failure rather than a subtle one, which is why this is the better of the two problems to meet the idea on.\n\nThe empty-input case is worth handling explicitly rather than falling out of the recursion. With no digits the base case fires immediately and records the empty string, giving a one-element answer where the correct answer has none.",
+          "steps": [
+            "Return an empty list when the digit string is empty.",
+            "Build the digit-to-letters mapping once.",
+            "Recurse with an index into the digit string and a buffer of chosen letters.",
+            "At the end of the string, join the buffer and record it.",
+            "Otherwise loop the letters of the current digit: append, recurse on the next index, remove."
+          ],
+          "code": {
+            "javascript": "function walkKeypad(digits, keypad, index, buffer, out) {\n  if (index === digits.length) {\n    out.push(buffer.join(\"\"));\n    return;\n  }\n  for (const letter of keypad[digits[index]]) {\n    buffer.push(letter);\n    walkKeypad(digits, keypad, index + 1, buffer, out);\n    buffer.pop();\n  }\n}\n\nfunction letterCombinations(digits) {\n  if (digits.length === 0) return [];\n  const keypad = { 2: \"abc\", 3: \"def\", 4: \"ghi\", 5: \"jkl\", 6: \"mno\", 7: \"pqrs\", 8: \"tuv\", 9: \"wxyz\" };\n  const out = [];\n  walkKeypad(digits, keypad, 0, [], out);\n  return out;\n}",
+            "python": "def letter_combinations(digits):\n    if not digits:\n        return []\n    keypad = {\"2\": \"abc\", \"3\": \"def\", \"4\": \"ghi\", \"5\": \"jkl\", \"6\": \"mno\", \"7\": \"pqrs\", \"8\": \"tuv\", \"9\": \"wxyz\"}\n    groups = [keypad[d] for d in digits]\n    total = 1\n    for group in groups:\n        total *= len(group)\n    out = []\n    for n in range(total):\n        rest = n\n        chars = []\n        for group in reversed(groups):\n            rest, pick = divmod(rest, len(group))\n            chars.append(group[pick])\n        out.append(\"\".join(reversed(chars)))\n    return out"
+          },
+          "time_complexity": "O(4^N * N)",
+          "space_complexity": "O(N)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function letterCombinations(digits) {\n  // Your code here\n}",
+        "python": "def letter_combinations(digits):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<string> letterCombinations(string digits) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public String[] letterCombinations(String digits) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nchar** letterCombinations(char* digits, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public string[] LetterCombinations(string digits) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
+      },
+      "cpp_signature":       {
+        "fn": "letterCombinations",
+        "class": "Solution",
+        "args": [{ "name": "digits", "type": "string" }],
+        "ret": "vector<string>"
+      },
+      "time_complexity": "O(4^N * N)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": {"digits":"23"}, "expected_output": ["ad","ae","af","bd","be","bf","cd","ce","cf"], "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"digits":""}, "expected_output": [], "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"digits":"2"}, "expected_output": ["a","b","c"], "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"digits":"7"}, "expected_output": ["p","q","r","s"], "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"digits":"9"}, "expected_output": ["w","x","y","z"], "is_hidden": true, "order_index": 5, "label": "the other four-letter button" },
+        { "input_payload": {"digits":"22"}, "expected_output": ["aa","ab","ac","ba","bb","bc","ca","cb","cc"], "is_hidden": true, "order_index": 6, "label": "a repeated digit, branching over the same group twice" },
+        { "input_payload": {"digits":"79"}, "expected_output": ["pw","px","py","pz","qw","qx","qy","qz","rw","rx","ry","rz","sw","sx","sy","sz"], "is_hidden": true, "order_index": 7, "label": "two four-letter buttons, sixteen strings" },
+        { "input_payload": {"digits":"234"}, "expected_output": ["adg","adh","adi","aeg","aeh","aei","afg","afh","afi","bdg","bdh","bdi","beg","beh","bei","bfg","bfh","bfi","cdg","cdh","cdi","ceg","ceh","cei","cfg","cfh","cfi"], "is_hidden": true, "order_index": 8, "label": "twenty-seven strings from three three-letter buttons" },
+        { "input_payload": {"digits":"279"}, "expected_output": ["apw","apx","apy","apz","aqw","aqx","aqy","aqz","arw","arx","ary","arz","asw","asx","asy","asz","bpw","bpx","bpy","bpz","bqw","bqx","bqy","bqz","brw","brx","bry","brz","bsw","bsx","bsy","bsz","cpw","cpx","cpy","cpz","cqw","cqx","cqy","cqz","crw","crx","cry","crz","csw","csx","csy","csz"], "is_hidden": true, "order_index": 9, "label": "mixed branching factors, forty-eight strings" },
+        { "input_payload": {"digits":"999"}, "expected_output": ["www","wwx","wwy","wwz","wxw","wxx","wxy","wxz","wyw","wyx","wyy","wyz","wzw","wzx","wzy","wzz","xww","xwx","xwy","xwz","xxw","xxx","xxy","xxz","xyw","xyx","xyy","xyz","xzw","xzx","xzy","xzz","yww","ywx","ywy","ywz","yxw","yxx","yxy","yxz","yyw","yyx","yyy","yyz","yzw","yzx","yzy","yzz","zww","zwx","zwy","zwz","zxw","zxx","zxy","zxz","zyw","zyx","zyy","zyz","zzw","zzx","zzy","zzz"], "is_hidden": true, "order_index": 10, "label": "the same four-letter group three times, sixty-four strings" },
+        { "input_payload": {"digits":"2345"}, "expected_output": ["adgj","adgk","adgl","adhj","adhk","adhl","adij","adik","adil","aegj","aegk","aegl","aehj","aehk","aehl","aeij","aeik","aeil","afgj","afgk","afgl","afhj","afhk","afhl","afij","afik","afil","bdgj","bdgk","bdgl","bdhj","bdhk","bdhl","bdij","bdik","bdil","begj","begk","begl","behj","behk","behl","beij","beik","beil","bfgj","bfgk","bfgl","bfhj","bfhk","bfhl","bfij","bfik","bfil","cdgj","cdgk","cdgl","cdhj","cdhk","cdhl","cdij","cdik","cdil","cegj","cegk","cegl","cehj","cehk","cehl","ceij","ceik","ceil","cfgj","cfgk","cfgl","cfhj","cfhk","cfhl","cfij","cfik","cfil"], "is_hidden": true, "order_index": 11, "label": "maximum length with three-letter buttons, eighty-one strings" },
+        { "input_payload": {"digits":"7979"}, "expected_output": ["pwpw","pwpx","pwpy","pwpz","pwqw","pwqx","pwqy","pwqz","pwrw","pwrx","pwry","pwrz","pwsw","pwsx","pwsy","pwsz","pxpw","pxpx","pxpy","pxpz","pxqw","pxqx","pxqy","pxqz","pxrw","pxrx","pxry","pxrz","pxsw","pxsx","pxsy","pxsz","pypw","pypx","pypy","pypz","pyqw","pyqx","pyqy","pyqz","pyrw","pyrx","pyry","pyrz","pysw","pysx","pysy","pysz","pzpw","pzpx","pzpy","pzpz","pzqw","pzqx","pzqy","pzqz","pzrw","pzrx","pzry","pzrz","pzsw","pzsx","pzsy","pzsz","qwpw","qwpx","qwpy","qwpz","qwqw","qwqx","qwqy","qwqz","qwrw","qwrx","qwry","qwrz","qwsw","qwsx","qwsy","qwsz","qxpw","qxpx","qxpy","qxpz","qxqw","qxqx","qxqy","qxqz","qxrw","qxrx","qxry","qxrz","qxsw","qxsx","qxsy","qxsz","qypw","qypx","qypy","qypz","qyqw","qyqx","qyqy","qyqz","qyrw","qyrx","qyry","qyrz","qysw","qysx","qysy","qysz","qzpw","qzpx","qzpy","qzpz","qzqw","qzqx","qzqy","qzqz","qzrw","qzrx","qzry","qzrz","qzsw","qzsx","qzsy","qzsz","rwpw","rwpx","rwpy","rwpz","rwqw","rwqx","rwqy","rwqz","rwrw","rwrx","rwry","rwrz","rwsw","rwsx","rwsy","rwsz","rxpw","rxpx","rxpy","rxpz","rxqw","rxqx","rxqy","rxqz","rxrw","rxrx","rxry","rxrz","rxsw","rxsx","rxsy","rxsz","rypw","rypx","rypy","rypz","ryqw","ryqx","ryqy","ryqz","ryrw","ryrx","ryry","ryrz","rysw","rysx","rysy","rysz","rzpw","rzpx","rzpy","rzpz","rzqw","rzqx","rzqy","rzqz","rzrw","rzrx","rzry","rzrz","rzsw","rzsx","rzsy","rzsz","swpw","swpx","swpy","swpz","swqw","swqx","swqy","swqz","swrw","swrx","swry","swrz","swsw","swsx","swsy","swsz","sxpw","sxpx","sxpy","sxpz","sxqw","sxqx","sxqy","sxqz","sxrw","sxrx","sxry","sxrz","sxsw","sxsx","sxsy","sxsz","sypw","sypx","sypy","sypz","syqw","syqx","syqy","syqz","syrw","syrx","syry","syrz","sysw","sysx","sysy","sysz","szpw","szpx","szpy","szpz","szqw","szqx","szqy","szqz","szrw","szrx","szry","szrz","szsw","szsx","szsy","szsz"], "is_hidden": true, "order_index": 12, "label": "maximum length, all four-letter buttons, 256 strings" },
+        { "input_payload": {"digits":"8"}, "expected_output": ["t","u","v"], "is_hidden": true, "order_index": 13, "label": "a three-letter button in the middle of the keypad" },
+        { "input_payload": {"digits":"56"}, "expected_output": ["jm","jn","jo","km","kn","ko","lm","ln","lo"], "is_hidden": true, "order_index": 14, "label": "two adjacent three-letter buttons" }
+      ]
+    }
+  ]
+}

@@ -5,18 +5,18 @@
 The final approved additions for the 150 milestone. **No full problem specifications** — no
 descriptions, examples, constraints, reference solutions or test cases. Those are Phase 3A.2.
 
-Generated at `2026-09-01T18:31:43.650Z`.
+Generated at `2026-09-01T19:16:59.866Z`.
 
 ## Totals
 
 | | |
 | --- | ---: |
-| Current total | 110 |
+| Current total | 115 |
 | Additions | 55 |
-| Resulting total | 165 |
-| Patterns touched | 23 (14 opened, 9 topped up) |
+| Resulting total | 170 |
+| Patterns touched | 23 (12 opened, 11 topped up) |
 | Coding-capable patterns | 79 |
-| Coding-capable populated, before | 22 (27.8%) |
+| Coding-capable populated, before | 24 (30.4%) |
 | Coding-capable populated, after | 36 (45.6%) |
 | Conceptual patterns | 2 |
 | Structurally blocked patterns | 27 |
@@ -28,10 +28,10 @@ Coding-capable pattern distribution after the milestone:
 
 | Problems | Before | After |
 | --- | ---: | ---: |
-| 0 (empty) | 57 | 43 |
+| 0 (empty) | 55 | 43 |
 | 1 | 3 | 0 |
-| 2–4 | 12 | 26 |
-| 5+ | 7 | 10 |
+| 2–4 | 14 | 25 |
+| 5+ | 7 | 11 |
 
 ## Learner order
 
@@ -423,7 +423,7 @@ harder application.
 - **Language capability** 5/6 — **C cannot express this**
 - **Prerequisite** none within the milestone
 - **Learning objective** See the binary include/exclude decision tree
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** all-subsets-of-distinct-values (Medium), all-subsets-with-duplicates (Medium), count-subsets-with-target-sum (Medium)
 - **Non-redundant because** No enumeration problem exists in the curriculum at all.
 - **Output ordering** REQUIRED — subsets have no natural order. Each subset ascending, the outer list sorted by length then lexicographically. Follows the 3sum precedent.
 - **64-bit risk** none
@@ -439,7 +439,7 @@ harder application.
 - **Language capability** 5/6 — **C cannot express this**
 - **Prerequisite** recursion/subset-include-exclude (subsets)
 - **Learning objective** Prune a branch by sorting first and skipping equal siblings
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** all-subsets-of-distinct-values (Medium), all-subsets-with-duplicates (Medium), count-subsets-with-target-sum (Medium)
 - **Non-redundant because** Deduplication during recursion is a distinct skill from the plain enumeration.
 - **Output ordering** REQUIRED — same convention as the distinct case, so the two problems are directly comparable.
 - **64-bit risk** none
@@ -455,7 +455,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** recursion/subset-include-exclude (subsets)
 - **Learning objective** Separate counting from enumeration — the step that makes DP possible
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** all-subsets-of-distinct-values (Medium), all-subsets-with-duplicates (Medium), count-subsets-with-target-sum (Medium)
 - **Non-redundant because** Chosen so the pattern is not entirely C-unsupported, and it is the direct bridge to 0-1 knapsack.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -470,7 +470,7 @@ harder application.
 - **Language capability** 5/6 — **C cannot express this**
 - **Prerequisite** recursion/subset-include-exclude
 - **Learning objective** Mutate shared state and undo it on the way out
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** combinations-summing-to-target (Medium), phone-keypad-letter-combinations (Medium)
 - **Non-redundant because** First problem requiring an explicit undo step.
 - **Output ordering** REQUIRED — each combination non-decreasing, outer list sorted lexicographically.
 - **64-bit risk** none
@@ -486,7 +486,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** recursion/backtracking-with-restore (combination sum)
 - **Learning objective** Backtrack over a mapping rather than over the input array
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** combinations-summing-to-target (Medium), phone-keypad-letter-combinations (Medium)
 - **Non-redundant because** Returns strings, so it keeps the pattern reachable in C and varies the branching source.
 - **Output ordering** REQUIRED — lexicographic, which is also what a straightforward recursion produces if the keypad is walked in order.
 - **64-bit risk** none
