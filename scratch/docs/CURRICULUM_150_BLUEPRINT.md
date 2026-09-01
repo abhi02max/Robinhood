@@ -5,18 +5,18 @@
 The final approved additions for the 150 milestone. **No full problem specifications** — no
 descriptions, examples, constraints, reference solutions or test cases. Those are Phase 3A.2.
 
-Generated at `2026-09-01T19:16:59.866Z`.
+Generated at `2026-09-01T19:48:25.241Z`.
 
 ## Totals
 
 | | |
 | --- | ---: |
-| Current total | 115 |
+| Current total | 120 |
 | Additions | 55 |
-| Resulting total | 170 |
-| Patterns touched | 23 (12 opened, 11 topped up) |
+| Resulting total | 175 |
+| Patterns touched | 23 (11 opened, 12 topped up) |
 | Coding-capable patterns | 79 |
-| Coding-capable populated, before | 24 (30.4%) |
+| Coding-capable populated, before | 25 (31.6%) |
 | Coding-capable populated, after | 36 (45.6%) |
 | Conceptual patterns | 2 |
 | Structurally blocked patterns | 27 |
@@ -28,10 +28,10 @@ Coding-capable pattern distribution after the milestone:
 
 | Problems | Before | After |
 | --- | ---: | ---: |
-| 0 (empty) | 55 | 43 |
-| 1 | 3 | 0 |
-| 2–4 | 14 | 25 |
-| 5+ | 7 | 11 |
+| 0 (empty) | 54 | 43 |
+| 1 | 2 | 0 |
+| 2–4 | 16 | 23 |
+| 5+ | 7 | 13 |
 
 ## Learner order
 
@@ -502,7 +502,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** arrays/kadane-maximum-subarray (maximum subarray)
 - **Learning objective** Carry two running extremes because a negative flips them
-- **Preceded in this pattern by** maximum-subarray (Medium)
+- **Preceded in this pattern by** maximum-subarray (Medium), maximum-product-subarray (Medium), maximum-circular-subarray-sum (Medium)
 - **Non-redundant because** The existing maximum-subarray is additive and never needs the min tracked.
 - **64-bit risk** CONSTRAIN — cap n and |value| so the product stays inside the exact-integer range
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -517,7 +517,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** arrays/kadane-maximum-subarray (maximum subarray)
 - **Learning objective** Decompose into the non-wrapping case and its complement
-- **Preceded in this pattern by** maximum-subarray (Medium)
+- **Preceded in this pattern by** maximum-subarray (Medium), maximum-product-subarray (Medium), maximum-circular-subarray-sum (Medium)
 - **Non-redundant because** Introduces the total-minus-minimum complement trick.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -532,7 +532,7 @@ harder application.
 - **Language capability** 5/6 — **C cannot express this**
 - **Prerequisite** sorting/custom-comparator-and-stability
 - **Learning objective** Sort by start, then extend or emit
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** merge-overlapping-intervals (Medium), insert-interval (Medium), minimum-meeting-rooms (Medium)
 - **Non-redundant because** greedy/interval-scheduling COUNTS or selects intervals; none of its four problems produces a merged set.
 - **Output ordering** Determined by the algorithm: ascending by start. Stated anyway so it is not accidental.
 - **64-bit risk** none
@@ -548,7 +548,7 @@ harder application.
 - **Language capability** 5/6 — **C cannot express this**
 - **Prerequisite** arrays/intervals (merge)
 - **Learning objective** Handle before/overlap/after as three explicit phases
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** merge-overlapping-intervals (Medium), insert-interval (Medium), minimum-meeting-rooms (Medium)
 - **Non-redundant because** A single insertion has a different structure from a full merge.
 - **Output ordering** Determined: ascending by start.
 - **64-bit risk** none
@@ -564,7 +564,7 @@ harder application.
 - **Language capability** 5/6 — **C cannot express this**
 - **Prerequisite** arrays/intervals (merge)
 - **Learning objective** Convert intervals into a sweep over start/end events
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** merge-overlapping-intervals (Medium), insert-interval (Medium), minimum-meeting-rooms (Medium)
 - **Non-redundant because** The existing meeting-rooms asks whether ANY overlap exists (a boolean); this asks for maximum concurrency, which needs a sweep.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today

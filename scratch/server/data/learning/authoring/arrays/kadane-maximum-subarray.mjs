@@ -1,0 +1,311 @@
+/**
+ * Arrays -> Kadane's Algorithm (Max Subarray).
+ *
+ * WHY THIS FILE ALSO CONTAINS AN EXISTING PROBLEM
+ * ----------------------------------------------
+ * `maximum-subarray` already existed as a hand-written v2 file. The authoring build rewrites the
+ * WHOLE pattern file, so adding two problems by adding a spec would have deleted it. It is
+ * re-authored here instead, keeping its slug, title, difficulty, company list and every one of its
+ * test payloads, so the seeded row is updated rather than replaced and no learner progress is
+ * orphaned. Its expected outputs are now computed by three agreeing references instead of being
+ * hand-written, which is a strict improvement: the previous file asserted them.
+ *
+ * THE LADDER
+ * ----------
+ *   maximum subarray            the additive case. One running extreme is enough.
+ *   maximum product subarray    a negative multiplier SWAPS best and worst, so one running extreme
+ *                               is provably not enough. This is the smallest problem that breaks
+ *                               the habit formed by the first one.
+ *   maximum circular subarray   the range is no longer an interval of indices. Solved by splitting
+ *                               into the non-wrapping case (problem 1 verbatim) and its complement,
+ *                               which is the first time a problem is answered by running the
+ *                               previous algorithm twice with opposite polarity.
+ *
+ * The three are deliberately in one pattern file because each one's intuition is the previous one's
+ * failure mode.
+ */
+export default {
+  topic: 'arrays',
+  pattern: 'kadane-maximum-subarray',
+  problems: [
+    // =======================================================================
+    {
+      slug: 'maximum-subarray',
+      title: 'Maximum Subarray',
+      difficulty: 'Medium',
+      tags: ['arrays', 'kadane-maximum-subarray', 'dynamic-programming', 'greedy'],
+      companies: ['Amazon', 'Microsoft', 'Bloomberg', 'LinkedIn', 'Apple'],
+      description:
+        'Return the largest sum obtainable from a contiguous block of `nums`. The block must contain at least one element.\n\nThat last sentence is the whole difficulty. If an empty block were allowed the answer would never be below zero and the problem would be much easier. Because it is not allowed, an array where every value is negative must still return something negative — the least bad single element — and any solution that starts its running total at `0` will return `0` there and be wrong.\n\nThere is no requirement to report where the block is, only its sum.',
+      analogy:
+        'A year of daily profit and loss on one position. You are asked for the best unbroken run of trading days you could have held it: once you are in you stay in until you close, so a losing day inside the run still counts against you. And you have to name some run, even in a year where every single day lost money.',
+      constraints: [
+        '1 <= nums.length <= 10^5',
+        '-10^4 <= nums[i] <= 10^4',
+      ],
+      edgeCases: [
+        'A single element, positive, negative or zero — the answer is that element',
+        'Every value negative, where the answer is the largest single value and NOT zero',
+        'Every value positive, where the answer is the sum of the whole array',
+        'The best block sits at the very start or the very end, so a loop that skips an endpoint misses it',
+        'The best block is one large value surrounded by larger negatives',
+        'All zeros, where the answer is zero for the right reason rather than by accident',
+      ],
+      hints: [
+        'Fix the right end of the block. For each index i, ask a smaller question: of all blocks that end exactly at i, what is the biggest sum? Answer that for every i and the overall answer is the biggest of those answers.',
+        'A block ending at i is either just nums[i] on its own, or some block ending at i-1 with nums[i] stuck on the end. There is no third shape. So the best block ending at i is max(nums[i], best_ending_at(i - 1) + nums[i]).',
+        'Read that formula again: the previous best is only worth keeping when it is positive. That is the entire algorithm, and it needs two numbers rather than an array — the running total and the best total seen so far. Start both at nums[0], never at zero, and the all-negative case handles itself.',
+      ],
+      brute: {
+        name: 'Every Block, With a Running Total',
+        summary: 'Try all left and right endpoints, growing the sum as the right endpoint advances.',
+        intuition:
+          'A contiguous block is fully described by where it starts and where it ends, so enumerating all of them is a nested loop. The one thing worth doing carefully is not recomputing each sum from scratch: with the left end pinned, moving the right end one step right only adds one value. That drops the cost from cubic to quadratic and costs nothing in clarity.\n\nQuadratic is far too slow for the stated limit of 100,000 elements, so this is a baseline rather than a submission. Its value is what you notice while writing it: for a fixed left end the running total sometimes dips below where it started, and every block that continues past that dip would have been better off starting later. The optimal solution is that observation taken seriously.\n\nStarting `best` at negative infinity rather than zero is not an optimisation detail here either. It is the same bug the optimal version has to avoid, met one level earlier.',
+        steps: [
+          'Set best to negative infinity, so an all-negative array cannot be answered with zero.',
+          'For each left endpoint i, set a running total to zero.',
+          'For each right endpoint j from i onwards, add nums[j] to the running total.',
+          'Update best with the running total after every addition, since every prefix of the inner loop is a valid block.',
+          'Return best.',
+        ],
+        js: 'function maxSubArray(nums) {\n  let best = -Infinity;\n  for (let i = 0; i < nums.length; i += 1) {\n    let runningTotal = 0;\n    for (let j = i; j < nums.length; j += 1) {\n      runningTotal += nums[j];\n      if (runningTotal > best) best = runningTotal;\n    }\n  }\n  return best;\n}',
+        py: 'def max_subarray(nums):\n    best = float("-inf")\n    n = len(nums)\n    for i in range(n):\n        running_total = 0\n        for j in range(i, n):\n            running_total += nums[j]\n            if running_total > best:\n                best = running_total\n    return best',
+        time: 'O(N^2)',
+        space: 'O(1)',
+      },
+      optimal: {
+        name: 'Kadane, or Prefix Total Minus the Smallest Earlier Prefix',
+        summary: 'One pass carrying the best block ending here, or equivalently the smallest prefix total seen so far.',
+        intuition:
+          'Let `f(i)` be the largest sum of a block ending exactly at index i. Every such block is either the single element `nums[i]` or a block ending at `i-1` with `nums[i]` appended, and the best available prefix is by definition `f(i-1)`. So `f(i) = max(nums[i], f(i-1) + nums[i])`, and the answer is the largest `f(i)` over all i. When `f(i-1)` is negative the max discards it, which is what "start a new block here" means. Neither the array of `f` values nor the block itself needs to be stored — the running value and the running best are two scalars, so the space is constant.\n\nThe same algorithm has a second face worth seeing, because it is the one that generalises. Write `P(k)` for the total of the first k elements. The sum of the block from i to j is `P(j+1) - P(i)`, so maximising it means, for each right endpoint, subtracting the smallest prefix total that occurred strictly earlier. Sweep once keeping that smallest prefix and the answer falls out. The two formulations are the same computation viewed from either end, and the accompanying Python reference is written this way on purpose: an independent construction that agrees on every test is much stronger evidence than a transcription would be.\n\nThe prefix view is also what makes the circular version of this problem tractable, since "the smallest prefix so far" generalises to "the smallest prefix inside a window" while "extend or restart" does not.',
+        steps: [
+          'Initialise the running block total and the best answer to nums[0]. Not to zero.',
+          'For each later element, set the running total to the larger of the element alone and the running total plus the element.',
+          'Update the best answer with the running total.',
+          'Return the best answer.',
+          'Equivalently: sweep the prefix totals, and at each step subtract the smallest prefix total seen before this position, updating that smallest value only afterwards so the block is never empty.',
+        ],
+        js: 'function maxSubArray(nums) {\n  let current = nums[0];\n  let best = nums[0];\n  for (let i = 1; i < nums.length; i += 1) {\n    current = Math.max(nums[i], current + nums[i]);\n    if (current > best) best = current;\n  }\n  return best;\n}',
+        py: 'def max_subarray(nums):\n    best = None\n    running_prefix = 0\n    smallest_prefix = 0\n    for value in nums:\n        running_prefix += value\n        candidate = running_prefix - smallest_prefix\n        if best is None or candidate > best:\n            best = candidate\n        if running_prefix < smallest_prefix:\n            smallest_prefix = running_prefix\n    return best',
+        time: 'O(N)',
+        space: 'O(1)',
+      },
+      examples: [
+        { payload: { nums: [-2, 1, -3, 4, -1, 2, 1, -5, 4] }, expect: 6, explanation: 'The block [4,-1,2,1] sums to 6. Continuing into the -5 drops the total to 1, so the run ends there even though a 4 follows.' },
+        { payload: { nums: [1] }, expect: 1, explanation: 'One element, so the only block is the array itself.' },
+        { payload: { nums: [5, 4, -1, 7, 8] }, expect: 23, explanation: 'The single dip to -1 is worth crossing because the running total stays positive throughout, so the whole array is optimal.' },
+        { payload: { nums: [-1, -2, -3, -4] }, expect: -1, explanation: 'Every value is negative and a block cannot be empty, so the answer is the largest single value, -1. A running total initialised to 0 returns 0 here and is wrong.' },
+      ],
+      cases: [
+        { payload: { nums: [-1] }, label: 'single negative' },
+        { payload: { nums: [0] }, label: 'single zero' },
+        { payload: { nums: [-2, -1] }, label: 'two negatives, the later one is better' },
+        { payload: { nums: [1, 2, 3, 4, 5] }, label: 'all positive, whole array' },
+        { payload: { nums: [-5, -4, -3, -2, -1] }, label: 'increasing negatives, answer is the last element' },
+        { payload: { nums: [10000, -1, 10000] }, label: 'boundary magnitudes, the dip is worth crossing' },
+        { payload: { nums: [3, -2, 5, -1] }, label: 'stop before the trailing negative' },
+        { payload: { nums: [8, -19, 5, -4, 20] }, label: 'restarting beats extending' },
+        { payload: { nums: [-2, -3, 4, -1, -2, 1, 5, -3] }, label: 'best block is interior, touching neither end' },
+        { payload: { nums: [0, 0, 0, 0] }, label: 'all zeros' },
+        { payload: { nums: [-4, -1, -7, -2] }, label: 'all negative with the answer in the middle, so an endpoint-only search fails' },
+        { payload: { nums: [7, -8, 7, -8, 7] }, label: 'every extension is a net loss, so the answer is a single element' },
+      ],
+      assume: (p) => {
+        if (!Array.isArray(p.nums) || p.nums.length < 1) return 'nums must hold at least one element';
+        if (!p.nums.every((v) => Number.isInteger(v) && v >= -10000 && v <= 10000)) return 'values must be integers within +/- 10^4';
+        return true;
+      },
+    },
+
+    // =======================================================================
+    {
+      slug: 'maximum-product-subarray',
+      title: 'Maximum Product Subarray',
+      difficulty: 'Medium',
+      tags: ['arrays', 'kadane-maximum-subarray', 'dynamic-programming', 'sign-tracking'],
+      companies: ['Amazon', 'Microsoft', 'Google', 'Adobe'],
+      description:
+        'Return the largest product obtainable from a contiguous block of `nums`. The block must contain at least one element.\n\nSwapping addition for multiplication looks cosmetic and is not. With sums, a running total that has gone bad stays bad and is worth discarding. With products, the worst running value is one negative factor away from being the best one, so a block you were right to reject can become the answer as soon as the next value is negative. Tracking only the best product as you scan is therefore not enough, and the test cases will find that out.\n\nZero is the other structural difference: it destroys any block that contains it, cutting the array into independent segments.\n\nThe array is short and the values are small so that every product, including every intermediate one, is exact. The answer can still exceed the range of a 32-bit integer, so choose your result type accordingly.',
+      analogy:
+        'Compounding returns rather than daily cash. A day that halves your position is a factor of 0.5, and two such days multiply out to a quarter — but in this arithmetic a bad stretch flips to a good one the moment another reversal lands on top of it, which is why you have to remember your worst run as carefully as your best. A day that wipes you out entirely is a zero, and nothing before it can ever help again.',
+      constraints: [
+        '1 <= nums.length <= 15',
+        '-8 <= nums[i] <= 8',
+        'The answer, and every intermediate product of a contiguous block, is exactly representable as an integer; the answer may exceed 32 bits',
+      ],
+      edgeCases: [
+        'A single element, including a single negative one, where the answer is that element',
+        'An odd number of negative values, so the whole array is not the answer and one negative must be dropped from an end',
+        'A zero splitting the array, where the answer may be a block on either side, or zero itself when both sides are worse',
+        'All values zero, where the answer is zero',
+        'A single negative value and nothing else, where the answer is negative and any implementation defaulting to 0 or 1 fails',
+        'A block whose product is best only because two negatives cancel',
+        'Leading or trailing zeros, which must not be allowed to reset the answer to zero when a positive block exists',
+      ],
+      hints: [
+        'Zeros make this easier, not harder: no block can span one, so the array is really a list of independent zero-free segments plus the option of answering zero.',
+        'Inside a zero-free segment, think about what one negative value does to your running product. It turns the smallest product into the largest and the largest into the smallest. So carry BOTH, and at each element let the new pair be chosen among the element alone, the element times the old largest, and the element times the old smallest.',
+        'The element alone must be one of the three candidates. That is what starts a fresh block, and it is how a zero is handled without any special case: after a zero both running values become the next element itself.',
+        'A different route to the same answer: within a zero-free segment the best block always reaches one end of the segment, because dropping values from the far end can only remove factors. So one left-to-right sweep of running products and one right-to-left sweep, resetting to 1 at each zero, also finds it.',
+      ],
+      brute: {
+        name: 'Every Block, With a Running Product',
+        summary: 'Try all left and right endpoints, multiplying as the right endpoint advances.',
+        intuition:
+          'The same enumeration as the sum version, with the accumulator changed. Pin the left endpoint, walk the right endpoint rightwards, multiply in each new value and record the product. Every contiguous block is visited exactly once, so correctness needs no argument beyond that.\n\nThis is the reference that settles the arguments. The sign-tracking solution is easy to write in a form that is subtly wrong — dropping the element-alone candidate, or resetting on zero in the wrong order — and those bugs produce a plausible number rather than an obvious failure. A quadratic enumeration has nowhere to hide a sign bug, which is why the problem is deliberately capped at fifteen elements: the honest solution stays runnable on every test case.\n\nStarting best at negative infinity matters for the same reason as before. Starting it at 1, a natural instinct with products, silently converts an all-negative input into a wrong positive answer.',
+        steps: [
+          'Set best to negative infinity.',
+          'For each left endpoint i, set a running product to 1.',
+          'For each right endpoint j from i onwards, multiply the running product by nums[j].',
+          'Update best after every multiplication.',
+          'Return best.',
+        ],
+        js: 'function maxProductSubarray(nums) {\n  let best = -Infinity;\n  for (let i = 0; i < nums.length; i += 1) {\n    let runningProduct = 1;\n    for (let j = i; j < nums.length; j += 1) {\n      runningProduct *= nums[j];\n      if (runningProduct > best) best = runningProduct;\n    }\n  }\n  return best;\n}',
+        py: 'def max_product_subarray(nums):\n    best = float("-inf")\n    n = len(nums)\n    for i in range(n):\n        running_product = 1\n        for j in range(i, n):\n            running_product *= nums[j]\n            if running_product > best:\n                best = running_product\n    return best',
+        time: 'O(N^2)',
+        space: 'O(1)',
+      },
+      optimal: {
+        name: 'Carry Both Extremes, or Sweep From Both Ends',
+        summary: 'Track the largest and smallest product ending here, because a negative value exchanges them.',
+        intuition:
+          'Keep two values as you scan: the largest product of a block ending at the current index, and the smallest. At the next element there are exactly three candidates for a block ending there — the element on its own, the element times the previous largest, and the element times the previous smallest. The new largest is the maximum of those three and the new smallest is the minimum. Both must be computed from the OLD pair, so overwriting the largest before using it to compute the smallest is a real and easy bug.\n\nWhy the smallest is needed: a large negative product is the most valuable thing you can own when the next value is negative. The sum version has no analogue of this, which is why the habit built by the previous problem actively misleads here. A zero needs no special handling — all three candidates become 0 or the element itself, so the pair resets on its own, provided the element-alone candidate is present.\n\nThe accompanying Python reference takes the other route, to keep the two implementations independent. Within a stretch containing no zeros, the optimal block must touch one end of that stretch: shrinking it from an end only drops factors, and if dropping a factor helped, the block was not optimal. So a left-to-right sweep of running products and a right-to-left sweep, each resetting to 1 whenever a zero is crossed, together consider every candidate. It looks nothing like the two-extreme scan and agrees with it on every case.',
+        steps: [
+          'Initialise the largest, the smallest and the answer to nums[0].',
+          'For each later element, form three candidates: the element, the element times the old largest, the element times the old smallest.',
+          'Set the new largest to the maximum of the three and the new smallest to the minimum, both computed from the old pair before either is overwritten.',
+          'Update the answer with the new largest.',
+          'Return the answer.',
+        ],
+        js: 'function maxProductSubarray(nums) {\n  let largest = nums[0];\n  let smallest = nums[0];\n  let best = nums[0];\n  for (let i = 1; i < nums.length; i += 1) {\n    const value = nums[i];\n    const viaLargest = largest * value;\n    const viaSmallest = smallest * value;\n    largest = Math.max(value, viaLargest, viaSmallest);\n    smallest = Math.min(value, viaLargest, viaSmallest);\n    if (largest > best) best = largest;\n  }\n  return best;\n}',
+        py: 'def max_product_subarray(nums):\n    best = max(nums)\n    running = 1\n    for value in nums:\n        running *= value\n        if running > best:\n            best = running\n        if running == 0:\n            running = 1\n    running = 1\n    for value in reversed(nums):\n        running *= value\n        if running > best:\n            best = running\n        if running == 0:\n            running = 1\n    return best',
+        time: 'O(N)',
+        space: 'O(1)',
+      },
+      examples: [
+        { payload: { nums: [2, 3, -2, 4] }, expect: 6, explanation: 'The block [2,3] gives 6. Reaching the 4 requires passing through -2, and 2*3*-2*4 is -48, so the run stops early.' },
+        { payload: { nums: [-2, 0, -1] }, expect: 0, explanation: 'No block spans the zero, and each side on its own is negative, so taking the zero alone is the best available.' },
+        { payload: { nums: [2, -5, -2, -4, 3] }, expect: 24, explanation: 'The answer is [-2,-4,3] = 24, found by scanning from the right. A left-to-right sweep alone peaks at [2,-5,-2] = 20 and misses it.' },
+        { payload: { nums: [-3] }, expect: -3, explanation: 'One element, and it is negative. The block cannot be empty, so a negative answer is correct.' },
+      ],
+      cases: [
+        { payload: { nums: [0] }, label: 'single zero' },
+        { payload: { nums: [8] }, label: 'single maximum value' },
+        { payload: { nums: [-2, -3] }, label: 'two negatives multiply to a positive' },
+        { payload: { nums: [-2, 3, -4] }, label: 'whole array, both negatives cancel' },
+        { payload: { nums: [-1, -2, -3] }, label: 'three negatives, so one end value must be dropped' },
+        { payload: { nums: [0, 0, 0] }, label: 'all zeros' },
+        { payload: { nums: [0, 2] }, label: 'leading zero must not cap the answer at 0' },
+        { payload: { nums: [2, 0] }, label: 'trailing zero must not cap the answer at 0' },
+        { payload: { nums: [-2, 0, 0, -3] }, label: 'two zeros, three segments, answer is 0' },
+        { payload: { nums: [8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8] }, label: 'answer 8,589,934,592 overflows a 32-bit signed integer' },
+        { payload: { nums: [-8, 8, 8, 8, 8, 8, 8, 8, 8, 8, -8] }, label: 'both ends negative, the whole array wins, and it exceeds 32 bits' },
+        { payload: { nums: [1, -8, 1, -8, 1, -8, 1] }, label: 'odd negative count with 1s between, forcing a choice of which negative to drop' },
+        { payload: { nums: [-8, 0, 8, 8, 0, -8, -8] }, label: 'zeros isolating a positive segment and a two-negative segment' },
+        { payload: { nums: [5, -1, -1, 5] }, label: 'the two -1s are worth crossing to join the 5s' },
+        { payload: { nums: [-1, 0] }, label: 'shortest input where the answer is the zero rather than the element' },
+      ],
+      assume: (p) => {
+        if (!Array.isArray(p.nums) || p.nums.length < 1 || p.nums.length > 15) return 'nums must hold between 1 and 15 elements';
+        if (!p.nums.every((v) => Number.isInteger(v) && v >= -8 && v <= 8)) return 'values must be integers within +/- 8';
+        const bound = 8 ** p.nums.length;
+        if (!Number.isSafeInteger(bound)) return 'the worst-case product for this length is not an exact integer';
+        return true;
+      },
+    },
+
+    // =======================================================================
+    {
+      slug: 'maximum-circular-subarray-sum',
+      title: 'Maximum Circular Subarray Sum',
+      difficulty: 'Medium',
+      tags: ['arrays', 'kadane-maximum-subarray', 'prefix-sum', 'complement'],
+      companies: ['Amazon', 'Google', 'Uber'],
+      description:
+        'The array `nums` is circular: the element after the last one is the first one. Return the largest sum obtainable from a contiguous block of this circular array.\n\nA block may wrap past the end and continue from the front. It must contain at least one element, and it may not use any element more than once — so its length is between 1 and `nums.length`.\n\nEverything else is the ordinary maximum-subarray problem, which means the answer is either a block that does not wrap, or one that does. Handling the second case without enumerating every rotation is the point.',
+      analogy:
+        'Shifts around a 24-hour clock. A shift can run from 22:00 through midnight to 03:00, so the busiest stretch of the day is not necessarily a stretch you can point at on a straight timeline. But it can never be longer than a full day, which is exactly the constraint that stops the wrap-around case from being unbounded.',
+      constraints: [
+        '1 <= nums.length <= 30',
+        '-10^4 <= nums[i] <= 10^4',
+        'A block uses each element at most once, so its length is at most nums.length',
+      ],
+      edgeCases: [
+        'The best block does not wrap at all, so the plain non-circular answer is already correct',
+        'The best block wraps, so it is the whole array minus a contiguous middle piece',
+        'Every value is negative, where the complement view would wrongly propose the empty block and return 0',
+        'A single element',
+        'The whole array is optimal, which is the boundary between wrapping and not',
+        'All values equal and positive, where the answer is the total',
+        'Values that make the wrapping and non-wrapping answers tie',
+      ],
+      hints: [
+        'Split into two cases and take the better one. Either the best block does not wrap, which is the previous problem unchanged, or it does.',
+        'Describe a wrapping block by what it leaves out. A block that wraps consists of a suffix plus a prefix, so the elements it omits form one contiguous run in the middle. Its sum is the array total minus that run.',
+        'To make the array total minus a middle run as large as possible, make the middle run as small as possible. So run the same one-pass scan a second time looking for the MINIMUM block sum, and compare total minus that against the non-wrapping answer.',
+        'There is one trap. The omitted run is not allowed to be the entire array, because the block must keep at least one element. That only bites when every value is negative, where the minimum block is everything and total minus it is 0. Detect that case by checking whether the non-wrapping answer is negative, and if so return it directly.',
+      ],
+      brute: {
+        name: 'Every Start and Every Length',
+        summary: 'Walk every starting index and every length from 1 to N, stepping around the array with a modulus.',
+        intuition:
+          'The circular structure is easiest to trust when you index it directly. Choose a start, then extend the block one element at a time using the index modulo the length, and record the total after each extension. Capping the length at the array length is what prevents any element from being counted twice; that cap is the only place the circularity constraint appears, which makes it obvious rather than implicit.\n\nEvery circular block has exactly one such description, so this is a complete enumeration. It is quadratic, which is why the array is limited to thirty elements — small enough that the reference runs on every test case, large enough to contain a wrap that is not near an end.\n\nWriting this version first is worthwhile even if the linear one is obvious to you, because the complement argument that the linear version depends on is the kind of reasoning that feels correct while being off by one case. Here that case, an all-negative array, shows up as a plain disagreement rather than as a subtly wrong number.',
+        steps: [
+          'Set best to negative infinity.',
+          'For each starting index i in the array:',
+          '  Set a running total to zero.',
+          '  For each length from 1 to N, add the element at (i + length - 1) modulo N to the running total.',
+          '  Update best with the running total after each addition.',
+          'Return best.',
+        ],
+        js: 'function maxCircularSubarraySum(nums) {\n  const n = nums.length;\n  let best = -Infinity;\n  for (let start = 0; start < n; start += 1) {\n    let runningTotal = 0;\n    for (let length = 1; length <= n; length += 1) {\n      runningTotal += nums[(start + length - 1) % n];\n      if (runningTotal > best) best = runningTotal;\n    }\n  }\n  return best;\n}',
+        py: 'def max_circular_subarray_sum(nums):\n    n = len(nums)\n    best = float("-inf")\n    for start in range(n):\n        running_total = 0\n        for length in range(1, n + 1):\n            running_total += nums[(start + length - 1) % n]\n            if running_total > best:\n                best = running_total\n    return best',
+        time: 'O(N^2)',
+        space: 'O(1)',
+      },
+      optimal: {
+        name: 'Best Non-Wrapping, or Total Minus the Worst Middle',
+        summary: 'Run the linear scan twice with opposite polarity and take the better of the two cases.',
+        intuition:
+          'A wrapping block is a suffix followed by a prefix, so the elements it excludes form a single contiguous run somewhere in the middle. Its sum is therefore the array total minus that run, and the best wrapping block corresponds to the WORST contiguous run. That is the same one-pass scan as before with every comparison reversed, so one traversal can maintain four values at once: the best and worst block ending here, and the best and worst seen anywhere. Add the total and the answer is the larger of the best block and the total minus the worst block.\n\nThe exception is not optional. When every value is negative the worst run is the whole array, the complement is empty, and total minus worst is 0 — an answer that corresponds to taking nothing, which the problem forbids. Since an all-negative array is exactly the case where the best non-wrapping block is itself negative, testing that one condition covers it, and any array containing a non-negative value cannot hit it.\n\nThe Python reference solves it a different way, and the difference is instructive. Concatenate the array with itself and take prefix totals. Every circular block of length 1 to N is a difference of two prefix totals whose indices are at most N apart, so the answer is the largest such difference — which means sweeping the right index and subtracting the smallest prefix total inside a trailing window of width N. That is a windowed minimum, maintained with a monotonic queue. It needs no special case at all: the length bound is enforced by the window, so an empty block is never representable and the all-negative input just works. Two very different pieces of code agreeing on every payload is the evidence that the complement argument above is sound.',
+        steps: [
+          'Initialise best-ending-here, best-anywhere, worst-ending-here, worst-anywhere and the total to nums[0].',
+          'For each later element, extend or restart both the best and the worst running block, and update both records and the total.',
+          'If best-anywhere is negative, every value is negative: return best-anywhere.',
+          'Otherwise return the larger of best-anywhere and total minus worst-anywhere.',
+        ],
+        js: 'function maxCircularSubarraySum(nums) {\n  let bestHere = nums[0];\n  let bestAnywhere = nums[0];\n  let worstHere = nums[0];\n  let worstAnywhere = nums[0];\n  let total = nums[0];\n  for (let i = 1; i < nums.length; i += 1) {\n    const value = nums[i];\n    bestHere = Math.max(value, bestHere + value);\n    bestAnywhere = Math.max(bestAnywhere, bestHere);\n    worstHere = Math.min(value, worstHere + value);\n    worstAnywhere = Math.min(worstAnywhere, worstHere);\n    total += value;\n  }\n  if (bestAnywhere < 0) return bestAnywhere;\n  return Math.max(bestAnywhere, total - worstAnywhere);\n}',
+        py: 'def max_circular_subarray_sum(nums):\n    n = len(nums)\n    doubled = nums + nums\n    prefix = [0]\n    for value in doubled:\n        prefix.append(prefix[-1] + value)\n    queue = []\n    head = 0\n    best = None\n    for right in range(1, 2 * n + 1):\n        entering = right - 1\n        while len(queue) > head and prefix[queue[-1]] >= prefix[entering]:\n            queue.pop()\n        queue.append(entering)\n        while queue[head] < right - n:\n            head += 1\n        candidate = prefix[right] - prefix[queue[head]]\n        if best is None or candidate > best:\n            best = candidate\n    return best',
+        time: 'O(N)',
+        space: 'O(1)',
+      },
+      examples: [
+        { payload: { nums: [1, -2, 3, -2] }, expect: 3, explanation: 'The best block is the single 3. Wrapping to pick up the leading 1 costs the -2 between them, which is a net loss of one.' },
+        { payload: { nums: [5, -3, 5] }, expect: 10, explanation: 'The best block wraps: the trailing 5 followed by the leading 5, omitting only the -3. Without wrapping the answer would be 7.' },
+        { payload: { nums: [-3, -2, -3] }, expect: -2, explanation: 'Every value is negative, so the answer is the largest single value. The complement route would propose the empty block and return 0, which is not allowed.' },
+        { payload: { nums: [3, -1, 2, -1] }, expect: 4, explanation: 'The wrapping block [-1,3,-1,2] uses everything and sums to 3, while [3,-1,2] sums to 4 without wrapping, so wrapping is not always better.' },
+      ],
+      cases: [
+        { payload: { nums: [7] }, label: 'single positive element' },
+        { payload: { nums: [-7] }, label: 'single negative element' },
+        { payload: { nums: [0] }, label: 'single zero' },
+        { payload: { nums: [2, 2, 2, 2] }, label: 'all positive, so the whole array is optimal' },
+        { payload: { nums: [-1, -1, -1, -1] }, label: 'all equal and negative, answer is a single element not 0' },
+        { payload: { nums: [8, -1, -1, -1, 8] }, label: 'wrap pays for three negatives to join the two 8s' },
+        { payload: { nums: [8, -9, -9, -9, 8] }, label: 'same shape but the wrap no longer pays, so the answer is a single 8' },
+        { payload: { nums: [-2, 4, -5, 4, -5, 9, 4] }, label: 'wrapping block made of a suffix and a prefix around an interior dip' },
+        { payload: { nums: [10000, -10000, 10000, -10000] }, label: 'constraint boundary magnitudes' },
+        { payload: { nums: [1, -1, 1, -1, 1] }, label: 'alternating, where the wrap ties with the non-wrapping answer' },
+        { payload: { nums: [3, 1, 3, 2, 6] }, label: 'no negatives at all, so the worst block is a single element and total minus it must not win' },
+        { payload: { nums: [-5, 3, 5, -2, 1, -7, 4] }, label: 'best block is interior and does not wrap despite negatives at both ends' },
+        { payload: { nums: [4, -1, -1, -1, -1, -1, 4] }, label: 'wrap omits a long negative run' },
+        { payload: { nums: [0, 0, 0, 0] }, label: 'all zeros' },
+      ],
+      assume: (p) => {
+        if (!Array.isArray(p.nums) || p.nums.length < 1 || p.nums.length > 30) return 'nums must hold between 1 and 30 elements';
+        if (!p.nums.every((v) => Number.isInteger(v) && v >= -10000 && v <= 10000)) return 'values must be integers within +/- 10^4';
+        return true;
+      },
+    },
+  ],
+};

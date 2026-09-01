@@ -1,0 +1,366 @@
+/**
+ * Arrays -> Intervals.
+ *
+ * WHY THIS PATTERN IS NOT A DUPLICATE OF greedy/interval-scheduling
+ * ----------------------------------------------------------------
+ * `greedy/interval-scheduling` already holds four interval problems, and all four return a COUNT or
+ * a SELECTION: can everything be attended, how many must be removed, how many arrows, how long a
+ * chain. Every one of them is an exchange-argument proof about which intervals to keep.
+ *
+ * This pattern is about the other half of interval work: producing or measuring the *combined
+ * shape*. Merging returns a new set of intervals; insertion rebuilds one; the room count measures
+ * peak concurrency. None of them is a greedy choice — sorting plus a single sweep is the whole
+ * technique, and the interesting part is the boundary arithmetic rather than the proof.
+ *
+ * ENDPOINT CONVENTION, STATED ONCE
+ * --------------------------------
+ * The repository already fixed this in greedy/interval-scheduling: intervals are half-open, so
+ * `[1, 4)` and `[4, 5)` do NOT overlap. This file keeps that convention, which has one consequence
+ * worth spelling out because it looks like a contradiction and is not:
+ *
+ *   - `meeting-rooms` asks whether any two intervals overlap, and [1,4) and [4,5) do not, so it
+ *     answers "no conflict".
+ *   - merging asks for the union written with as few intervals as possible, and the union of [1,4)
+ *     and [4,5) is exactly [1,5), one interval.
+ *
+ * Both are right. Touching intervals do not conflict AND they do combine into one. Every problem
+ * here therefore states the rule at its own boundary explicitly rather than relying on the reader
+ * importing it, and the test cases pin it.
+ *
+ * All three problems take interval lists as `vector<vector<int>>`, which C cannot express, so C is
+ * unavailable across this pattern. Nothing was flattened to change that: a start/end pair is the
+ * problem's actual data, and splitting it into two parallel arrays purely to satisfy one language's
+ * calling convention is the signature manipulation this project has ruled out.
+ *
+ * THE LADDER
+ * ----------
+ *   merge   sort, then either extend the interval you are holding or emit it and pick up the next
+ *   insert  the same job with the sort already done, which exposes the boundary tests on their own
+ *   rooms   stop thinking about intervals and think about the +1/-1 events at their endpoints
+ */
+export default {
+  topic: 'arrays',
+  pattern: 'intervals',
+  problems: [
+    // =======================================================================
+    {
+      slug: 'merge-overlapping-intervals',
+      title: 'Merge Overlapping Intervals',
+      difficulty: 'Medium',
+      tags: ['arrays', 'intervals', 'sorting', 'sweep'],
+      companies: ['Amazon', 'Google', 'Meta', 'Microsoft', 'Bloomberg'],
+      description:
+        'Each element of `intervals` is a pair `[start, end]` with `start < end`, describing the half-open range from `start` up to but not including `end`. The input is in no particular order and ranges may overlap or repeat.\n\nReturn the same collection of points written with as few intervals as possible, sorted by increasing start.\n\nTwo details decide most implementations. First, ranges that merely touch — one ending exactly where the next begins — combine into a single interval, because the points they cover form one unbroken run. Second, one range may sit entirely inside another, in which case the wider one absorbs it and the answer must not shrink to the inner range.',
+      analogy:
+        'Highlighter strokes over a single line of text. Some strokes overlap, some sit end to end, one is drawn right across the middle of a longer one. Asked to describe what is highlighted, you would not list the strokes — you would list the unbroken coloured runs, and a stroke swallowed by a longer one gets no mention at all.',
+      constraints: [
+        '1 <= intervals.length <= 200',
+        'intervals[i] is a pair [start, end] with start < end',
+        '0 <= start < end <= 10^6',
+        'The input is not sorted; the output must be sorted by increasing start',
+      ],
+      edgeCases: [
+        'A single interval, which is returned unchanged',
+        'No overlaps at all, so the answer is the input sorted and nothing more',
+        'Ranges that only touch at an endpoint, which DO combine into one',
+        'One range entirely inside another, where the outer end must be kept',
+        'Everything overlapping, collapsing to one interval',
+        'Duplicate identical ranges',
+        'Input given in descending order, so an implementation that forgets to sort fails',
+        'A chain where each range touches the next, collapsing the whole input to one interval',
+      ],
+      hints: [
+        'Sorting by start is what makes one pass possible. Once the list is in start order, anything that overlaps the interval you are currently holding must come immediately next — it cannot be further down the list.',
+        'Hold one interval open as you sweep. For the next range, either its start is at or before your open end, in which case it belongs to the same run, or it is beyond it, in which case the run is finished and you emit it and open a new one.',
+        'Extending the run means setting the open end to the LARGER of the two ends, never to the incoming end. That single max is what handles a range nested inside a wider one; assigning the incoming end instead is the most common bug here.',
+        'The test for "belongs to the same run" is start <= open end, not start < open end. With half-open ranges, one ending exactly where the next begins leaves no gap between them, so they are one run.',
+      ],
+      brute: {
+        name: 'Fuse Any Two, Repeatedly',
+        summary: 'Scan for any pair that overlaps or touches, replace it with its union, and repeat until no pair does.',
+        intuition:
+          'This needs no insight into ordering at all, which is exactly why it is worth writing. Two ranges overlap or touch precisely when each one starts at or before the other ends. Find any such pair, replace both with the smallest range covering them, and start over. When no pair is left the collection is already the minimal representation, and one sort at the end puts it in the required order.\n\nCorrectness is easy to accept: fusing two ranges never changes which points are covered, and each fusion reduces the count by one, so it terminates. There is no ordering argument to get wrong and no boundary case hidden in a loop condition — the touching rule appears once, in the overlap test.\n\nThe cost is that a scan restarts after every fusion, which is cubic in the worst case. That is fine at 200 intervals and it is the reference the sweep is checked against, including on the nested and descending-order cases where the sweep is easiest to get wrong.',
+        steps: [
+          'Copy the intervals so the input is not modified.',
+          'Search for any pair i, j where each starts at or before the other ends.',
+          'Replace interval i with the minimum start and maximum end of the pair, and remove interval j.',
+          'Repeat the search from the beginning until no such pair exists.',
+          'Sort by start and return.',
+        ],
+        js: 'function mergeIntervals(intervals) {\n  const parts = intervals.map((pair) => pair.slice());\n  let fused = true;\n  while (fused) {\n    fused = false;\n    search:\n    for (let i = 0; i < parts.length; i += 1) {\n      for (let j = i + 1; j < parts.length; j += 1) {\n        const touches = parts[i][0] <= parts[j][1] && parts[j][0] <= parts[i][1];\n        if (touches) {\n          parts[i] = [Math.min(parts[i][0], parts[j][0]), Math.max(parts[i][1], parts[j][1])];\n          parts.splice(j, 1);\n          fused = true;\n          break search;\n        }\n      }\n    }\n  }\n  parts.sort((a, b) => a[0] - b[0]);\n  return parts;\n}',
+        py: 'def merge_intervals(intervals):\n    parts = [list(pair) for pair in intervals]\n    fused = True\n    while fused:\n        fused = False\n        for i in range(len(parts)):\n            for j in range(i + 1, len(parts)):\n                if parts[i][0] <= parts[j][1] and parts[j][0] <= parts[i][1]:\n                    parts[i] = [min(parts[i][0], parts[j][0]), max(parts[i][1], parts[j][1])]\n                    parts.pop(j)\n                    fused = True\n                    break\n            if fused:\n                break\n    parts.sort(key=lambda pair: pair[0])\n    return parts',
+        time: 'O(N^3)',
+        space: 'O(N)',
+      },
+      optimal: {
+        name: 'Sort by Start, Then One Sweep',
+        summary: 'In start order, extend the interval you are holding or emit it and open the next.',
+        intuition:
+          'Sort by start. Now hold the first interval open and walk the rest. Because starts only increase, any range that shares points with the open one must begin at or before the open end, and any range that begins after it cannot share points with the open one or with anything already emitted. So one comparison per range decides everything, and nothing ever needs revisiting.\n\nThe two boundary decisions are where the answers get lost. `start <= openEnd` rather than `<` is what merges touching ranges. `openEnd = max(openEnd, end)` rather than `openEnd = end` is what survives a nested range: sorted by start, `[2, 3]` follows `[1, 10]`, and assigning its end truncates the answer to `[1, 3]` while silently reporting the same number of intervals. That bug produces plausible output on most inputs, which is why nesting is tested directly rather than left to chance.\n\nThe accompanying Python reference is built the other way round, from events rather than intervals, so the two are independent. Turn each range into a `+1` at its start and a `-1` at its end, sort the events, and sweep a depth counter: a run opens when depth rises from zero and closes when it returns to zero. Touching ranges are handled by ordering starts before ends at the same coordinate — at that coordinate depth dips to one rather than zero, so the run stays open. The same rule, arrived at from a different direction.',
+        steps: [
+          'Sort a copy of the intervals by increasing start.',
+          'Open the first interval, remembering its start and end.',
+          'For each remaining interval: if its start is at or before the open end, set the open end to the larger of the two ends.',
+          'Otherwise emit the open interval and open this one instead.',
+          'Emit the interval still open when the sweep ends, and return the emitted list.',
+        ],
+        js: 'function mergeIntervals(intervals) {\n  const sorted = intervals.map((pair) => pair.slice()).sort((a, b) => a[0] - b[0]);\n  const merged = [];\n  let openStart = sorted[0][0];\n  let openEnd = sorted[0][1];\n  for (let i = 1; i < sorted.length; i += 1) {\n    const [start, end] = sorted[i];\n    if (start <= openEnd) {\n      openEnd = Math.max(openEnd, end);\n    } else {\n      merged.push([openStart, openEnd]);\n      openStart = start;\n      openEnd = end;\n    }\n  }\n  merged.push([openStart, openEnd]);\n  return merged;\n}',
+        py: 'def merge_intervals(intervals):\n    events = []\n    for pair in intervals:\n        events.append((pair[0], 0))\n        events.append((pair[1], 1))\n    events.sort()\n    merged = []\n    depth = 0\n    run_start = None\n    for position, kind in events:\n        if kind == 0:\n            if depth == 0:\n                run_start = position\n            depth += 1\n        else:\n            depth -= 1\n            if depth == 0:\n                merged.append([run_start, position])\n    return merged',
+        time: 'O(N log N)',
+        space: 'O(N)',
+      },
+      examples: [
+        { payload: { intervals: [[1, 3], [2, 6], [8, 10], [15, 18]] }, expect: [[1, 6], [8, 10], [15, 18]], explanation: 'The first two share the points from 2 to 3 and become [1,6]. The other two touch nothing and pass through unchanged.' },
+        { payload: { intervals: [[1, 4], [4, 5]] }, expect: [[1, 5]], explanation: 'They do not overlap — one ends exactly where the other begins — but the points they cover form one unbroken run, so the union is a single interval.' },
+        { payload: { intervals: [[1, 10], [2, 3], [4, 8]] }, expect: [[1, 10]], explanation: 'Both later ranges sit inside the first. Keeping the larger end is what preserves 10; assigning the incoming end would wrongly return [1,8].' },
+        { payload: { intervals: [[8, 10], [1, 3]] }, expect: [[1, 3], [8, 10]], explanation: 'Nothing merges, but the input is out of order, so the answer is not the input. The sort is not optional.' },
+      ],
+      cases: [
+        { payload: { intervals: [[5, 7]] }, label: 'single interval' },
+        { payload: { intervals: [[1, 2], [3, 4], [5, 6]] }, label: 'already sorted, no overlaps, gap of one between each' },
+        { payload: { intervals: [[6, 7], [4, 5], [2, 3]] }, label: 'fully descending, no overlaps' },
+        { payload: { intervals: [[1, 2], [2, 3], [3, 4], [4, 5]] }, label: 'chain of touching ranges collapses to one' },
+        { payload: { intervals: [[2, 3], [1, 2], [4, 5], [3, 4]] }, label: 'same chain shuffled' },
+        { payload: { intervals: [[1, 5], [1, 5], [1, 5]] }, label: 'three identical ranges' },
+        { payload: { intervals: [[1, 100], [2, 3]] }, label: 'nested — assigning the incoming end truncates to [1,3]' },
+        { payload: { intervals: [[2, 3], [1, 100]] }, label: 'the same nesting, wider range last' },
+        { payload: { intervals: [[0, 1], [0, 2], [0, 3]] }, label: 'shared start, growing ends' },
+        { payload: { intervals: [[1, 4], [0, 4], [2, 4]] }, label: 'shared end, differing starts' },
+        { payload: { intervals: [[10, 20], [1, 2], [15, 30], [3, 4], [19, 21]] }, label: 'two separate runs plus two singletons, unsorted' },
+        { payload: { intervals: [[0, 1000000]] }, label: 'constraint boundary coordinates' },
+        { payload: { intervals: [[1, 2], [4, 5], [2, 4]] }, label: 'a middle range bridges two that do not touch each other' },
+        { payload: { intervals: [[7, 8], [1, 9], [2, 3], [5, 6], [8, 9]] }, label: 'one range covering all the others' },
+      ],
+      assume: (p) => {
+        if (!Array.isArray(p.intervals) || p.intervals.length < 1 || p.intervals.length > 200) return 'intervals must hold between 1 and 200 pairs';
+        for (const pair of p.intervals) {
+          if (!Array.isArray(pair) || pair.length !== 2) return 'each interval must be a pair';
+          const [start, end] = pair;
+          if (!Number.isInteger(start) || !Number.isInteger(end)) return 'endpoints must be integers';
+          if (!(start < end)) return `start must be strictly less than end, got [${start}, ${end}]`;
+          if (start < 0 || end > 1000000) return 'endpoints must lie within 0..10^6';
+        }
+        return true;
+      },
+    },
+
+    // =======================================================================
+    {
+      slug: 'insert-interval',
+      title: 'Insert Interval',
+      difficulty: 'Medium',
+      tags: ['arrays', 'intervals', 'sweep', 'two-pointers'],
+      companies: ['Google', 'Amazon', 'Meta', 'LinkedIn'],
+      description:
+        '`intervals` is already sorted by increasing start and already minimal: no two of its ranges overlap, and none of them touches the next, so there is a genuine gap between consecutive ranges. Each is a half-open pair `[start, end]` with `start < end`.\n\nInsert `newInterval` and return the result, still sorted and still minimal.\n\nThe sort is done for you, which is the point of the problem: what is left is purely the boundary reasoning. Every existing range falls into one of three groups — those that finish before the new one starts, those that share or touch its span, and those that begin after it finishes. The first and last groups are copied through untouched. The middle group, however many ranges it contains, becomes one interval together with the new one.',
+      analogy:
+        'Booking a room that is already scheduled in tidy, non-adjacent blocks, and your booking happens to span three of them. The blocks before yours and after yours are unaffected. The three you cut across, plus your own, become one continuous occupied block running from the earliest start among them to the latest end.',
+      constraints: [
+        '0 <= intervals.length <= 200',
+        'intervals is sorted by increasing start',
+        'For consecutive entries, the earlier end is strictly less than the later start',
+        'Every pair, including newInterval, satisfies start < end',
+        '0 <= start < end <= 10^6',
+      ],
+      edgeCases: [
+        'An empty existing list, where the answer is the new interval alone',
+        'The new interval ends before everything, so it goes at the front',
+        'The new interval starts after everything, so it goes at the back',
+        'The new interval fits in a gap and merges with nothing',
+        'The new interval merely touches a neighbour at one endpoint, which DOES merge',
+        'The new interval swallows several existing ranges at once',
+        'The new interval sits entirely inside an existing range, so the answer equals the input',
+        'The new interval exactly equals an existing range',
+      ],
+      hints: [
+        'Do not modify the list in place while scanning it. Build a fresh output list in three phases and the boundary conditions stop competing with each other.',
+        'Phase one: copy every range whose end is strictly less than the new start. Strictly, because a range ending exactly at the new start leaves no gap and belongs to the merge.',
+        'Phase two: while the next range starts at or before the current merged end, absorb it — widening the merged range to the SMALLER start and the LARGER end. Both ends move. Forgetting to lower the start throws away the part of an absorbed range that lay before the new one, which is the single most common way to get this phase wrong.',
+        'Phase three: emit the merged interval, then copy the rest. Because the input had no touching neighbours, everything remaining starts strictly after the merged end and needs no further checks.',
+      ],
+      brute: {
+        name: 'Append and Merge From Scratch',
+        summary: 'Add the new interval to the list and run a full sort-and-merge, ignoring that the input was sorted.',
+        intuition:
+          'The result of inserting into a minimal set and re-minimising is the same as taking all the ranges together and minimising once, so the shortest correct solution is to throw away the precondition: append the new range, sort by start, and sweep.\n\nThis is genuinely good code and would pass a review. It is the baseline here because it discards information you were handed — the input was already sorted, so the sort is wasted work, and it does not force you to think about the three groups at all, which is the reasoning the problem exists to teach.\n\nIt is also the reference the phase-based version is measured against, and the disagreements it catches are the interesting ones: whether a range ending exactly at the new start merges, and whether a merged end that grows mid-loop still pulls in later ranges.',
+        steps: [
+          'Copy the existing intervals and append the new one.',
+          'Sort by increasing start.',
+          'Sweep once, extending the open interval while the next start is at or before the open end, taking the larger of the two ends.',
+          'Emit each finished interval and return the list.',
+        ],
+        js: 'function insertInterval(intervals, newInterval) {\n  const all = intervals.map((pair) => pair.slice());\n  all.push(newInterval.slice());\n  all.sort((a, b) => a[0] - b[0]);\n  const merged = [];\n  let openStart = all[0][0];\n  let openEnd = all[0][1];\n  for (let i = 1; i < all.length; i += 1) {\n    if (all[i][0] <= openEnd) {\n      openEnd = Math.max(openEnd, all[i][1]);\n    } else {\n      merged.push([openStart, openEnd]);\n      openStart = all[i][0];\n      openEnd = all[i][1];\n    }\n  }\n  merged.push([openStart, openEnd]);\n  return merged;\n}',
+        py: 'def insert_interval(intervals, newInterval):\n    everything = [list(pair) for pair in intervals] + [list(newInterval)]\n    everything.sort(key=lambda pair: pair[0])\n    merged = []\n    open_start, open_end = everything[0]\n    for start, end in everything[1:]:\n        if start <= open_end:\n            open_end = max(open_end, end)\n        else:\n            merged.append([open_start, open_end])\n            open_start, open_end = start, end\n    merged.append([open_start, open_end])\n    return merged',
+        time: 'O(N log N)',
+        space: 'O(N)',
+      },
+      optimal: {
+        name: 'Three Phases, No Sort',
+        summary: 'Copy what ends before, absorb what touches, copy what starts after.',
+        intuition:
+          'The input is sorted, so the three groups are three consecutive stretches of the list and a single left-to-right pass visits them in order. Copy while the current end is strictly below the new start. Then absorb while the current start is at or below the running merged end, widening that end as you go. Then copy the remainder. One pass, no sort, and the sorted precondition is actually used.\n\nThe absorbing loop widens BOTH ends, and the start is the one people drop. Folding `[3, 5]` into a new range of `[4, 8]` has to pull the start back to 3; leaving it at 4 loses a point that was covered before the insert. The end needs a max for the same reason merging does, since an absorbed range may finish earlier than the new one.\n\nOne thing here looks like a trap and is not, and it is worth knowing which. The merged end grows as ranges are absorbed, so it is natural to suspect that a range out of reach at the start of the phase gets pulled in later — and therefore that comparing against the original `newInterval` would be wrong. Under this problem\'s precondition it cannot happen. Take any range X starting after the original end. Everything absorbed starts at or before that original end, hence before X does; and because the existing ranges are disjoint with genuine gaps, a range starting before X must also finish before X begins. So nothing absorbed can have raised the end as far as X. The mirror argument covers the low side. Both forms are therefore correct, and an exhaustive check over every legal input with up to three existing ranges confirms they produce identical output. The moving bound is written here anyway, because it is the form that survives if the "already minimal" precondition is relaxed — and that precondition is exactly what separates this problem from merging.\n\nThe strictness of the two comparisons is where answers actually get lost. A range ending exactly at the new start must be absorbed, not copied, because touching ranges combine — hence `end < newStart` for phase one. Likewise phase two uses `start <= mergedEnd`. Get either backwards and the output holds two intervals that should have been one, which is easy to miss by eye and is what the touching test cases exist to catch.\n\nThe accompanying Python reference partitions instead of walking phases: it selects the ranges ending before, the ranges starting after, and everything else, then folds that middle group into the new range. There is no loop order to get wrong because the middle group is defined once, against the original new interval — which is exactly the equivalence argued above, arrived at from the other side. Two different constructions landing on the same answer for every payload.',
+        steps: [
+          'Start the merged range at the new interval, and an empty output list.',
+          'While the next existing range ends strictly before the merged start, copy it to the output.',
+          'While the next existing range starts at or before the merged end, widen the merged range to the smaller start and the larger end.',
+          'Append the merged range.',
+          'Copy every remaining range and return the output.',
+        ],
+        js: 'function insertInterval(intervals, newInterval) {\n  const output = [];\n  let mergedStart = newInterval[0];\n  let mergedEnd = newInterval[1];\n  let index = 0;\n  while (index < intervals.length && intervals[index][1] < mergedStart) {\n    output.push(intervals[index].slice());\n    index += 1;\n  }\n  while (index < intervals.length && intervals[index][0] <= mergedEnd) {\n    mergedStart = Math.min(mergedStart, intervals[index][0]);\n    mergedEnd = Math.max(mergedEnd, intervals[index][1]);\n    index += 1;\n  }\n  output.push([mergedStart, mergedEnd]);\n  while (index < intervals.length) {\n    output.push(intervals[index].slice());\n    index += 1;\n  }\n  return output;\n}',
+        py: 'def insert_interval(intervals, newInterval):\n    low, high = newInterval[0], newInterval[1]\n    before = [list(pair) for pair in intervals if pair[1] < low]\n    after = [list(pair) for pair in intervals if pair[0] > high]\n    overlapping = [pair for pair in intervals if not (pair[1] < low or pair[0] > high)]\n    for pair in overlapping:\n        low = min(low, pair[0])\n        high = max(high, pair[1])\n    return before + [[low, high]] + after',
+        time: 'O(N)',
+        space: 'O(N)',
+      },
+      examples: [
+        { payload: { intervals: [[1, 3], [6, 9]], newInterval: [2, 5] }, expect: [[1, 5], [6, 9]], explanation: 'The new range overlaps [1,3] and stops short of 6, so it merges with the first only. Note 5 and 6 leave a gap, so [6,9] stays separate.' },
+        { payload: { intervals: [[1, 2], [3, 5], [6, 7], [8, 10], [12, 16]], newInterval: [4, 8] }, expect: [[1, 2], [3, 10], [12, 16]], explanation: 'The new range overlaps [3,5] and [6,7] and touches [8,10] exactly at 8. Widening to 10 while absorbing is what pulls that last one in.' },
+        { payload: { intervals: [[1, 3], [8, 10]], newInterval: [3, 8] }, expect: [[1, 10]], explanation: 'The new range touches both neighbours at an endpoint and nothing else. Touching combines, so all three become one.' },
+        { payload: { intervals: [[1, 20]], newInterval: [5, 6] }, expect: [[1, 20]], explanation: 'The new range is already covered. Taking the smaller start and larger end leaves the existing range untouched.' },
+      ],
+      cases: [
+        { payload: { intervals: [], newInterval: [4, 9] }, label: 'empty list, answer is the new interval alone' },
+        { payload: { intervals: [[5, 7]], newInterval: [1, 2] }, label: 'goes at the front with a gap' },
+        { payload: { intervals: [[5, 7]], newInterval: [9, 11] }, label: 'goes at the back with a gap' },
+        { payload: { intervals: [[1, 2], [7, 8]], newInterval: [4, 5] }, label: 'lands in a gap and merges with nothing' },
+        { payload: { intervals: [[1, 4]], newInterval: [4, 6] }, label: 'touches the existing end, so it merges' },
+        { payload: { intervals: [[4, 6]], newInterval: [1, 4] }, label: 'touches the existing start, so it merges' },
+        { payload: { intervals: [[1, 2], [3, 4], [5, 6], [7, 8]], newInterval: [0, 100] }, label: 'swallows everything' },
+        { payload: { intervals: [[1, 2], [3, 4], [5, 6], [7, 8]], newInterval: [2, 7] }, label: 'touches the first and last it reaches at both endpoints' },
+        { payload: { intervals: [[1, 5]], newInterval: [1, 5] }, label: 'exactly equal to the only existing range' },
+        { payload: { intervals: [[1, 5]], newInterval: [2, 3] }, label: 'strictly inside, answer equals the input' },
+        { payload: { intervals: [[1, 3], [10, 20], [30, 40]], newInterval: [2, 35] }, label: 'spans a middle range entirely and partially cuts both outer ones' },
+        { payload: { intervals: [[1, 2], [20, 21]], newInterval: [3, 19] }, label: 'fills the whole gap without touching either side' },
+        { payload: { intervals: [[1, 2], [20, 21]], newInterval: [2, 20] }, label: 'fills the gap and touches both sides, collapsing all three' },
+        { payload: { intervals: [[0, 1]], newInterval: [1, 1000000] }, label: 'constraint boundary coordinates, touching at 1' },
+        { payload: { intervals: [[5, 10], [15, 20], [25, 30]], newInterval: [12, 16] }, label: 'the merged end grows from 16 to 20 while absorbing, and the gap to 25 keeps that from mattering' },
+        { payload: { intervals: [[1, 4], [10, 12]], newInterval: [3, 4] }, label: 'absorbed range starts before the new one, so the merged start must move back to 1' },
+      ],
+      assume: (p) => {
+        const check = (pair, what) => {
+          if (!Array.isArray(pair) || pair.length !== 2) return `${what} must be a pair`;
+          const [start, end] = pair;
+          if (!Number.isInteger(start) || !Number.isInteger(end)) return `${what} endpoints must be integers`;
+          if (!(start < end)) return `${what} needs start < end, got [${start}, ${end}]`;
+          if (start < 0 || end > 1000000) return `${what} must lie within 0..10^6`;
+          return null;
+        };
+        if (!Array.isArray(p.intervals) || p.intervals.length > 200) return 'intervals must hold at most 200 pairs';
+        for (const pair of p.intervals) {
+          const bad = check(pair, 'each existing interval');
+          if (bad) return bad;
+        }
+        for (let i = 1; i < p.intervals.length; i += 1) {
+          if (!(p.intervals[i - 1][1] < p.intervals[i][0])) {
+            return `existing intervals must be sorted with a genuine gap; [${p.intervals[i - 1]}] then [${p.intervals[i]}] would already have merged`;
+          }
+        }
+        return check(p.newInterval, 'newInterval') || true;
+      },
+    },
+
+    // =======================================================================
+    {
+      slug: 'minimum-meeting-rooms',
+      title: 'Minimum Meeting Rooms',
+      difficulty: 'Medium',
+      tags: ['arrays', 'intervals', 'sweep', 'counting'],
+      companies: ['Amazon', 'Google', 'Meta', 'Uber', 'Bloomberg'],
+      description:
+        'Each element of `intervals` is a meeting `[start, end]` with `start < end`. Return the smallest number of rooms that can hold all of them.\n\nA room holds one meeting at a time. Because intervals are half-open, a meeting ending at `10` and one starting at `10` can use the same room with no clash.\n\nThe answer is the largest number of meetings that are ever running at once. Nothing needs to be assigned to a specific room to work that out — and noticing that is the difference between a short solution and a long one. The related problem `meeting-rooms` asks only whether that number exceeds one; this asks for the number itself.',
+      analogy:
+        'Counting how many taxis a rank needs by watching the road rather than the cars. You do not follow individual journeys or decide which taxi takes which fare — you stand there with a tally, add one whenever someone drives off, subtract one whenever someone returns, and the highest the tally ever reaches is your fleet size.',
+      constraints: [
+        '1 <= intervals.length <= 200',
+        'intervals[i] is a pair [start, end] with start < end',
+        '0 <= start < end <= 10^6',
+        'A meeting ending at time t does not clash with one starting at time t',
+      ],
+      edgeCases: [
+        'A single meeting, which needs one room',
+        'Meetings that never overlap, which all fit in one room',
+        'Meetings that end exactly when the next begins, which share a room',
+        'All meetings identical, needing one room each',
+        'A long meeting spanning many short ones',
+        'Peak concurrency occurring in the middle rather than at the first or last meeting',
+        'Several meetings starting at the same instant',
+        'A meeting ending and another starting at the same instant, where the tally must net to no change',
+      ],
+      hints: [
+        'Stop thinking about rooms. If at some instant k meetings are running, you need at least k rooms; and if you never exceed k, greedily reusing any free room never needs more than k. So the answer is exactly the peak number of simultaneous meetings.',
+        'Concurrency only ever changes at an endpoint, and only ever rises at a start. So the peak is reached at the start of some meeting — you never have to look anywhere else.',
+        'Turn each meeting into two events: +1 at its start and -1 at its end. Sort all the events by time, sweep a running tally, and record the maximum. This never needs to know which meeting an event came from.',
+        'Ordering at a tie decides the half-open rule. When a -1 and a +1 land on the same instant they must cancel, so the tally does not spike. Process the -1 first, or use a per-coordinate net delta so the order cannot matter at all.',
+      ],
+      brute: {
+        name: 'Count Concurrency at Each Start',
+        summary: 'For every meeting, count how many meetings are running at the instant it begins, and take the largest count.',
+        intuition:
+          'Concurrency only rises when a meeting starts, so the peak must occur at some meeting start. That means the whole answer is available from a double loop: for each meeting, count how many meetings are running at its start time, and keep the largest of those counts.\n\n"Running at time t" is where the half-open rule shows up, and it shows up in one place: a meeting covers t when its start is at or before t and its end is strictly after t. A meeting ending exactly at t has already released the room, so the strict comparison is what makes rooms reusable at the boundary. Every meeting counts itself, since its start is at or before its own start and its end is strictly after it, so the answer is never below one.\n\nThis version is quadratic but has no sorting, no event ordering and no tie-breaking rule, which makes it the right thing to check the sweep against — particularly on inputs where a meeting ends at the exact instant another starts.',
+        steps: [
+          'Set the peak to zero.',
+          'For each meeting, take its start time as the probe instant.',
+          'Count every meeting whose start is at or before the probe and whose end is strictly after it.',
+          'Update the peak with that count.',
+          'Return the peak.',
+        ],
+        js: 'function minMeetingRooms(intervals) {\n  let peak = 0;\n  for (const probe of intervals) {\n    const instant = probe[0];\n    let concurrent = 0;\n    for (const other of intervals) {\n      if (other[0] <= instant && instant < other[1]) concurrent += 1;\n    }\n    if (concurrent > peak) peak = concurrent;\n  }\n  return peak;\n}',
+        py: 'def min_meeting_rooms(intervals):\n    peak = 0\n    for probe in intervals:\n        instant = probe[0]\n        concurrent = 0\n        for other in intervals:\n            if other[0] <= instant < other[1]:\n                concurrent += 1\n        if concurrent > peak:\n            peak = concurrent\n    return peak',
+        time: 'O(N^2)',
+        space: 'O(1)',
+      },
+      optimal: {
+        name: 'Sweep the Endpoints',
+        summary: 'Sort starts and ends separately, then walk the starts releasing every room already free.',
+        intuition:
+          'Take the start times into one sorted list and the end times into another. Walk the starts in order, and before counting each one, release every meeting whose end time is at or before it. The running count after each start is the concurrency at that instant, and its maximum is the answer.\n\nThe two lists get separated deliberately. Which meeting an end time belonged to never matters — only that some room came free before this start. That is the same reason the accompanying Python reference can use a plain map from time to net change: add one at each start, subtract one at each end, then read the times in order accumulating the total. Where a start and an end coincide the two contributions cancel inside a single coordinate, so no tie-breaking rule is needed at all, and that is the more robust way to write it. The `<=` in the two-pointer version is doing exactly the same work: it releases a room that becomes free at the very instant the next meeting starts.\n\nUsing `<` there instead is the bug this problem is really about. It reports one room too many on any schedule that is back-to-back, and it is invisible on inputs where no two endpoints coincide. Several test cases here consist of nothing but abutting meetings for that reason.\n\nA min-heap of end times is the more commonly seen solution and is the same algorithm — the heap is just an incremental version of the sorted end list. Sorting both lists up front is simpler and has the same complexity, and `heaps` is a later topic.',
+        steps: [
+          'Collect the start times and sort them.',
+          'Collect the end times and sort them.',
+          'Walk the starts in order, keeping a running count of occupied rooms and an index into the ends.',
+          'Before counting a start, while the next end is at or before it, decrement the running count and advance the end index.',
+          'Increment the running count for this start and update the peak.',
+          'Return the peak.',
+        ],
+        js: 'function minMeetingRooms(intervals) {\n  const starts = intervals.map((pair) => pair[0]).sort((a, b) => a - b);\n  const ends = intervals.map((pair) => pair[1]).sort((a, b) => a - b);\n  let occupied = 0;\n  let peak = 0;\n  let endIndex = 0;\n  for (let i = 0; i < starts.length; i += 1) {\n    while (endIndex < ends.length && ends[endIndex] <= starts[i]) {\n      occupied -= 1;\n      endIndex += 1;\n    }\n    occupied += 1;\n    if (occupied > peak) peak = occupied;\n  }\n  return peak;\n}',
+        py: 'def min_meeting_rooms(intervals):\n    delta = {}\n    for pair in intervals:\n        delta[pair[0]] = delta.get(pair[0], 0) + 1\n        delta[pair[1]] = delta.get(pair[1], 0) - 1\n    occupied = 0\n    peak = 0\n    for position in sorted(delta):\n        occupied += delta[position]\n        if occupied > peak:\n            peak = occupied\n    return peak',
+        time: 'O(N log N)',
+        space: 'O(N)',
+      },
+      examples: [
+        { payload: { intervals: [[0, 30], [5, 10], [15, 20]] }, expect: 2, explanation: 'The long meeting runs throughout, and the two short ones never overlap each other, so two rooms suffice.' },
+        { payload: { intervals: [[7, 10], [2, 4]] }, expect: 1, explanation: 'The two do not overlap, so one room is reused.' },
+        { payload: { intervals: [[1, 5], [5, 9], [9, 13]] }, expect: 1, explanation: 'Each ends exactly when the next begins. Half-open intervals do not clash at a shared endpoint, so one room holds all three. Using a strict comparison when releasing rooms returns 3 here.' },
+        { payload: { intervals: [[1, 10], [2, 7], [3, 19], [8, 12], [10, 20], [11, 30]] }, expect: 4, explanation: 'At the instant 11 begins, the meetings [3,19], [8,12], [10,20] and [11,30] are all running, which is the peak.' },
+      ],
+      cases: [
+        { payload: { intervals: [[1, 2]] }, label: 'single meeting' },
+        { payload: { intervals: [[1, 2], [3, 4], [5, 6], [7, 8]] }, label: 'no overlaps at all, gaps between' },
+        { payload: { intervals: [[1, 2], [2, 3], [3, 4], [4, 5], [5, 6]] }, label: 'entirely back to back, one room; a strict release comparison returns 5' },
+        { payload: { intervals: [[4, 5], [4, 5], [4, 5]] }, label: 'three identical meetings need three rooms' },
+        { payload: { intervals: [[0, 100], [1, 2], [3, 4], [5, 6]] }, label: 'one long meeting over three short ones' },
+        { payload: { intervals: [[1, 2], [1, 3], [1, 4], [1, 5]] }, label: 'four simultaneous starts' },
+        { payload: { intervals: [[1, 4], [2, 4], [3, 4]] }, label: 'staggered starts, shared end' },
+        { payload: { intervals: [[1, 3], [3, 5], [2, 8]] }, label: 'a release and a start coincide at 3 while a third meeting spans both' },
+        { payload: { intervals: [[10, 20], [1, 2], [15, 25], [3, 4], [18, 19]] }, label: 'unsorted input with the peak among the later meetings' },
+        { payload: { intervals: [[1, 100], [2, 99], [3, 98], [50, 51]] }, label: 'fully nested meetings, peak in the middle' },
+        { payload: { intervals: [[0, 1000000], [0, 1]] }, label: 'constraint boundary coordinates' },
+        { payload: { intervals: [[5, 6], [1, 2], [5, 6], [1, 2]] }, label: 'two pairs of duplicates far apart' },
+        { payload: { intervals: [[1, 5], [2, 6], [3, 7], [4, 8], [5, 9]] }, label: 'sliding overlap where a release and a start meet at 5' },
+        { payload: { intervals: [[2, 3], [1, 10], [4, 5], [6, 7], [8, 9]] }, label: 'peak of 2 reached four separate times' },
+        { payload: { intervals: [[1, 2], [1, 2], [2, 3]] }, label: 'smallest input where the peak is not the occupancy at the last start; returning the final counter gives 1' },
+        { payload: { intervals: [[1, 5], [2, 6], [30, 31]] }, label: 'peak of 2 happens early and everything has ended before the lone last meeting starts' },
+      ],
+      assume: (p) => {
+        if (!Array.isArray(p.intervals) || p.intervals.length < 1 || p.intervals.length > 200) return 'intervals must hold between 1 and 200 pairs';
+        for (const pair of p.intervals) {
+          if (!Array.isArray(pair) || pair.length !== 2) return 'each meeting must be a pair';
+          const [start, end] = pair;
+          if (!Number.isInteger(start) || !Number.isInteger(end)) return 'endpoints must be integers';
+          if (!(start < end)) return `start must be strictly less than end, got [${start}, ${end}]`;
+          if (start < 0 || end > 1000000) return 'endpoints must lie within 0..10^6';
+        }
+        return true;
+      },
+    },
+  ],
+};
