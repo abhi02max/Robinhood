@@ -54,6 +54,100 @@ function isStringArray(v, minItems = 0, maxItems = Infinity, minStrLen = 0) {
 }
 
 // -----------------------------------------------------------------------------
+// The 64-bit JSON ceiling (tracked architecture debt, found in Phase 2E)
+// -----------------------------------------------------------------------------
+/**
+ * Test-case values are stored as JSON and read with `JSON.parse`, so every number
+ * becomes an IEEE-754 double. Integers above 2^53-1 therefore cannot round-trip:
+ *
+ *     JSON.parse('9007199254740993')  ->  9007199254740992
+ *
+ * The danger is not that this fails. It is that it succeeds. An author writing a
+ * problem whose correct answer needs exact 64-bit arithmetic would get a silently
+ * rounded `expected_output`, and the graded verdict would then be wrong for every
+ * candidate whose solution was right — with no error anywhere to explain it.
+ *
+ * The registry already declares `long long` and `vector<long long>` for C++, Java, C
+ * and C#, and the harnesses emit correct 64-bit literals for them. The storage format
+ * is the only part that cannot carry the value. So until expected outputs are typed
+ * (see docs/PRODUCTION_READINESS.md section 18), the validator REFUSES the case rather
+ * than letting precision disappear quietly.
+ *
+ * TWO CHECKS, BECAUSE ONE IS NOT ENOUGH
+ *
+ * `checkJsonSafeNumbers` walks the parsed value and rejects any integer outside the
+ * safe range. That is authoritative for rejection: any decimal literal larger than
+ * 2^53-1 rounds to a double that is still larger than 2^53-1, so nothing escapes.
+ *
+ * What it CANNOT do is tell the author what they originally wrote, because by the time
+ * it runs the digits are already gone. `checkRawIntegerLiterals` reads the file TEXT and
+ * compares each long integer literal against its round-trip, so the message can quote
+ * the literal as authored and the exact value it silently became.
+ */
+const MAX_SAFE = Number.MAX_SAFE_INTEGER; // 2^53 - 1 = 9007199254740991
+
+function checkJsonSafeNumbers(value, p, errs = []) {
+  if (typeof value === 'number') {
+    if (Number.isInteger(value) && Math.abs(value) > MAX_SAFE) {
+      // Note what is NOT being claimed here. Some of these values round-trip perfectly —
+      // 2^60 is a power of two and survives `JSON.parse` exactly, and so does 1e300. The
+      // problem is not the literal, it is arithmetic: above 2^53 the spacing between
+      // representable doubles exceeds 1, so a JavaScript or Python reference solution and
+      // the `deepEqual` comparison layer can both be off by an amount they cannot detect.
+      // The value is refused because nothing in this pipeline can promise it is exact,
+      // whether or not this particular literal happens to be.
+      errs.push(
+        `${p}: integer-valued number ${value} is outside the exact-integer range `
+        + `(±${MAX_SAFE} = 2^53-1). Test-case values are stored as JSON and compared as `
+        + 'IEEE-754 doubles, so exactness is not guaranteed above that bound even when the '
+        + 'literal itself round-trips. Typed expected-output serialization is tracked debt '
+        + '(see docs/PRODUCTION_READINESS.md section 18); until it lands, do not author a '
+        + 'problem whose correct answer needs exact 64-bit integers.',
+      );
+    } else if (!Number.isFinite(value)) {
+      // JSON cannot represent these at all; a stringified "Infinity" would arrive as text.
+      errs.push(`${p}: ${value} is not representable in JSON`);
+    }
+    return errs;
+  }
+  if (Array.isArray(value)) {
+    value.forEach((v, i) => checkJsonSafeNumbers(v, `${p}[${i}]`, errs));
+    return errs;
+  }
+  if (isPlainObject(value)) {
+    for (const [k, v] of Object.entries(value)) checkJsonSafeNumbers(v, `${p}.${k}`, errs);
+  }
+  return errs;
+}
+
+/**
+ * Catch integer literals in the raw file whose value changed when parsed.
+ *
+ * Runs on the file text, so it can name the literal the author actually typed. 16 digits
+ * is the threshold because 2^53-1 has 16 of them; anything shorter is always safe.
+ */
+function checkRawIntegerLiterals(raw, filePath) {
+  const errs = [];
+  // Integer literals only: a preceding `:` or `[` or `,` and no decimal point or exponent.
+  const re = /(-?\b\d{16,})(?![\d.eE])/g;
+  const seen = new Set();
+  let m;
+  while ((m = re.exec(raw)) !== null) {
+    const literal = m[1];
+    if (seen.has(literal)) continue;
+    seen.add(literal);
+    const roundTripped = String(Number(literal));
+    if (roundTripped !== literal.replace(/^\+/, '')) {
+      errs.push(
+        `${filePath}: the integer literal ${literal} does not survive JSON.parse — `
+        + `it becomes ${roundTripped}. Precision is lost silently, so the file is rejected.`,
+      );
+    }
+  }
+  return errs;
+}
+
+// -----------------------------------------------------------------------------
 // Field validators — each returns an array of error messages (empty == valid)
 // -----------------------------------------------------------------------------
 function checkSlug(value, fieldPath) {
@@ -122,6 +216,12 @@ function checkTestCase(tc, p, seenOrder) {
   }
   if (!('input_payload' in tc))    errs.push(`${p}.input_payload: required`);
   if (!('expected_output' in tc))  errs.push(`${p}.expected_output: required (may be null, false, 0, etc.)`);
+
+  // Both sides of the case, because an argument that cannot round-trip is as broken as
+  // an answer that cannot: the harness would compile the rounded literal into the program.
+  if ('input_payload' in tc)   errs.push(...checkJsonSafeNumbers(tc.input_payload, `${p}.input_payload`));
+  if ('expected_output' in tc) errs.push(...checkJsonSafeNumbers(tc.expected_output, `${p}.expected_output`));
+
   if (typeof tc.is_hidden !== 'boolean') errs.push(`${p}.is_hidden: required boolean`);
   if (!Number.isInteger(tc.order_index) || tc.order_index < 1) {
     errs.push(`${p}.order_index: required positive integer`);
@@ -408,13 +508,20 @@ export async function validateAllProblemFiles({ problemsDir = DEFAULT_PROBLEMS_D
   for (const file of targets) {
     const rel = path.relative(process.cwd(), file);
     let parsed;
+    let raw;
     try {
-      const raw = await fs.readFile(file, 'utf8');
+      raw = await fs.readFile(file, 'utf8');
       parsed = JSON.parse(raw);
     } catch (err) {
       allErrors.push(`${rel}: ${err instanceof SyntaxError ? `JSON parse error — ${err.message}` : err.message}`);
       continue;
     }
+
+    // Applied to EVERY file, v1 and v2 alike. Legacy files are exempt from the strict
+    // schema, but silent precision loss is a data-correctness fault rather than a schema
+    // style rule, and the seeder loads v1 files too.
+    allErrors.push(...checkRawIntegerLiterals(raw, rel));
+
     const result = validateProblemBundle(parsed, rel);
     if (result.version === '2.0') {
       v2Files++;

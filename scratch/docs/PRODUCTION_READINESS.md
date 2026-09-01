@@ -888,3 +888,102 @@ exactly the ones that could not detect D0, so there is now one implementation:
 `language-submission.spec.ts` and `authenticated-submission.spec.ts` still pin
 `house-robber` deliberately — their reference solutions are written for that specific
 signature — and that is now the documented exception rather than the norm.
+
+---
+
+# 18. Tracked architecture debt — typed expected-output serialization
+
+**Status: OPEN. Not scheduled. A guard is in place so it cannot cause silent damage in the
+meantime.**
+
+## The problem
+
+Test-case values live in JSON and are read with `JSON.parse`, so every number becomes an
+IEEE-754 double. Above 2^53−1 the gap between representable doubles exceeds 1:
+
+```
+JSON.parse('9007199254740993')  ->  9007199254740992
+```
+
+The hazard is not that this fails. It is that it **succeeds**. A problem whose correct
+answer needs exact 64-bit arithmetic would get a quietly rounded `expected_output`, and
+then every candidate with a *correct* solution would be graded Wrong Answer, with nothing
+in any log to explain it. That is the most expensive class of bug this platform can have:
+it blames the user for our defect.
+
+Discovered in Phase 2E while building the canonical corpus. The corpus stops at 2^53−1 for
+exactly this reason, and that ceiling is a property of the storage format rather than of
+any language's harness.
+
+## Why it is not merely a serializer bug
+
+The rest of the pipeline is already correct. The registry declares `long long` and
+`vector<long long>` for C++, Java, C and C#; the literal emitters produce correct 64-bit
+source for all four (`42L` in Java and C#, `42LL` in C); and unit tests pin those. What
+cannot carry the value is:
+
+1. **storage** — `expected_output` and `input_payload` are untyped JSON;
+2. **the comparison layer** — `deepEqual` compares parsed doubles;
+3. **reference solutions in JavaScript** — every authored problem carries a JS reference,
+   and JS numbers are doubles, so the reference itself cannot compute the answer exactly.
+
+Point 3 is why this is an architecture item and not a one-line fix. Typing the storage
+format without addressing how expected outputs are *derived* would move the imprecision
+rather than remove it.
+
+## Shape of the eventual fix
+
+A typed representation that distinguishes at minimum:
+
+```
+int      int64      double      bool      string      array/nested
+```
+
+Sketch, not a decision:
+
+```json
+{ "type": "int64", "value": "9223372036854775807" }
+```
+
+`int64` carried as a decimal **string** and parsed with `BigInt` on the comparison side,
+`double` as a JSON number with an explicit tolerance, and containers typed by element. The
+authoring pipeline would derive expected outputs from a reference that can represent the
+type — which means the Python reference becomes authoritative for `int64`, since Python
+integers are arbitrary precision and JavaScript's are not.
+
+Consequences to work through before starting:
+
+- `deepEqual` needs a type-aware comparison, and it is currently shared by every provider
+  path.
+- The six harnesses already emit correct 64-bit literals but would need to *serialize*
+  returns in the typed form rather than as bare JSON.
+- 96 existing problems would need migration, or the format needs to accept both — and
+  accepting both is how the v1/v2 problem-schema split (D7) happened.
+
+## The guard, until then
+
+`validate-problem-schema.js` **refuses** any test case it cannot represent exactly, rather
+than letting precision disappear. Two checks, because one is not enough:
+
+- `checkJsonSafeNumbers` walks parsed `input_payload` and `expected_output` and rejects any
+  integer-valued number outside ±(2^53−1). This is authoritative for rejection. It also
+  refuses values that round-trip *fine* — 2^60 is a power of two and survives exactly, as
+  does `1e300` — because the hazard is arithmetic, not storage: the JS reference and the
+  comparison layer can both be wrong above 2^53 by an amount neither can detect.
+- `checkRawIntegerLiterals` reads the file **text** and compares each ≥16-digit integer
+  literal against its round-trip. The parsed check cannot report what the author wrote,
+  because by then the digits are gone; this one quotes the literal as authored *and* the
+  value it silently became.
+
+Applied to v1 and v2 files alike: legacy files are exempt from the strict schema, but
+silent precision loss is a data-correctness fault rather than a schema style rule, and the
+seeder loads v1 files too.
+
+Covered by `tests/unit/json-integer-ceiling.test.js`, 10 tests, including that the guard
+does **not** fire on the existing 96-problem curriculum. A guard that rejects valid content
+is worse than no guard.
+
+**Practical effect on curriculum expansion:** problems requiring exact values beyond
+2^53−1 cannot be authored yet. Nothing in the current 96 needs them, and the common
+interview cases that would (large Fibonacci, big-product subarrays, 64-bit hashing) can be
+deferred or constrained to fit. The validator will say so rather than let it through.
