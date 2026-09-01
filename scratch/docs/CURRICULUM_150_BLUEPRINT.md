@@ -5,18 +5,18 @@
 The final approved additions for the 150 milestone. **No full problem specifications** — no
 descriptions, examples, constraints, reference solutions or test cases. Those are Phase 3A.2.
 
-Generated at `2026-09-01T18:13:03.122Z`.
+Generated at `2026-09-01T18:21:49.997Z`.
 
 ## Totals
 
 | | |
 | --- | ---: |
-| Current total | 95 |
+| Current total | 104 |
 | Additions | 55 |
-| Resulting total | 150 |
-| Patterns touched | 23 (20 opened, 3 topped up) |
+| Resulting total | 159 |
+| Patterns touched | 23 (17 opened, 6 topped up) |
 | Coding-capable patterns | 79 |
-| Coding-capable populated, before | 16 (20.3%) |
+| Coding-capable populated, before | 19 (24.1%) |
 | Coding-capable populated, after | 36 (45.6%) |
 | Conceptual patterns | 2 |
 | Structurally blocked patterns | 27 |
@@ -28,10 +28,10 @@ Coding-capable pattern distribution after the milestone:
 
 | Problems | Before | After |
 | --- | ---: | ---: |
-| 0 (empty) | 63 | 43 |
+| 0 (empty) | 60 | 43 |
 | 1 | 3 | 0 |
-| 2–4 | 6 | 29 |
-| 5+ | 7 | 7 |
+| 2–4 | 9 | 26 |
+| 5+ | 7 | 10 |
 
 ## Learner order
 
@@ -197,7 +197,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** none within the milestone
 - **Learning objective** Translate a prose rule into a reverse-order loop with a carry invariant
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** increment-digit-array (Easy), reverse-signed-integer-digits (Easy), integer-to-roman-numeral (Medium)
 - **Non-redundant because** No existing problem manipulates a digit-array representation; prefix-sum problems read the array, they do not restructure it.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -212,7 +212,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** none within the milestone
 - **Learning objective** Detect overflow BEFORE it happens rather than after
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** increment-digit-array (Easy), reverse-signed-integer-digits (Easy), integer-to-roman-numeral (Medium)
 - **Non-redundant because** Overflow-safe arithmetic appears nowhere in the current 96.
 - **64-bit risk** bounded — the answer is int32 by construction, but the check needs 64-bit reasoning; constrain input to int32
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -227,7 +227,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** basics/simulation (reverse integer)
 - **Learning objective** Simulate repeated greedy subtraction against an ordered value table
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** increment-digit-array (Easy), reverse-signed-integer-digits (Easy), integer-to-roman-numeral (Medium)
 - **Non-redundant because** No existing problem builds an output string by consuming an input quantity; it is also the first place a lookup table drives the loop.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -242,7 +242,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** none within the milestone
 - **Learning objective** Reduce a problem by a recurrence on remainders
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** greatest-common-divisor-euclid (Easy), trailing-zeroes-in-factorial (Easy), power-by-squaring (Medium)
 - **Non-redundant because** Nothing in the curriculum does number theory.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -257,7 +257,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** none within the milestone
 - **Learning objective** Reason about prime factors instead of evaluating
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** greatest-common-divisor-euclid (Easy), trailing-zeroes-in-factorial (Easy), power-by-squaring (Medium)
 - **Non-redundant because** Teaches avoiding the big value entirely — directly relevant to the 64-bit ceiling.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -272,7 +272,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** basics/integer-math-modular (gcd)
 - **Learning objective** Halve the exponent each step instead of multiplying n times
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** greatest-common-divisor-euclid (Easy), trailing-zeroes-in-factorial (Easy), power-by-squaring (Medium)
 - **Non-redundant because** The only divide-and-halve recurrence outside binary search, and one of very few problems using the `double` type — currently exercised by exactly one seeded problem.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -287,7 +287,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** none within the milestone
 - **Learning objective** See a prefix as any associative fold, not only a sum
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** running-maximum-of-a-sequence (Easy), range-sum-from-prefix-table (Easy), count-valid-array-splits (Medium)
 - **Non-redundant because** arrays/prefix-sum is entirely sum-based; this generalises the operator.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -302,7 +302,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** basics/prefix-arithmetic-basics (running max)
 - **Learning objective** Separate the precompute step from the query step
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** running-maximum-of-a-sequence (Easy), range-sum-from-prefix-table (Easy), count-valid-array-splits (Medium)
 - **Non-redundant because** The existing running-sum problem RETURNS the prefix array; this one uses it to answer a query, which is the actual point of the technique.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -317,7 +317,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** basics/prefix-arithmetic-basics (range-sum query)
 - **Learning objective** Use a running prefix against a fixed total, so each split is answered in constant time
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** running-maximum-of-a-sequence (Easy), range-sum-from-prefix-table (Easy), count-valid-array-splits (Medium)
 - **Non-redundant because** find-pivot-index asks for one index where the two sides are EQUAL and returns it; this counts every position satisfying an INEQUALITY, which is the running-prefix-versus-total form rather than a search.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today

@@ -3,7 +3,7 @@
 **Generated** by `node server/scripts/curriculum-audit.mjs`. Do not edit by hand — every
 number below is recomputed from `topics.json`, `patterns/*.json` and `problems/`.
 
-Generated at `2026-09-01T18:13:03.122Z`.
+Generated at `2026-09-01T18:21:49.997Z`.
 
 Sections 1–4 are **repository facts**. Sections 5 onward are **engineering judgement**,
 kept separate on purpose. No company-frequency figures are used anywhere.
@@ -12,18 +12,18 @@ kept separate on purpose. No company-frequency figures are used anywhere.
 
 | | |
 | --- | ---: |
-| Problems | 95 |
-| Easy | 34 |
-| Medium | 51 |
+| Problems | 104 |
+| Easy | 40 |
+| Medium | 54 |
 | Hard | 10 |
-| Test cases | 1156 |
+| Test cases | 1281 |
 | Topics | 17 |
 | Patterns | 108 |
-| Empty topics | 8 |
-| Empty patterns | 92 (85.2%) |
+| Empty topics | 7 |
+| Empty patterns | 89 (82.4%) |
 | Patterns with exactly 1 problem | 3 (2.8%) |
 | Patterns with exactly 2 problems | 0 |
-| Patterns with 2 or more | 13 (12%) |
+| Patterns with 2 or more | 16 (14.8%) |
 
 ### Coverage by pattern KIND — the meaningful KPI
 
@@ -42,24 +42,24 @@ Of the coding-capable patterns:
 
 | Problems | Patterns |
 | --- | ---: |
-| 0 (empty) | 63 |
+| 0 (empty) | 60 |
 | 1 | 3 |
-| 2–4 | 6 |
+| 2–4 | 9 |
 | 5+ | 7 |
 
-Populated: **16 of 79 (20.3%)**.
+Populated: **19 of 79 (24.1%)**.
 
 ### Concentration
 
 The single most populated topic is **sliding-window-two-pointers** with 
-**57 of 95 problems (60%)**. 
-The five largest patterns hold **58.9%** of everything.
+**57 of 104 problems (54.8%)**. 
+The five largest patterns hold **53.8%** of everything.
 
 ## 2. Topic distribution
 
 | # | Topic | Patterns | Filled | Problems | E | M | H | Prerequisites |
 | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| 1 | Basics | 6 | 0 | **0** | 0 | 0 | 0 | — |
+| 1 | Basics | 6 | 3 | 9 | 6 | 3 | 0 | — |
 | 2 | Sorting | 6 | 0 | **0** | 0 | 0 | 0 | basics |
 | 3 | Arrays | 7 | 2 | 6 | 2 | 4 | 0 | basics, sorting |
 | 4 | Binary Search | 6 | 1 | 4 | 3 | 1 | 0 | basics, sorting |
@@ -79,14 +79,14 @@ The five largest patterns hold **58.9%** of everything.
 
 ## 3. Every pattern
 
-### 1. Basics `basics` — 0 problem(s)
+### 1. Basics `basics` — 9 problem(s)
 
 | # | Pattern | Count | E | M | H | Tier | Problems |
 | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
 | 1 | Complexity Analysis | **0** | 0 | 0 | 0 | FOUNDATION 💭 | — |
-| 2 | Direct Simulation | **0** | 0 | 0 | 0 | FOUNDATION | — |
-| 3 | Integer Math & Modular Arithmetic | **0** | 0 | 0 | 0 | IMPORTANT | — |
-| 4 | Prefix & Running Aggregates | **0** | 0 | 0 | 0 | FOUNDATION | — |
+| 2 | Direct Simulation | 3 | 2 | 1 | 0 | FOUNDATION | increment-digit-array (E), reverse-signed-integer-digits (E), integer-to-roman-numeral (M) |
+| 3 | Integer Math & Modular Arithmetic | 3 | 2 | 1 | 0 | IMPORTANT | greatest-common-divisor-euclid (E), trailing-zeroes-in-factorial (E), power-by-squaring (M) |
+| 4 | Prefix & Running Aggregates | 3 | 2 | 1 | 0 | FOUNDATION | running-maximum-of-a-sequence (E), range-sum-from-prefix-table (E), count-valid-array-splits (M) |
 | 5 | Sieve of Eratosthenes & Primes | **0** | 0 | 0 | 0 | SPECIALIZED | — |
 | 6 | Base Conversion & Bit Basics | **0** | 0 | 0 | 0 | IMPORTANT | — |
 
@@ -277,9 +277,8 @@ function. Neither counts as a missing coding problem; see section 6.
 
 ## 4. Data defects observed (not fixed)
 
-### medium (7)
+### medium (6)
 
-- **INVERTED_TEACHING_ORDER** `basics/prefix-arithmetic-basics` — "basics/prefix-arithmetic-basics" holds 0 problems while "arrays/prefix-sum" — which builds on it — holds 5. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `bit-manipulation/basic-bit-ops` — "bit-manipulation/basic-bit-ops" holds 0 problems while "bit-manipulation/xor-properties" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `greedy/sort-then-greedy` — "greedy/sort-then-greedy" holds 0 problems while "greedy/interval-scheduling" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `sorting/custom-comparator-and-stability` — "sorting/custom-comparator-and-stability" holds 0 problems while "greedy/interval-scheduling" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
@@ -307,9 +306,9 @@ Judgement. Tier definitions:
 
 | Tier | Patterns | Populated | Empty |
 | --- | ---: | ---: | ---: |
-| FOUNDATION | 23 | 10 | 13 |
+| FOUNDATION | 23 | 12 | 11 |
 | CORE_INTERVIEW | 34 | 5 | 29 |
-| IMPORTANT | 29 | 0 | 29 |
+| IMPORTANT | 29 | 1 | 28 |
 | ADVANCED | 14 | 1 | 13 |
 | SPECIALIZED | 8 | 0 | 8 |
 
@@ -430,12 +429,12 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 
 | | |
 | --- | ---: |
-| Current total | 95 |
+| Current total | 104 |
 | Proposed additions | 55 |
-| Resulting total | 150 |
+| Resulting total | 159 |
 | Patterns touched | 23 |
-| — newly opened | 20 |
-| — topped up | 3 |
+| — newly opened | 17 |
+| — topped up | 6 |
 | Patterns populated after | 36 of 108 (33.3%) |
 | Patterns still empty after | 72 |
 | Additions: Easy / Medium / Hard | 14 / 38 / 3 |
@@ -446,9 +445,9 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 
 | Pattern | Tier | Now | Add | Target | Progression |
 | --- | --- | ---: | ---: | ---: | --- |
-| `basics/simulation` | FOUNDATION | 0 | +3 | 3 | Easy → Easy → Medium |
-| `basics/integer-math-modular` | IMPORTANT | 0 | +3 | 3 | Easy → Medium → Easy |
-| `basics/prefix-arithmetic-basics` | FOUNDATION | 0 | +3 | 3 | Easy → Easy → Medium |
+| `basics/simulation` | FOUNDATION | 3 | +3 | 6 | Easy → Easy → Medium |
+| `basics/integer-math-modular` | IMPORTANT | 3 | +3 | 6 | Easy → Medium → Easy |
+| `basics/prefix-arithmetic-basics` | FOUNDATION | 3 | +3 | 6 | Easy → Easy → Medium |
 | `sorting/comparison-sorts-elementary` | FOUNDATION | 0 | +2 | 2 | Easy → Easy |
 | `sorting/merge-sort-divide-conquer` | CORE_INTERVIEW | 0 | +2 | 2 | Medium → Medium |
 | `sorting/custom-comparator-and-stability` | CORE_INTERVIEW | 0 | +2 | 2 | Medium → Medium |

@@ -1,0 +1,359 @@
+{
+  "$schema": "../../problem.schema.json",
+  "schema_version": "2.0",
+  "topic_slug": "basics",
+  "pattern_slug": "integer-math-modular",
+  "problems": [
+    {
+      "slug": "greatest-common-divisor-euclid",
+      "title": "Greatest Common Divisor",
+      "difficulty": "Easy",
+      "tags": ["basics", "integer-math-modular", "integer-math", "euclidean-algorithm", "recurrence"],
+      "description": "Given two positive integers `a` and `b`, return their greatest common divisor: the largest positive integer that divides both of them exactly.\n\nThe obvious approach is to try every candidate downwards until one divides both. There is a far better one, and it comes from a single observation: any number that divides both `a` and `b` also divides their remainder `a mod b`. That turns a search into a recurrence.",
+      "real_world_analogy": "Tiling a rectangular floor with identical square tiles and no cutting. Lay the largest squares that fit along the short side, and you are left with a smaller rectangle; the biggest tile that works for the original floor is exactly the biggest tile that works for the leftover strip. Repeat until the leftover is itself a perfect square of tiles.",
+      "examples": [
+        {
+          "input": "a = 12, b = 18",
+          "output": "6",
+          "explanation": "18 mod 12 is 6, then 12 mod 6 is 0, so the answer is 6."
+        },
+        {
+          "input": "a = 7, b = 13",
+          "output": "1",
+          "explanation": "Coprime inputs. The brute force would test thirteen candidates to learn this; the recurrence takes three steps."
+        },
+        {
+          "input": "a = 100, b = 25",
+          "output": "25",
+          "explanation": "25 divides 100 exactly, so the first remainder is already zero."
+        },
+        {
+          "input": "a = 8, b = 20",
+          "output": "4",
+          "explanation": "The smaller value comes first, and the recurrence handles it without a swap: 8 mod 20 is 8, which swaps the pair on the next step."
+        }
+      ],
+      "constraints": [
+        "1 <= a <= 10^9",
+        "1 <= b <= 10^9"
+      ],
+      "edge_cases": [
+        "The two values are equal, so the answer is the value itself",
+        "One value divides the other exactly, so the answer is the smaller one",
+        "The values are coprime, so the answer is 1",
+        "a is smaller than b, which the recurrence must handle without a special case",
+        "A pair where the answer is large relative to the inputs, such as two multiples of a big prime"
+      ],
+      "hints": [
+        "If d divides both a and b, then d also divides a - b, and more usefully it divides a mod b. What does that let you replace the pair with?",
+        "gcd(a, b) = gcd(b, a mod b), and gcd(a, 0) = a. Two lines, and no searching.",
+        "The order of the arguments takes care of itself. If a is smaller than b, then a mod b is just a, and the first step swaps them."
+      ],
+      "approaches": [
+        {
+          "name": "Search Downwards for a Common Divisor",
+          "summary": "Try every candidate from the smaller input down to one, and return the first that divides both.",
+          "intuition": "The definition is a search: the greatest common divisor is the largest number dividing both, so test candidates from largest to smallest and stop at the first success. It is correct by construction and needs no insight at all, which is what makes it the right thing to compare against.\n\nThe cost is the problem. With inputs up to 10^9 and a coprime pair, this walks nearly a billion candidates to return 1. It is a good demonstration that \"obviously correct\" and \"usable\" are different properties.",
+          "steps": [
+            "Let candidate start at the smaller of the two inputs.",
+            "While candidate is at least one, test whether it divides both a and b exactly.",
+            "Return candidate at the first success.",
+            "Otherwise decrease candidate by one and continue."
+          ],
+          "code": {
+            "javascript": "function gcd(a, b) {\n  let candidate = Math.min(a, b);\n  while (candidate >= 1) {\n    if (a % candidate === 0 && b % candidate === 0) return candidate;\n    candidate -= 1;\n  }\n  return 1;\n}",
+            "python": "def gcd(a, b):\n    candidate = min(a, b)\n    while candidate >= 1:\n        if a % candidate == 0 and b % candidate == 0:\n            return candidate\n        candidate -= 1\n    return 1"
+          },
+          "time_complexity": "O(min(a, b))",
+          "space_complexity": "O(1)"
+        },
+        {
+          "name": "Euclidean Algorithm",
+          "summary": "Replace the pair with (b, a mod b) until the second value reaches zero.",
+          "intuition": "Every common divisor of `a` and `b` is also a common divisor of `b` and `a mod b`, and the reverse holds too, so the two pairs have exactly the same set of common divisors — and therefore the same greatest one. That licenses replacing the problem with a strictly smaller one.\n\nIt shrinks fast. Each step replaces `a` with a remainder, which is smaller than `b`, so the pair at least halves every two steps; a pair near 10^9 finishes in a few dozen iterations rather than a billion. When the second value hits zero the first value divides both and is the answer.\n\nThis is the pattern in miniature: not a cleverer search, but a rule that makes the search unnecessary.",
+          "steps": [
+            "While b is non-zero, compute the remainder of a divided by b.",
+            "Replace a with b and b with that remainder.",
+            "When b reaches zero, a holds the greatest common divisor.",
+            "Return a."
+          ],
+          "code": {
+            "javascript": "function gcd(a, b) {\n  let x = a;\n  let y = b;\n  while (y !== 0) {\n    const remainder = x % y;\n    x = y;\n    y = remainder;\n  }\n  return x;\n}",
+            "python": "def gcd(a, b):\n    x, y = a, b\n    while y:\n        x, y = y, x % y\n    return x"
+          },
+          "time_complexity": "O(log(min(a, b)))",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function gcd(a, b) {\n  // Your code here\n}",
+        "python": "def gcd(a, b):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int gcd(int a, int b) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int gcd(int a, int b) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "c": "int gcd(int a, int b) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int Gcd(int a, int b) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+      },
+      "cpp_signature":       {
+        "fn": "gcd",
+        "class": "Solution",
+        "args": [
+          { "name": "a", "type": "int" },
+          { "name": "b", "type": "int" }
+        ],
+        "ret": "int"
+      },
+      "time_complexity": "O(log(min(a, b)))",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"a":12,"b":18}, "expected_output": 6, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"a":7,"b":13}, "expected_output": 1, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"a":100,"b":25}, "expected_output": 25, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"a":8,"b":20}, "expected_output": 4, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"a":1,"b":1}, "expected_output": 1, "is_hidden": true, "order_index": 5, "label": "smallest valid input" },
+        { "input_payload": {"a":1,"b":1000000000}, "expected_output": 1, "is_hidden": true, "order_index": 6, "label": "one is 1, so the answer is 1" },
+        { "input_payload": {"a":17,"b":17}, "expected_output": 17, "is_hidden": true, "order_index": 7, "label": "equal values, answer is the value" },
+        { "input_payload": {"a":1000000000,"b":1000000000}, "expected_output": 1000000000, "is_hidden": true, "order_index": 8, "label": "both at the constraint ceiling" },
+        { "input_payload": {"a":999999937,"b":999999937}, "expected_output": 999999937, "is_hidden": true, "order_index": 9, "label": "a large prime paired with itself" },
+        { "input_payload": {"a":999999937,"b":2}, "expected_output": 1, "is_hidden": true, "order_index": 10, "label": "a large prime and 2 are coprime" },
+        { "input_payload": {"a":462,"b":1071}, "expected_output": 21, "is_hidden": true, "order_index": 11, "label": "the classic worked pair, answer 21" },
+        { "input_payload": {"a":270,"b":192}, "expected_output": 6, "is_hidden": true, "order_index": 12, "label": "answer 6 after several remainder steps" },
+        { "input_payload": {"a":610,"b":377}, "expected_output": 1, "is_hidden": true, "order_index": 13, "label": "consecutive Fibonacci numbers, the worst case for the number of steps" },
+        { "input_payload": {"a":123456789,"b":987654321}, "expected_output": 9, "is_hidden": true, "order_index": 14, "label": "large pair with a small answer" }
+      ]
+    },
+    {
+      "slug": "trailing-zeroes-in-factorial",
+      "title": "Trailing Zeroes in a Factorial",
+      "difficulty": "Easy",
+      "tags": ["basics", "integer-math-modular", "integer-math", "prime-factorisation", "counting"],
+      "description": "For a non-negative integer `n`, return the number of trailing zeroes in `n` factorial — the product of every integer from 1 to `n`.\n\nYou must not compute the factorial. Even a modest `n` produces a number with thousands of digits, and the question does not need it: a trailing zero is a factor of ten, a factor of ten is a two paired with a five, and in a factorial the twos always outnumber the fives. So the answer is simply how many times five divides into the product.",
+      "real_world_analogy": "Counting how many complete gift boxes you can pack when each box needs one lid and one base. You have far more bases than lids, so you never need to count the bases at all — the number of lids decides it. Fives are the lids.",
+      "examples": [
+        {
+          "input": "n = 3",
+          "output": "0",
+          "explanation": "3 factorial is 6. There is no factor of five yet, so no trailing zero."
+        },
+        {
+          "input": "n = 5",
+          "output": "1",
+          "explanation": "5 factorial is 120. One five appears, giving one trailing zero."
+        },
+        {
+          "input": "n = 25",
+          "output": "6",
+          "explanation": "Five multiples of five give five, and 25 itself contributes a second five, so 25/5 + 25/25 = 5 + 1 = 6."
+        },
+        {
+          "input": "n = 0",
+          "output": "0",
+          "explanation": "Zero factorial is 1, which has no trailing zeroes."
+        }
+      ],
+      "constraints": [
+        "0 <= n <= 10000"
+      ],
+      "edge_cases": [
+        "n = 0, whose factorial is 1 and has no trailing zeroes",
+        "n below five, where no factor of five exists yet so the answer is 0",
+        "n = 25, where 25 contributes TWO fives rather than one",
+        "n = 125, which contributes three fives, so counting multiples of five once is not enough",
+        "A value just below a power of five, where the count does not yet increase"
+      ],
+      "hints": [
+        "A trailing zero comes from a factor of ten, and a factor of ten is a two times a five. Which of the two is scarcer in a factorial?",
+        "Count how many numbers from 1 to n are multiples of five. Then remember that 25 contributes two fives, 125 contributes three, and so on.",
+        "Add n/5, then n/25, then n/125, using integer division, until the term becomes zero. Each pass counts one more five from the numbers that have several."
+      ],
+      "approaches": [
+        {
+          "name": "Multiply Out and Count",
+          "summary": "Build the factorial with arbitrary-precision arithmetic, then strip zeroes off the end.",
+          "intuition": "The literal reading: form the product, look at it, count the zeroes at the end. Obviously correct, and useful precisely because it is the thing the optimal approach claims to make unnecessary.\n\nIt also shows why the constraint on `n` matters. The factorial of 10000 has more than 35,000 digits; computing it takes real time and memory in a language with big integers, and is simply impossible in a fixed-width type. The answer, meanwhile, is a number below 2500.",
+          "steps": [
+            "Set an accumulator to one.",
+            "Multiply it by every integer from two to n using arbitrary-precision arithmetic.",
+            "Repeatedly divide out factors of ten while the accumulator ends in a zero, counting as you go.",
+            "Return the count."
+          ],
+          "code": {
+            "javascript": "function trailingZeroes(n) {\n  let product = 1n;\n  for (let i = 2n; i <= BigInt(n); i++) product *= i;\n  let count = 0;\n  while (product > 0n && product % 10n === 0n) {\n    count += 1;\n    product /= 10n;\n  }\n  return count;\n}",
+            "python": "def trailing_zeroes(n):\n    product = 1\n    for i in range(2, n + 1):\n        product *= i\n    count = 0\n    while product and product % 10 == 0:\n        count += 1\n        product //= 10\n    return count"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Count Factors of Five",
+          "summary": "Sum n/5 + n/25 + n/125 + ... with integer division, stopping when the term is zero.",
+          "intuition": "Every trailing zero needs a five and a two. Between 1 and n the multiples of two are more than twice as many as the multiples of five, so twos are never the limiting factor and the answer is exactly the number of fives in the prime factorisation of the product.\n\nCounting them takes one subtlety. Adding n/5 counts one five for each multiple of five, but 25 contains two fives, 125 contains three, and each of those has only been counted once so far. Adding n/25 gives every multiple of 25 its second five, adding n/125 gives every multiple of 125 its third, and so on. The terms shrink by a factor of five each time, so the loop runs about log base five of n times — five or six iterations for any n in range.",
+          "steps": [
+            "Set count to zero and power to five.",
+            "While power does not exceed n, add the integer division of n by power to count.",
+            "Multiply power by five.",
+            "Return count."
+          ],
+          "code": {
+            "javascript": "function trailingZeroes(n) {\n  let count = 0;\n  let power = 5;\n  while (power <= n) {\n    count += Math.floor(n / power);\n    power *= 5;\n  }\n  return count;\n}",
+            "python": "def trailing_zeroes(n):\n    count = 0\n    power = 5\n    while power <= n:\n        count += n // power\n        power *= 5\n    return count"
+          },
+          "time_complexity": "O(log N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function trailingZeroes(n) {\n  // Your code here\n}",
+        "python": "def trailing_zeroes(n):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int trailingZeroes(int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int trailingZeroes(int n) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "c": "int trailingZeroes(int n) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int TrailingZeroes(int n) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+      },
+      "cpp_signature":       {
+        "fn": "trailingZeroes",
+        "class": "Solution",
+        "args": [{ "name": "n", "type": "int" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(log N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"n":3}, "expected_output": 0, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"n":5}, "expected_output": 1, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"n":25}, "expected_output": 6, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"n":0}, "expected_output": 0, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"n":1}, "expected_output": 0, "is_hidden": true, "order_index": 5, "label": "smallest positive input" },
+        { "input_payload": {"n":4}, "expected_output": 0, "is_hidden": true, "order_index": 6, "label": "just below the first multiple of five" },
+        { "input_payload": {"n":10}, "expected_output": 2, "is_hidden": true, "order_index": 7, "label": "two multiples of five" },
+        { "input_payload": {"n":24}, "expected_output": 4, "is_hidden": true, "order_index": 8, "label": "just below 25, so the second five has not appeared yet" },
+        { "input_payload": {"n":26}, "expected_output": 6, "is_hidden": true, "order_index": 9, "label": "just above 25" },
+        { "input_payload": {"n":124}, "expected_output": 28, "is_hidden": true, "order_index": 10, "label": "just below 125, where a naive n/5 + n/25 is still correct" },
+        { "input_payload": {"n":125}, "expected_output": 31, "is_hidden": true, "order_index": 11, "label": "a third power of five, so a two-term sum is now wrong" },
+        { "input_payload": {"n":626}, "expected_output": 156, "is_hidden": true, "order_index": 12, "label": "past the fourth power of five" },
+        { "input_payload": {"n":3125}, "expected_output": 781, "is_hidden": true, "order_index": 13, "label": "a fifth power of five" },
+        { "input_payload": {"n":10000}, "expected_output": 2499, "is_hidden": true, "order_index": 14, "label": "constraint ceiling; the brute force would build a 35000-digit number" }
+      ]
+    },
+    {
+      "slug": "power-by-squaring",
+      "title": "Power by Squaring",
+      "difficulty": "Medium",
+      "tags": ["basics", "integer-math-modular", "integer-math", "divide-and-conquer", "exponentiation"],
+      "description": "Given a value `x` and an integer exponent `n`, return `x` raised to the power `n`. The exponent may be negative, in which case the answer is the reciprocal of the positive power.\n\nMultiplying `x` by itself `n` times is the obvious method and it is too slow for a large exponent. There is a much better one built on a single identity: `x^n` is `(x^(n/2))^2` when `n` is even. Each step halves the exponent instead of decreasing it by one.\n\nCompare answers with a small tolerance rather than exact equality, since the result is a floating-point value.",
+      "real_world_analogy": "Folding a sheet of paper to get 1024 layers. You do not stack sheets one at a time; you fold ten times, and each fold squares the layer count you already have. Ten operations instead of a thousand.",
+      "examples": [
+        {
+          "input": "x = 2, n = 10",
+          "output": "1024",
+          "explanation": "Ten squarings-and-halvings rather than ten multiplications; the binary form of 10 is 1010, so two of the four steps contribute."
+        },
+        {
+          "input": "x = 2.1, n = 3",
+          "output": "9.261000000000001",
+          "explanation": "An odd exponent peels one factor off, leaving an even exponent to halve."
+        },
+        {
+          "input": "x = 2, n = -2",
+          "output": "0.25",
+          "explanation": "The negative exponent is handled once at the start by replacing the base with 0.5."
+        },
+        {
+          "input": "x = -2, n = 3",
+          "output": "-8",
+          "explanation": "A negative base with an odd exponent keeps the sign."
+        }
+      ],
+      "constraints": [
+        "-100.0 < x < 100.0",
+        "-1000 <= n <= 1000",
+        "x is not zero when n is negative",
+        "The answer fits comfortably within double precision"
+      ],
+      "edge_cases": [
+        "An exponent of zero, whose answer is 1 for any base",
+        "An exponent of one, whose answer is the base",
+        "A negative exponent, which inverts the result",
+        "A negative base with an odd exponent, so the sign survives, and with an even exponent, so it does not",
+        "A base of 1 or -1 with a large exponent, where the answer stays bounded"
+      ],
+      "hints": [
+        "If n is even then x^n equals (x*x)^(n/2). That single rewrite halves the exponent for the cost of one multiplication.",
+        "If n is odd, peel one factor off: x^n = x * x^(n-1), and now the exponent is even.",
+        "Handle a negative exponent once, at the start, by taking the reciprocal of the base and negating the exponent. Do not scatter the sign check through the loop."
+      ],
+      "approaches": [
+        {
+          "name": "Repeated Multiplication",
+          "summary": "Multiply the base by itself as many times as the exponent says.",
+          "intuition": "The definition of a power is repeated multiplication, so do exactly that in a loop and invert at the end if the exponent was negative. It is correct and completely transparent.\n\nIt is also linear in the exponent, which is the wrong shape: doubling the exponent doubles the work. That matters less at n = 1000 than it would at n = 10^9, and the reason to write it anyway is that it makes the accumulated floating-point error visible — a thousand successive multiplications drift further from the true value than ten squarings do.",
+          "steps": [
+            "Take the absolute value of the exponent and remember whether it was negative.",
+            "Set an accumulator to one and multiply it by the base that many times.",
+            "If the exponent was negative, return the reciprocal of the accumulator.",
+            "Otherwise return the accumulator."
+          ],
+          "code": {
+            "javascript": "function myPow(x, n) {\n  const negative = n < 0;\n  let times = Math.abs(n);\n  let result = 1;\n  for (let i = 0; i < times; i++) result *= x;\n  return negative ? 1 / result : result;\n}",
+            "python": "def my_pow(x, n):\n    negative = n < 0\n    result = 1.0\n    for _ in range(abs(n)):\n        result *= x\n    return 1 / result if negative else result"
+          },
+          "time_complexity": "O(N)",
+          "space_complexity": "O(1)"
+        },
+        {
+          "name": "Exponentiation by Squaring",
+          "summary": "Square the base and halve the exponent, multiplying the answer in whenever the exponent is odd.",
+          "intuition": "Write the exponent in binary. Then `x^n` is the product of `x^(2^k)` over exactly the bit positions k where the exponent has a one. Squaring the base repeatedly walks through `x`, `x^2`, `x^4`, `x^8` and so on, so a single pass over the bits of the exponent is enough.\n\nMechanically: while the exponent is non-zero, if it is odd multiply the accumulator by the current base, then square the base and halve the exponent. The number of iterations is the number of bits in the exponent, so an exponent of 1000 takes ten steps rather than a thousand.\n\nThe negative exponent is handled once, before the loop, by replacing the base with its reciprocal. Doing it up front rather than inside the loop is what keeps the loop free of special cases — the same instinct as peeling the sign off before reversing digits.",
+          "steps": [
+            "If the exponent is negative, replace the base with its reciprocal and negate the exponent.",
+            "Set the accumulator to one.",
+            "While the exponent is non-zero, multiply the accumulator by the base if the exponent is odd.",
+            "Square the base and halve the exponent using integer division.",
+            "Return the accumulator."
+          ],
+          "code": {
+            "javascript": "function myPow(x, n) {\n  let base = n < 0 ? 1 / x : x;\n  let exponent = Math.abs(n);\n  let result = 1;\n  while (exponent > 0) {\n    if (exponent % 2 === 1) result *= base;\n    base *= base;\n    exponent = Math.floor(exponent / 2);\n  }\n  return result;\n}",
+            "python": "def my_pow(x, n):\n    base = 1 / x if n < 0 else x\n    exponent = abs(n)\n    result = 1.0\n    while exponent:\n        if exponent & 1:\n            result *= base\n        base *= base\n        exponent >>= 1\n    return result"
+          },
+          "time_complexity": "O(log N)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function myPow(x, n) {\n  // Your code here\n}",
+        "python": "def my_pow(x, n):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    double myPow(double x, int n) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public double myPow(double x, int n) {\n        // Write your solution here.\n        return 0.0;\n    }\n}\n",
+        "c": "double myPow(double x, int n) {\n    // Write your solution here.\n    return 0.0;\n}\n",
+        "csharp": "public class Solution {\n    public double MyPow(double x, int n) {\n        // Write your solution here.\n        return 0.0D;\n    }\n}\n"
+      },
+      "cpp_signature":       {
+        "fn": "myPow",
+        "class": "Solution",
+        "args": [
+          { "name": "x", "type": "double" },
+          { "name": "n", "type": "int" }
+        ],
+        "ret": "double"
+      },
+      "time_complexity": "O(log N)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"x":2,"n":10}, "expected_output": 1024, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"x":2.1,"n":3}, "expected_output": 9.261000000000001, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"x":2,"n":-2}, "expected_output": 0.25, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"x":-2,"n":3}, "expected_output": -8, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"x":5,"n":0}, "expected_output": 1, "is_hidden": true, "order_index": 5, "label": "exponent zero, answer 1" },
+        { "input_payload": {"x":0,"n":0}, "expected_output": 1, "is_hidden": true, "order_index": 6, "label": "zero to the zero, taken as 1 here" },
+        { "input_payload": {"x":7.5,"n":1}, "expected_output": 7.5, "is_hidden": true, "order_index": 7, "label": "exponent one returns the base" },
+        { "input_payload": {"x":-3,"n":4}, "expected_output": 81, "is_hidden": true, "order_index": 8, "label": "negative base, even exponent, so the sign cancels" },
+        { "input_payload": {"x":1,"n":1000}, "expected_output": 1, "is_hidden": true, "order_index": 9, "label": "base one with the largest exponent stays bounded" },
+        { "input_payload": {"x":-1,"n":999}, "expected_output": -1, "is_hidden": true, "order_index": 10, "label": "base minus one with a large odd exponent" },
+        { "input_payload": {"x":-1,"n":1000}, "expected_output": 1, "is_hidden": true, "order_index": 11, "label": "base minus one with a large even exponent" },
+        { "input_payload": {"x":2,"n":-10}, "expected_output": 0.0009765625, "is_hidden": true, "order_index": 12, "label": "reciprocal of 1024" },
+        { "input_payload": {"x":0.5,"n":20}, "expected_output": 9.5367431640625e-7, "is_hidden": true, "order_index": 13, "label": "a base below one shrinks fast" },
+        { "input_payload": {"x":1.0001,"n":1000}, "expected_output": 1.105165392603197, "is_hidden": true, "order_index": 14, "label": "many steps where repeated multiplication drifts further than squaring" },
+        { "input_payload": {"x":3,"n":13}, "expected_output": 1594323, "is_hidden": true, "order_index": 15, "label": "exponent 1101 in binary, so three of the four steps contribute" }
+      ]
+    }
+  ]
+}
