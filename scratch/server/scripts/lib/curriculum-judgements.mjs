@@ -533,6 +533,29 @@ export const MILESTONE_150 = Object.freeze({
     { topic: 'basics', pattern: 'integer-math-modular', concept: 'Count trailing zeroes in a factorial without computing it', difficulty: 'Easy', objective: 'Reason about prime factors instead of evaluating', prereq: null, notRedundant: 'Teaches avoiding the big value entirely — directly relevant to the 64-bit ceiling.', langs: { c: true }, int64: false },
     { topic: 'basics', pattern: 'prefix-arithmetic-basics', concept: 'Running maximum of a sequence', difficulty: 'Easy', objective: 'See a prefix as any associative fold, not only a sum', prereq: null, notRedundant: 'arrays/prefix-sum is entirely sum-based; this generalises the operator.', langs: { c: true }, int64: false },
     { topic: 'basics', pattern: 'prefix-arithmetic-basics', concept: 'Answer one range-sum query from a precomputed prefix table', difficulty: 'Easy', objective: 'Separate the precompute step from the query step', prereq: 'basics/prefix-arithmetic-basics (running max)', notRedundant: 'The existing running-sum problem RETURNS the prefix array; this one uses it to answer a query, which is the actual point of the technique.', langs: { c: true }, int64: false },
+    // THE 55th SLOT, added when deleting the duplicate moved the baseline from 96 to 95.
+    //
+    // Chosen against the stated preference order rather than invented to hit a number:
+    //   1. deepens an already-selected FOUNDATION pattern — yes, prefix-arithmetic-basics
+    //   2. improves a weak progression — yes, the pattern was Easy + Easy with no application step
+    //   3. fills a missing recognition/application step — yes, this is the application
+    //   4. opens no new pattern, so it cannot create another isolated single-problem pattern
+    //
+    // It also repairs the most consequential of the five INVERTED_TEACHING_ORDER findings:
+    // arrays/prefix-sum holds five problems built on prefix arithmetic while the pattern that
+    // teaches it holds none, and this is the slot that makes that pattern a real progression
+    // instead of two warm-ups.
+    //
+    // Alternatives, and why they were weaker. strings/palindrome-expansion has two Mediums and no
+    // recognition step, but every Easy centre-expansion candidate duplicates something already
+    // authored — valid-palindrome and valid-palindrome-ii exist under opposite-direction-two-pointers,
+    // and "longest palindrome from a multiset of characters" is frequency counting that belongs in
+    // frequency-counter. A third Medium would not fix the missing entry step.
+    // binary-search/binary-search-on-answer already gets its recognition ramp from
+    // lower-upper-bound's three slots. bit-manipulation/basic-bit-ops and
+    // sorting/comparison-sorts-elementary are the same shape as this one but less foundational:
+    // basics is the root of the entire dependency graph.
+    { topic: 'basics', pattern: 'prefix-arithmetic-basics', concept: 'Count the split positions where the left part\'s sum is at least the right part\'s', difficulty: 'Medium', objective: 'Use a running prefix against a fixed total, so each split is answered in constant time', prereq: 'basics/prefix-arithmetic-basics (range-sum query)', notRedundant: 'find-pivot-index asks for one index where the two sides are EQUAL and returns it; this counts every position satisfying an INEQUALITY, which is the running-prefix-versus-total form rather than a search.', langs: { c: true }, int64: false },
 
     // ===== sorting: the empty prerequisite of four topics, 6 =====
     { topic: 'sorting', pattern: 'comparison-sorts-elementary', concept: 'Sort an array with an explicit insertion sort', difficulty: 'Easy', objective: 'Write a sort rather than call one, and see the O(N^2) cost', prereq: null, notRedundant: 'Every existing problem calls a library sort or avoids sorting.', langs: { c: true }, int64: false },
@@ -625,6 +648,46 @@ export const MILESTONE_150 = Object.freeze({
 });
 
 // ---------------------------------------------------------------------------
+// 4b. Pipeline defects that data alone cannot reveal
+// ---------------------------------------------------------------------------
+
+/**
+ * Findings about the authoring/seeding pipeline rather than about the content.
+ *
+ * The audit is deliberately database-free, so it cannot detect these by inspection; they are
+ * recorded here so they appear in the report and do not survive only in a commit message.
+ */
+export const KNOWN_PIPELINE_DEFECTS = Object.freeze([
+  {
+    id: 'SEEDER_HAS_NO_DELETE_PASS',
+    severity: 'medium',
+    found: 'Phase 3A.2A, while deleting continuous-subarrays-deque',
+    detail: 'seed-learning.js is upsert-only (INSERT ... ON CONFLICT (slug) DO UPDATE) and has no '
+      + 'delete pass. Removing a problem from a seed file therefore leaves the row in the database, '
+      + 'and problems-index keeps serving it. The divergence is silent: no gate compares the '
+      + 'database against the seed files.',
+    consequence: 'Any content deletion has to be done twice, and forgetting the second half ships a '
+      + 'problem that exists for users but has no source of truth.',
+    fix: 'Either a reconciling delete pass in the seeder, or a drift check that fails when the '
+      + 'database holds a problem slug no seed file declares. Not built in 3A.2A: it is '
+      + 'infrastructure and that phase is content.',
+  },
+  {
+    id: 'V2_FILES_WITHOUT_AUTHORING_SPECS',
+    severity: 'low',
+    found: 'Phase 3A.2A, while planning which patterns to author',
+    detail: 'Three v2 problem files have no authoring spec: arrays/kadane-maximum-subarray, '
+      + 'stack-queue/parenthesis-matching, sliding-window-two-pointers/variable-size-sliding-window. '
+      + 'build-authored-problems.js rewrites `<pattern>.json` wholesale from the spec, so creating a '
+      + 'spec for one of those patterns would ERASE the existing problem unless it is re-authored '
+      + 'into the spec at the same time.',
+    consequence: 'A trap for exactly the patterns the 150 milestone tops up. Hit deliberately rather '
+      + 'than accidentally: the kadane spec re-authors maximum-subarray so it is not lost.',
+    fix: 'Bring all v2 files under the pipeline, which is the same work as defect D7.',
+  },
+]);
+
+// ---------------------------------------------------------------------------
 // 5. Per-slot detail for the blueprint
 // ---------------------------------------------------------------------------
 
@@ -667,6 +730,7 @@ export const SLOT_DETAIL = Object.freeze([
   { concept: 'Count trailing zeroes in a factorial without computing it', signature: 'int n -> int' },
   { concept: 'Running maximum of a sequence', signature: 'vector<int> nums -> vector<int>' },
   { concept: 'Answer one range-sum query from a precomputed prefix table', signature: 'vector<int> nums, int left, int right -> int' },
+  { concept: 'Count the split positions where the left part\'s sum is at least the right part\'s', signature: 'vector<int> nums -> int' },
   { concept: 'Sort an array with an explicit insertion sort', signature: 'vector<int> nums -> vector<int>' },
   { concept: 'Count the swaps a bubble sort performs, with early termination', signature: 'vector<int> nums -> int' },
   { concept: 'Sort an array with merge sort', signature: 'vector<int> nums -> vector<int>' },
@@ -794,17 +858,36 @@ export const SLOT_DETAIL = Object.freeze([
  * a permutation of every slot, so a dropped or duplicated entry cannot pass unnoticed.
  */
 export const LEARNER_SEQUENCE = Object.freeze([
-  { stage: 1, name: 'Foundations — the empty root', why: 'basics is the declared prerequisite of all 16 other topics and holds nothing. Everything else waits on it.', slots: [1, 2, 3, 4, 6, 5, 7, 8] },
-  { stage: 2, name: 'Sorting — the preprocessing step four topics assume', why: 'arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.', slots: [9, 10, 11, 12, 13, 14] },
-  { stage: 3, name: 'Recursion — the shape DP is built from', why: 'dynamic-programming declares recursion as a prerequisite and already holds four problems while recursion holds none.', slots: [15, 16, 17, 18, 19] },
-  { stage: 4, name: 'Arrays — depth on what is already started', why: 'kadane has one problem; intervals is a first-tier pattern and empty. Intervals follows stage 2 because it is sort-then-scan.', slots: [23, 24, 20, 21, 22] },
-  { stage: 5, name: 'Binary search — boundaries, then the predicate leap', why: 'lower-upper-bound is the discipline every other binary-search pattern reduces to; search-on-answer is the conceptual jump the topic exists for.', slots: [25, 26, 27, 28, 29] },
-  { stage: 6, name: 'Strings — before the window topic that uses them', why: 'the corrected prerequisite direction: 14 of the window topic\'s problems are string-typed, and two of them need frequency counting.', slots: [33, 34] },
-  { stage: 7, name: 'Sliding window — repair the one-problem gap', why: 'variable-size is the most transferable window idea and had a single problem beside neighbours holding twelve.', slots: [30, 31, 32] },
-  { stage: 8, name: 'Bit manipulation — the groundwork under xor', why: 'basic-bit-ops was empty while xor-properties, which builds on it, held four.', slots: [35, 36] },
-  { stage: 9, name: 'Stack and queue — give the entry pattern a progression', why: 'parenthesis-matching held one boolean problem; it now runs check -> quantity -> hard.', slots: [37, 38] },
-  { stage: 10, name: 'Greedy — the base move under interval scheduling', why: 'sort-then-greedy was empty while interval-scheduling, a specialisation of it, held four.', slots: [39, 40] },
-  { stage: 11, name: 'Heaps — open an empty core topic', why: 'nothing in the curriculum used a priority queue. Comes after sorting, which it declares as a prerequisite.', slots: [51, 52, 53, 54] },
-  { stage: 12, name: 'Dynamic programming — the first table, then knapsack', why: 'every existing DP problem is 1-D. Knapsack follows stage 3, since the equal-partition problem is the DP counterpart of the recursive subset count.', slots: [46, 47, 48, 49, 50] },
-  { stage: 13, name: 'Graphs — distance, then dependency order', why: 'all four existing graph problems are DFS connectivity; nothing computes a distance or handles direction.', slots: [41, 42, 43, 44, 45] },
+  { stage: 1, name: 'Foundations — the empty root', why: 'basics is the declared prerequisite of all 16 other topics and holds nothing. Everything else waits on it.', slots: [1, 2, 3, 4, 6, 5, 7, 8, 9] },
+  { stage: 2, name: 'Sorting — the preprocessing step four topics assume', why: 'arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.', slots: [10, 11, 12, 13, 14, 15] },
+  { stage: 3, name: 'Recursion — the shape DP is built from', why: 'dynamic-programming declares recursion as a prerequisite and already holds four problems while recursion holds none.', slots: [16, 17, 18, 19, 20] },
+  { stage: 4, name: 'Arrays — depth on what is already started', why: 'kadane has one problem; intervals is a first-tier pattern and empty. Intervals follows stage 2 because it is sort-then-scan.', slots: [24, 25, 21, 22, 23] },
+  { stage: 5, name: 'Binary search — boundaries, then the predicate leap', why: 'lower-upper-bound is the discipline every other binary-search pattern reduces to; search-on-answer is the conceptual jump the topic exists for.', slots: [26, 27, 28, 29, 30] },
+  { stage: 6, name: 'Strings — before the window topic that uses them', why: 'the corrected prerequisite direction: 14 of the window topic\'s problems are string-typed, and two of them need frequency counting.', slots: [34, 35] },
+  { stage: 7, name: 'Sliding window — repair the one-problem gap', why: 'variable-size is the most transferable window idea and had a single problem beside neighbours holding twelve.', slots: [31, 32, 33] },
+  { stage: 8, name: 'Bit manipulation — the groundwork under xor', why: 'basic-bit-ops was empty while xor-properties, which builds on it, held four.', slots: [36, 37] },
+  { stage: 9, name: 'Stack and queue — give the entry pattern a progression', why: 'parenthesis-matching held one boolean problem; it now runs check -> quantity -> hard.', slots: [38, 39] },
+  { stage: 10, name: 'Greedy — the base move under interval scheduling', why: 'sort-then-greedy was empty while interval-scheduling, a specialisation of it, held four.', slots: [40, 41] },
+  { stage: 11, name: 'Heaps — open an empty core topic', why: 'nothing in the curriculum used a priority queue. Comes after sorting, which it declares as a prerequisite.', slots: [52, 53, 54, 55] },
+  { stage: 12, name: 'Dynamic programming — the first table, then knapsack', why: 'every existing DP problem is 1-D. Knapsack follows stage 3, since the equal-partition problem is the DP counterpart of the recursive subset count.', slots: [47, 48, 49, 50, 51] },
+  { stage: 13, name: 'Graphs — distance, then dependency order', why: 'all four existing graph problems are DFS connectivity; nothing computes a distance or handles direction.', slots: [42, 43, 44, 45, 46] },
 ]);
+
+// ---------------------------------------------------------------------------
+// 7. Batching — 3A.2A / 3A.2B
+// ---------------------------------------------------------------------------
+
+/**
+ * The 55 additions are built in two batches, split on a STAGE boundary so no pattern
+ * progression is broken across commits.
+ *
+ * 3A.2A is stages 1-4 complete (25 slots) plus binary-search/lower-upper-bound's three
+ * (28 exactly). Stage 5 holds two separate patterns — lower-upper-bound and
+ * binary-search-on-answer — so taking the first and deferring the second splits a stage but
+ * not a progression, which is the constraint that actually matters. Taking all of stage 5
+ * would have made the batch 30.
+ */
+export const BATCHES = Object.freeze({
+  '3A.2A': { slots: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28], note: 'stages 1-4 complete, plus binary-search/lower-upper-bound' },
+  '3A.2B': { slots: [29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55], note: 'binary-search-on-answer, then stages 6-13' },
+});

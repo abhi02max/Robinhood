@@ -337,45 +337,6 @@
         { "input_payload": { "points": [[1,0],[3,1],[5,2],[7,3]], "k": 2 }, "expected_output": 7, "is_hidden": true, "order_index": 11 },
         { "input_payload": { "points": [[0,0],[1,1],[2,2],[3,3]], "k": 3 }, "expected_output": 6, "is_hidden": true, "order_index": 12 }
       ]
-    },
-    {
-      "slug": "continuous-subarrays-deque",
-      "title": "Continuous Subarrays (Deque View)",
-      "difficulty": "Medium",
-      "tags": ["monotonic-deque-window", "deque"],
-      "description": "Count subarrays where for any pair |nums[i1]-nums[i2]| <= 2. Same as `continuous-subarrays`; here we focus on the two-deque implementation.",
-      "examples": [{ "input": "nums=[5,4,2,4]", "output": "8" }],
-      "constraints": ["1 <= nums.length <= 10^5"],
-      "edge_cases": ["All equal", "Strictly increasing"],
-      "approach_brute": "O(N^2).",
-      "approach_optimal": "Sliding window with max deque + min deque. For each r, count = r-l+1. O(N).",
-      "starter_code": { "javascript": "function continuousSubarrays(nums) {}", "python": "def continuous_subarrays(nums): pass",
-        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int continuousSubarrays(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
-        "java": "class Solution {\n    public int continuousSubarrays(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
-        "c": "int continuousSubarrays(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n",
-        "csharp": "public class Solution {\n    public int ContinuousSubarrays(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n" },
-      "cpp_signature": {
-        "fn": "continuousSubarrays",
-        "class": "Solution",
-        "args": [{ "name": "nums", "type": "vector<int>" }],
-        "ret": "int"
-      },
-      "time_complexity": "O(N)",
-      "space_complexity": "O(N)",
-      "test_cases": [
-        { "input_payload": { "nums": [5,4,2,4] }, "expected_output": 8, "is_hidden": false, "order_index": 1 },
-        { "input_payload": { "nums": [1,2,3] }, "expected_output": 6, "is_hidden": false, "order_index": 2 },
-        { "input_payload": { "nums": [1,1,1] }, "expected_output": 6, "is_hidden": false, "order_index": 3 },
-        { "input_payload": { "nums": [1,4] }, "expected_output": 2, "is_hidden": false, "order_index": 4 },
-        { "input_payload": { "nums": [1,2,3,4] }, "expected_output": 9, "is_hidden": false, "order_index": 5 },
-        { "input_payload": { "nums": [5] }, "expected_output": 1, "is_hidden": true, "order_index": 6 },
-        { "input_payload": { "nums": [5,5,5,5] }, "expected_output": 10, "is_hidden": true, "order_index": 7 },
-        { "input_payload": { "nums": [1,2,5,6,3,4] }, "expected_output": 9, "is_hidden": true, "order_index": 8 },
-        { "input_payload": { "nums": [10,10,10,10,10] }, "expected_output": 15, "is_hidden": true, "order_index": 9 },
-        { "input_payload": { "nums": [1,3,5,7,9] }, "expected_output": 9, "is_hidden": true, "order_index": 10 },
-        { "input_payload": { "nums": [1,1,1,1,1,1] }, "expected_output": 21, "is_hidden": true, "order_index": 11 },
-        { "input_payload": { "nums": [100,99,98,97] }, "expected_output": 9, "is_hidden": true, "order_index": 12 }
-      ]
     }
   ]
 }

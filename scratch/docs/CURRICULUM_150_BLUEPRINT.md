@@ -5,14 +5,14 @@
 The final approved additions for the 150 milestone. **No full problem specifications** — no
 descriptions, examples, constraints, reference solutions or test cases. Those are Phase 3A.2.
 
-Generated at `2026-09-01T17:59:58.027Z`.
+Generated at `2026-09-01T18:13:03.122Z`.
 
 ## Totals
 
 | | |
 | --- | ---: |
-| Current total | 96 |
-| Additions | 54 |
+| Current total | 95 |
+| Additions | 55 |
 | Resulting total | 150 |
 | Patterns touched | 23 (20 opened, 3 topped up) |
 | Coding-capable patterns | 79 |
@@ -20,7 +20,7 @@ Generated at `2026-09-01T17:59:58.027Z`.
 | Coding-capable populated, after | 36 (45.6%) |
 | Conceptual patterns | 2 |
 | Structurally blocked patterns | 27 |
-| Easy / Medium / Hard | 14 / 37 / 3 |
+| Easy / Medium / Hard | 14 / 38 / 3 |
 | C cannot express | 12 |
 | 64-bit flagged | 7 |
 
@@ -54,6 +54,7 @@ harder application.
 | 1.6 | 5 | `integer-math-modular` | Raise a value to an integer power by squaring, handling a negative exponent | Medium |
 | 1.7 | 7 | `prefix-arithmetic-basics` | Running maximum of a sequence | Easy |
 | 1.8 | 8 | `prefix-arithmetic-basics` | Answer one range-sum query from a precomputed prefix table | Easy |
+| 1.9 | 9 | `prefix-arithmetic-basics` | Count the split positions where the left part's sum is at least the right part's | Medium |
 
 ### Stage 2 — Sorting — the preprocessing step four topics assume
 
@@ -61,12 +62,12 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 2.1 | 9 | `comparison-sorts-elementary` | Sort an array with an explicit insertion sort | Easy |
-| 2.2 | 10 | `comparison-sorts-elementary` | Count the swaps a bubble sort performs, with early termination | Easy |
-| 2.3 | 11 | `merge-sort-divide-conquer` | Sort an array with merge sort | Medium |
-| 2.4 | 12 | `merge-sort-divide-conquer` | Count inversions in an array using the merge step | Medium |
-| 2.5 | 13 | `custom-comparator-and-stability` | Sort values by descending frequency, breaking ties by value | Medium |
-| 2.6 | 14 | `custom-comparator-and-stability` | Arrange integers to form the largest possible concatenated number | Medium |
+| 2.1 | 10 | `comparison-sorts-elementary` | Sort an array with an explicit insertion sort | Easy |
+| 2.2 | 11 | `comparison-sorts-elementary` | Count the swaps a bubble sort performs, with early termination | Easy |
+| 2.3 | 12 | `merge-sort-divide-conquer` | Sort an array with merge sort | Medium |
+| 2.4 | 13 | `merge-sort-divide-conquer` | Count inversions in an array using the merge step | Medium |
+| 2.5 | 14 | `custom-comparator-and-stability` | Sort values by descending frequency, breaking ties by value | Medium |
+| 2.6 | 15 | `custom-comparator-and-stability` | Arrange integers to form the largest possible concatenated number | Medium |
 
 ### Stage 3 — Recursion — the shape DP is built from
 
@@ -74,11 +75,11 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 3.1 | 15 | `subset-include-exclude` | Enumerate all subsets of a distinct-element array | Medium |
-| 3.2 | 16 | `subset-include-exclude` | Enumerate subsets of an array containing duplicates, without repeats | Medium |
-| 3.3 | 17 | `subset-include-exclude` | Count subsets summing to a target, without enumerating them | Medium |
-| 3.4 | 18 | `backtracking-with-restore` | All combinations of candidates summing to a target, reuse allowed | Medium |
-| 3.5 | 19 | `backtracking-with-restore` | All letter strings a digit sequence could spell on a phone keypad | Medium |
+| 3.1 | 16 | `subset-include-exclude` | Enumerate all subsets of a distinct-element array | Medium |
+| 3.2 | 17 | `subset-include-exclude` | Enumerate subsets of an array containing duplicates, without repeats | Medium |
+| 3.3 | 18 | `subset-include-exclude` | Count subsets summing to a target, without enumerating them | Medium |
+| 3.4 | 19 | `backtracking-with-restore` | All combinations of candidates summing to a target, reuse allowed | Medium |
+| 3.5 | 20 | `backtracking-with-restore` | All letter strings a digit sequence could spell on a phone keypad | Medium |
 
 ### Stage 4 — Arrays — depth on what is already started
 
@@ -86,11 +87,11 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 4.1 | 23 | `kadane-maximum-subarray` | Maximum product of a contiguous subarray | Medium |
-| 4.2 | 24 | `kadane-maximum-subarray` | Maximum subarray sum in a circular array | Medium |
-| 4.3 | 20 | `intervals` | Merge a list of overlapping intervals | Medium |
-| 4.4 | 21 | `intervals` | Insert one interval into a sorted disjoint set | Medium |
-| 4.5 | 22 | `intervals` | Minimum number of rooms needed for overlapping meetings | Medium |
+| 4.1 | 24 | `kadane-maximum-subarray` | Maximum product of a contiguous subarray | Medium |
+| 4.2 | 25 | `kadane-maximum-subarray` | Maximum subarray sum in a circular array | Medium |
+| 4.3 | 21 | `intervals` | Merge a list of overlapping intervals | Medium |
+| 4.4 | 22 | `intervals` | Insert one interval into a sorted disjoint set | Medium |
+| 4.5 | 23 | `intervals` | Minimum number of rooms needed for overlapping meetings | Medium |
 
 ### Stage 5 — Binary search — boundaries, then the predicate leap
 
@@ -98,11 +99,11 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 5.1 | 25 | `lower-upper-bound` | Leftmost insertion position for a target among duplicates | Easy |
-| 5.2 | 26 | `lower-upper-bound` | First and last index of a target in a sorted array | Medium |
-| 5.3 | 27 | `lower-upper-bound` | For each query, count sorted values strictly below it | Medium |
-| 5.4 | 28 | `binary-search-on-answer` | Smallest ship capacity that clears all packages within a day budget | Medium |
-| 5.5 | 29 | `binary-search-on-answer` | Minimum hourly rate to finish all piles within an hour budget | Medium |
+| 5.1 | 26 | `lower-upper-bound` | Leftmost insertion position for a target among duplicates | Easy |
+| 5.2 | 27 | `lower-upper-bound` | First and last index of a target in a sorted array | Medium |
+| 5.3 | 28 | `lower-upper-bound` | For each query, count sorted values strictly below it | Medium |
+| 5.4 | 29 | `binary-search-on-answer` | Smallest ship capacity that clears all packages within a day budget | Medium |
+| 5.5 | 30 | `binary-search-on-answer` | Minimum hourly rate to finish all piles within an hour budget | Medium |
 
 ### Stage 6 — Strings — before the window topic that uses them
 
@@ -110,8 +111,8 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 6.1 | 33 | `palindrome-expansion` | Count palindromic substrings by expanding around each centre | Medium |
-| 6.2 | 34 | `palindrome-expansion` | Longest palindromic substring | Medium |
+| 6.1 | 34 | `palindrome-expansion` | Count palindromic substrings by expanding around each centre | Medium |
+| 6.2 | 35 | `palindrome-expansion` | Longest palindromic substring | Medium |
 
 ### Stage 7 — Sliding window — repair the one-problem gap
 
@@ -119,9 +120,9 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 7.1 | 30 | `variable-size-sliding-window` | Shortest subarray whose sum reaches a target | Medium |
-| 7.2 | 31 | `variable-size-sliding-window` | Longest substring obtainable by replacing at most k characters | Medium |
-| 7.3 | 32 | `variable-size-sliding-window` | Smallest window of a string containing all characters of a pattern | Hard |
+| 7.1 | 31 | `variable-size-sliding-window` | Shortest subarray whose sum reaches a target | Medium |
+| 7.2 | 32 | `variable-size-sliding-window` | Longest substring obtainable by replacing at most k characters | Medium |
+| 7.3 | 33 | `variable-size-sliding-window` | Smallest window of a string containing all characters of a pattern | Hard |
 
 ### Stage 8 — Bit manipulation — the groundwork under xor
 
@@ -129,8 +130,8 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 8.1 | 35 | `basic-bit-ops` | Number of set bits for every integer from 0 to n | Easy |
-| 8.2 | 36 | `basic-bit-ops` | Reverse the bits of a 32-bit unsigned value | Easy |
+| 8.1 | 36 | `basic-bit-ops` | Number of set bits for every integer from 0 to n | Easy |
+| 8.2 | 37 | `basic-bit-ops` | Reverse the bits of a 32-bit unsigned value | Easy |
 
 ### Stage 9 — Stack and queue — give the entry pattern a progression
 
@@ -138,8 +139,8 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 9.1 | 37 | `parenthesis-matching` | Minimum insertions to make a bracket string balanced | Medium |
-| 9.2 | 38 | `parenthesis-matching` | Length of the longest valid parenthesis substring | Hard |
+| 9.1 | 38 | `parenthesis-matching` | Minimum insertions to make a bracket string balanced | Medium |
+| 9.2 | 39 | `parenthesis-matching` | Length of the longest valid parenthesis substring | Hard |
 
 ### Stage 10 — Greedy — the base move under interval scheduling
 
@@ -147,8 +148,8 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 10.1 | 39 | `sort-then-greedy` | Maximise satisfied children by matching sorted sizes to sorted demands | Easy |
-| 10.2 | 40 | `sort-then-greedy` | Minimum increments to make all values distinct | Medium |
+| 10.1 | 40 | `sort-then-greedy` | Maximise satisfied children by matching sorted sizes to sorted demands | Easy |
+| 10.2 | 41 | `sort-then-greedy` | Minimum increments to make all values distinct | Medium |
 
 ### Stage 11 — Heaps — open an empty core topic
 
@@ -156,10 +157,10 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 11.1 | 51 | `heap-as-priority-queue` | Repeatedly combine the two largest values until one or none remains | Easy |
-| 11.2 | 52 | `heap-as-priority-queue` | Minimum total cost to combine all lengths pairwise | Medium |
-| 11.3 | 53 | `top-k-with-heap` | kth largest element of an unsorted array | Medium |
-| 11.4 | 54 | `top-k-with-heap` | The k most frequent values in an array | Medium |
+| 11.1 | 52 | `heap-as-priority-queue` | Repeatedly combine the two largest values until one or none remains | Easy |
+| 11.2 | 53 | `heap-as-priority-queue` | Minimum total cost to combine all lengths pairwise | Medium |
+| 11.3 | 54 | `top-k-with-heap` | kth largest element of an unsorted array | Medium |
+| 11.4 | 55 | `top-k-with-heap` | The k most frequent values in an array | Medium |
 
 ### Stage 12 — Dynamic programming — the first table, then knapsack
 
@@ -167,11 +168,11 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 12.1 | 46 | `2d-grid` | Number of monotone lattice paths across a grid | Easy |
-| 12.2 | 47 | `2d-grid` | Minimum-cost path from corner to corner of a cost grid | Medium |
-| 12.3 | 48 | `2d-grid` | Monotone lattice paths with blocked cells | Medium |
-| 12.4 | 49 | `0-1-knapsack` | Whether an array splits into two equal-sum halves | Medium |
-| 12.5 | 50 | `0-1-knapsack` | Smallest achievable difference between two subset sums | Medium |
+| 12.1 | 47 | `2d-grid` | Number of monotone lattice paths across a grid | Easy |
+| 12.2 | 48 | `2d-grid` | Minimum-cost path from corner to corner of a cost grid | Medium |
+| 12.3 | 49 | `2d-grid` | Monotone lattice paths with blocked cells | Medium |
+| 12.4 | 50 | `0-1-knapsack` | Whether an array splits into two equal-sum halves | Medium |
+| 12.5 | 51 | `0-1-knapsack` | Smallest achievable difference between two subset sums | Medium |
 
 ### Stage 13 — Graphs — distance, then dependency order
 
@@ -179,11 +180,11 @@ harder application.
 
 | Seq | # | Pattern | Concept | Diff |
 | ---: | ---: | --- | --- | --- |
-| 13.1 | 41 | `bfs-shortest-path` | Shortest clear path through a binary grid, eight-directional | Medium |
-| 13.2 | 42 | `bfs-shortest-path` | Minutes for a spreading state to fill a grid, or report impossible | Medium |
-| 13.3 | 43 | `bfs-shortest-path` | Fewest one-letter transformations between two words via a dictionary | Hard |
-| 13.4 | 44 | `topological-sort` | Whether a set of prerequisite pairs can all be satisfied | Medium |
-| 13.5 | 45 | `topological-sort` | Fewest rounds needed to finish all courses when independent ones run in parallel | Medium |
+| 13.1 | 42 | `bfs-shortest-path` | Shortest clear path through a binary grid, eight-directional | Medium |
+| 13.2 | 43 | `bfs-shortest-path` | Minutes for a spreading state to fill a grid, or report impossible | Medium |
+| 13.3 | 44 | `bfs-shortest-path` | Fewest one-letter transformations between two words via a dictionary | Hard |
+| 13.4 | 45 | `topological-sort` | Whether a set of prerequisite pairs can all be satisfied | Medium |
+| 13.5 | 46 | `topological-sort` | Fewest rounds needed to finish all courses when independent ones run in parallel | Medium |
 
 ## Every addition in detail
 
@@ -307,7 +308,22 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** basics is the declared prerequisite of all 16 other topics and holds nothing. Everything else waits on it.
 
-### 9. Sort an array with an explicit insertion sort
+### 9. Count the split positions where the left part's sum is at least the right part's
+
+- **Sequence** stage 1
+- **Topic / pattern** `basics` / `prefix-arithmetic-basics` — FOUNDATION
+- **Difficulty** Medium
+- **Signature** `vector<int> nums -> int`
+- **Language capability** 6/6
+- **Prerequisite** basics/prefix-arithmetic-basics (range-sum query)
+- **Learning objective** Use a running prefix against a fixed total, so each split is answered in constant time
+- **Preceded in this pattern by** none — this pattern is empty today
+- **Non-redundant because** find-pivot-index asks for one index where the two sides are EQUAL and returns it; this counts every position satisfying an INEQUALITY, which is the running-prefix-versus-total form rather than a search.
+- **64-bit risk** none
+- **Architecture blocker** none — this pattern is coding-capable today
+- **Milestone reason** basics is the declared prerequisite of all 16 other topics and holds nothing. Everything else waits on it.
+
+### 10. Sort an array with an explicit insertion sort
 
 - **Sequence** stage 2
 - **Topic / pattern** `sorting` / `comparison-sorts-elementary` — FOUNDATION
@@ -322,7 +338,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.
 
-### 10. Count the swaps a bubble sort performs, with early termination
+### 11. Count the swaps a bubble sort performs, with early termination
 
 - **Sequence** stage 2
 - **Topic / pattern** `sorting` / `comparison-sorts-elementary` — FOUNDATION
@@ -337,7 +353,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.
 
-### 11. Sort an array with merge sort
+### 12. Sort an array with merge sort
 
 - **Sequence** stage 2
 - **Topic / pattern** `sorting` / `merge-sort-divide-conquer` — CORE_INTERVIEW
@@ -352,7 +368,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.
 
-### 12. Count inversions in an array using the merge step
+### 13. Count inversions in an array using the merge step
 
 - **Sequence** stage 2
 - **Topic / pattern** `sorting` / `merge-sort-divide-conquer` — CORE_INTERVIEW
@@ -367,7 +383,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.
 
-### 13. Sort values by descending frequency, breaking ties by value
+### 14. Sort values by descending frequency, breaking ties by value
 
 - **Sequence** stage 2
 - **Topic / pattern** `sorting` / `custom-comparator-and-stability` — CORE_INTERVIEW
@@ -383,7 +399,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.
 
-### 14. Arrange integers to form the largest possible concatenated number
+### 15. Arrange integers to form the largest possible concatenated number
 
 - **Sequence** stage 2
 - **Topic / pattern** `sorting` / `custom-comparator-and-stability` — CORE_INTERVIEW
@@ -398,7 +414,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.
 
-### 15. Enumerate all subsets of a distinct-element array
+### 16. Enumerate all subsets of a distinct-element array
 
 - **Sequence** stage 3
 - **Topic / pattern** `recursion` / `subset-include-exclude` — FOUNDATION
@@ -414,7 +430,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** dynamic-programming declares recursion as a prerequisite and already holds four problems while recursion holds none.
 
-### 16. Enumerate subsets of an array containing duplicates, without repeats
+### 17. Enumerate subsets of an array containing duplicates, without repeats
 
 - **Sequence** stage 3
 - **Topic / pattern** `recursion` / `subset-include-exclude` — FOUNDATION
@@ -430,7 +446,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** dynamic-programming declares recursion as a prerequisite and already holds four problems while recursion holds none.
 
-### 17. Count subsets summing to a target, without enumerating them
+### 18. Count subsets summing to a target, without enumerating them
 
 - **Sequence** stage 3
 - **Topic / pattern** `recursion` / `subset-include-exclude` — FOUNDATION
@@ -445,7 +461,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** dynamic-programming declares recursion as a prerequisite and already holds four problems while recursion holds none.
 
-### 18. All combinations of candidates summing to a target, reuse allowed
+### 19. All combinations of candidates summing to a target, reuse allowed
 
 - **Sequence** stage 3
 - **Topic / pattern** `recursion` / `backtracking-with-restore` — CORE_INTERVIEW
@@ -461,7 +477,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** dynamic-programming declares recursion as a prerequisite and already holds four problems while recursion holds none.
 
-### 19. All letter strings a digit sequence could spell on a phone keypad
+### 20. All letter strings a digit sequence could spell on a phone keypad
 
 - **Sequence** stage 3
 - **Topic / pattern** `recursion` / `backtracking-with-restore` — CORE_INTERVIEW
@@ -477,7 +493,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** dynamic-programming declares recursion as a prerequisite and already holds four problems while recursion holds none.
 
-### 23. Maximum product of a contiguous subarray
+### 24. Maximum product of a contiguous subarray
 
 - **Sequence** stage 4
 - **Topic / pattern** `arrays` / `kadane-maximum-subarray` — CORE_INTERVIEW
@@ -492,7 +508,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** kadane has one problem; intervals is a first-tier pattern and empty. Intervals follows stage 2 because it is sort-then-scan.
 
-### 24. Maximum subarray sum in a circular array
+### 25. Maximum subarray sum in a circular array
 
 - **Sequence** stage 4
 - **Topic / pattern** `arrays` / `kadane-maximum-subarray` — CORE_INTERVIEW
@@ -507,7 +523,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** kadane has one problem; intervals is a first-tier pattern and empty. Intervals follows stage 2 because it is sort-then-scan.
 
-### 20. Merge a list of overlapping intervals
+### 21. Merge a list of overlapping intervals
 
 - **Sequence** stage 4
 - **Topic / pattern** `arrays` / `intervals` — CORE_INTERVIEW
@@ -523,7 +539,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** kadane has one problem; intervals is a first-tier pattern and empty. Intervals follows stage 2 because it is sort-then-scan.
 
-### 21. Insert one interval into a sorted disjoint set
+### 22. Insert one interval into a sorted disjoint set
 
 - **Sequence** stage 4
 - **Topic / pattern** `arrays` / `intervals` — CORE_INTERVIEW
@@ -539,7 +555,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** kadane has one problem; intervals is a first-tier pattern and empty. Intervals follows stage 2 because it is sort-then-scan.
 
-### 22. Minimum number of rooms needed for overlapping meetings
+### 23. Minimum number of rooms needed for overlapping meetings
 
 - **Sequence** stage 4
 - **Topic / pattern** `arrays` / `intervals` — CORE_INTERVIEW
@@ -554,7 +570,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** kadane has one problem; intervals is a first-tier pattern and empty. Intervals follows stage 2 because it is sort-then-scan.
 
-### 25. Leftmost insertion position for a target among duplicates
+### 26. Leftmost insertion position for a target among duplicates
 
 - **Sequence** stage 5
 - **Topic / pattern** `binary-search` / `lower-upper-bound` — FOUNDATION
@@ -569,7 +585,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** lower-upper-bound is the discipline every other binary-search pattern reduces to; search-on-answer is the conceptual jump the topic exists for.
 
-### 26. First and last index of a target in a sorted array
+### 27. First and last index of a target in a sorted array
 
 - **Sequence** stage 5
 - **Topic / pattern** `binary-search` / `lower-upper-bound` — FOUNDATION
@@ -584,7 +600,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** lower-upper-bound is the discipline every other binary-search pattern reduces to; search-on-answer is the conceptual jump the topic exists for.
 
-### 27. For each query, count sorted values strictly below it
+### 28. For each query, count sorted values strictly below it
 
 - **Sequence** stage 5
 - **Topic / pattern** `binary-search` / `lower-upper-bound` — FOUNDATION
@@ -600,7 +616,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** lower-upper-bound is the discipline every other binary-search pattern reduces to; search-on-answer is the conceptual jump the topic exists for.
 
-### 28. Smallest ship capacity that clears all packages within a day budget
+### 29. Smallest ship capacity that clears all packages within a day budget
 
 - **Sequence** stage 5
 - **Topic / pattern** `binary-search` / `binary-search-on-answer` — CORE_INTERVIEW
@@ -615,7 +631,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** lower-upper-bound is the discipline every other binary-search pattern reduces to; search-on-answer is the conceptual jump the topic exists for.
 
-### 29. Minimum hourly rate to finish all piles within an hour budget
+### 30. Minimum hourly rate to finish all piles within an hour budget
 
 - **Sequence** stage 5
 - **Topic / pattern** `binary-search` / `binary-search-on-answer` — CORE_INTERVIEW
@@ -630,7 +646,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** lower-upper-bound is the discipline every other binary-search pattern reduces to; search-on-answer is the conceptual jump the topic exists for.
 
-### 33. Count palindromic substrings by expanding around each centre
+### 34. Count palindromic substrings by expanding around each centre
 
 - **Sequence** stage 6
 - **Topic / pattern** `strings` / `palindrome-expansion` — CORE_INTERVIEW
@@ -645,7 +661,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** the corrected prerequisite direction: 14 of the window topic's problems are string-typed, and two of them need frequency counting.
 
-### 34. Longest palindromic substring
+### 35. Longest palindromic substring
 
 - **Sequence** stage 6
 - **Topic / pattern** `strings` / `palindrome-expansion` — CORE_INTERVIEW
@@ -661,7 +677,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** the corrected prerequisite direction: 14 of the window topic's problems are string-typed, and two of them need frequency counting.
 
-### 30. Shortest subarray whose sum reaches a target
+### 31. Shortest subarray whose sum reaches a target
 
 - **Sequence** stage 7
 - **Topic / pattern** `sliding-window-two-pointers` / `variable-size-sliding-window` — FOUNDATION
@@ -676,7 +692,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** variable-size is the most transferable window idea and had a single problem beside neighbours holding twelve.
 
-### 31. Longest substring obtainable by replacing at most k characters
+### 32. Longest substring obtainable by replacing at most k characters
 
 - **Sequence** stage 7
 - **Topic / pattern** `sliding-window-two-pointers` / `variable-size-sliding-window` — FOUNDATION
@@ -691,7 +707,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** variable-size is the most transferable window idea and had a single problem beside neighbours holding twelve.
 
-### 32. Smallest window of a string containing all characters of a pattern
+### 33. Smallest window of a string containing all characters of a pattern
 
 - **Sequence** stage 7
 - **Topic / pattern** `sliding-window-two-pointers` / `variable-size-sliding-window` — FOUNDATION
@@ -707,7 +723,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** variable-size is the most transferable window idea and had a single problem beside neighbours holding twelve.
 
-### 35. Number of set bits for every integer from 0 to n
+### 36. Number of set bits for every integer from 0 to n
 
 - **Sequence** stage 8
 - **Topic / pattern** `bit-manipulation` / `basic-bit-ops` — FOUNDATION
@@ -722,7 +738,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** basic-bit-ops was empty while xor-properties, which builds on it, held four.
 
-### 36. Reverse the bits of a 32-bit unsigned value
+### 37. Reverse the bits of a 32-bit unsigned value
 
 - **Sequence** stage 8
 - **Topic / pattern** `bit-manipulation` / `basic-bit-ops` — FOUNDATION
@@ -737,7 +753,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** basic-bit-ops was empty while xor-properties, which builds on it, held four.
 
-### 37. Minimum insertions to make a bracket string balanced
+### 38. Minimum insertions to make a bracket string balanced
 
 - **Sequence** stage 9
 - **Topic / pattern** `stack-queue` / `parenthesis-matching` — FOUNDATION
@@ -752,7 +768,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** parenthesis-matching held one boolean problem; it now runs check -> quantity -> hard.
 
-### 38. Length of the longest valid parenthesis substring
+### 39. Length of the longest valid parenthesis substring
 
 - **Sequence** stage 9
 - **Topic / pattern** `stack-queue` / `parenthesis-matching` — FOUNDATION
@@ -767,7 +783,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** parenthesis-matching held one boolean problem; it now runs check -> quantity -> hard.
 
-### 39. Maximise satisfied children by matching sorted sizes to sorted demands
+### 40. Maximise satisfied children by matching sorted sizes to sorted demands
 
 - **Sequence** stage 10
 - **Topic / pattern** `greedy` / `sort-then-greedy` — FOUNDATION
@@ -782,7 +798,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** sort-then-greedy was empty while interval-scheduling, a specialisation of it, held four.
 
-### 40. Minimum increments to make all values distinct
+### 41. Minimum increments to make all values distinct
 
 - **Sequence** stage 10
 - **Topic / pattern** `greedy` / `sort-then-greedy` — FOUNDATION
@@ -797,7 +813,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** sort-then-greedy was empty while interval-scheduling, a specialisation of it, held four.
 
-### 51. Repeatedly combine the two largest values until one or none remains
+### 52. Repeatedly combine the two largest values until one or none remains
 
 - **Sequence** stage 11
 - **Topic / pattern** `heaps` / `heap-as-priority-queue` — FOUNDATION
@@ -812,7 +828,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** nothing in the curriculum used a priority queue. Comes after sorting, which it declares as a prerequisite.
 
-### 52. Minimum total cost to combine all lengths pairwise
+### 53. Minimum total cost to combine all lengths pairwise
 
 - **Sequence** stage 11
 - **Topic / pattern** `heaps` / `heap-as-priority-queue` — FOUNDATION
@@ -827,7 +843,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** nothing in the curriculum used a priority queue. Comes after sorting, which it declares as a prerequisite.
 
-### 53. kth largest element of an unsorted array
+### 54. kth largest element of an unsorted array
 
 - **Sequence** stage 11
 - **Topic / pattern** `heaps` / `top-k-with-heap` — CORE_INTERVIEW
@@ -842,7 +858,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** nothing in the curriculum used a priority queue. Comes after sorting, which it declares as a prerequisite.
 
-### 54. The k most frequent values in an array
+### 55. The k most frequent values in an array
 
 - **Sequence** stage 11
 - **Topic / pattern** `heaps` / `top-k-with-heap` — CORE_INTERVIEW
@@ -858,7 +874,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** nothing in the curriculum used a priority queue. Comes after sorting, which it declares as a prerequisite.
 
-### 46. Number of monotone lattice paths across a grid
+### 47. Number of monotone lattice paths across a grid
 
 - **Sequence** stage 12
 - **Topic / pattern** `dynamic-programming` / `2d-grid` — CORE_INTERVIEW
@@ -873,7 +889,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** every existing DP problem is 1-D. Knapsack follows stage 3, since the equal-partition problem is the DP counterpart of the recursive subset count.
 
-### 47. Minimum-cost path from corner to corner of a cost grid
+### 48. Minimum-cost path from corner to corner of a cost grid
 
 - **Sequence** stage 12
 - **Topic / pattern** `dynamic-programming` / `2d-grid` — CORE_INTERVIEW
@@ -888,7 +904,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** every existing DP problem is 1-D. Knapsack follows stage 3, since the equal-partition problem is the DP counterpart of the recursive subset count.
 
-### 48. Monotone lattice paths with blocked cells
+### 49. Monotone lattice paths with blocked cells
 
 - **Sequence** stage 12
 - **Topic / pattern** `dynamic-programming` / `2d-grid` — CORE_INTERVIEW
@@ -903,7 +919,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** every existing DP problem is 1-D. Knapsack follows stage 3, since the equal-partition problem is the DP counterpart of the recursive subset count.
 
-### 49. Whether an array splits into two equal-sum halves
+### 50. Whether an array splits into two equal-sum halves
 
 - **Sequence** stage 12
 - **Topic / pattern** `dynamic-programming` / `0-1-knapsack` — CORE_INTERVIEW
@@ -918,7 +934,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** every existing DP problem is 1-D. Knapsack follows stage 3, since the equal-partition problem is the DP counterpart of the recursive subset count.
 
-### 50. Smallest achievable difference between two subset sums
+### 51. Smallest achievable difference between two subset sums
 
 - **Sequence** stage 12
 - **Topic / pattern** `dynamic-programming` / `0-1-knapsack` — CORE_INTERVIEW
@@ -933,7 +949,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** every existing DP problem is 1-D. Knapsack follows stage 3, since the equal-partition problem is the DP counterpart of the recursive subset count.
 
-### 41. Shortest clear path through a binary grid, eight-directional
+### 42. Shortest clear path through a binary grid, eight-directional
 
 - **Sequence** stage 13
 - **Topic / pattern** `graphs` / `bfs-shortest-path` — CORE_INTERVIEW
@@ -948,7 +964,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** all four existing graph problems are DFS connectivity; nothing computes a distance or handles direction.
 
-### 42. Minutes for a spreading state to fill a grid, or report impossible
+### 43. Minutes for a spreading state to fill a grid, or report impossible
 
 - **Sequence** stage 13
 - **Topic / pattern** `graphs` / `bfs-shortest-path` — CORE_INTERVIEW
@@ -963,7 +979,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** all four existing graph problems are DFS connectivity; nothing computes a distance or handles direction.
 
-### 43. Fewest one-letter transformations between two words via a dictionary
+### 44. Fewest one-letter transformations between two words via a dictionary
 
 - **Sequence** stage 13
 - **Topic / pattern** `graphs` / `bfs-shortest-path` — CORE_INTERVIEW
@@ -978,7 +994,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** all four existing graph problems are DFS connectivity; nothing computes a distance or handles direction.
 
-### 44. Whether a set of prerequisite pairs can all be satisfied
+### 45. Whether a set of prerequisite pairs can all be satisfied
 
 - **Sequence** stage 13
 - **Topic / pattern** `graphs` / `topological-sort` — CORE_INTERVIEW
@@ -993,7 +1009,7 @@ harder application.
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** all four existing graph problems are DFS connectivity; nothing computes a distance or handles direction.
 
-### 45. Fewest rounds needed to finish all courses when independent ones run in parallel
+### 46. Fewest rounds needed to finish all courses when independent ones run in parallel
 
 - **Sequence** stage 13
 - **Topic / pattern** `graphs` / `topological-sort` — CORE_INTERVIEW
@@ -1022,7 +1038,7 @@ reasoning survive, and whether the constraint is legitimate.
 - **Overflow reasoning retained** yes
 - **Legitimate** Yes, and nothing is constrained. Worth recording only because the lesson is asymmetric across languages: in C/C++/Java/C# the check is genuinely necessary, while in JavaScript and Python the intermediate never overflows, so those two solve it by comparing against the 32-bit bound rather than by avoiding an overflow.
 
-### 12. Count inversions in an array using the merge step
+### 13. Count inversions in an array using the merge step
 
 - **Canonical range** n up to 10^5, so the count reaches n(n-1)/2 ~ 5x10^9
 - **Robinhood range** unchanged — 5x10^9 is far inside the exact-integer range (2^53-1 ~ 9x10^15)
@@ -1030,7 +1046,7 @@ reasoning survive, and whether the constraint is legitimate.
 - **Overflow reasoning retained** yes
 - **Legitimate** Yes, and no constraint is applied. The return type must be `long long` because the answer exceeds int32, which is exactly the point: this would be the first curriculum problem to exercise `long long` on a real provider, a registry type implemented in Phases 2B-2D and never executed.
 
-### 14. Arrange integers to form the largest possible concatenated number
+### 15. Arrange integers to form the largest possible concatenated number
 
 - **Canonical range** the concatenation of up to 100 numbers, which as an integer would be hundreds of digits
 - **Robinhood range** unchanged — the answer is returned as a STRING, so no numeric range applies
@@ -1038,7 +1054,7 @@ reasoning survive, and whether the constraint is legitimate.
 - **Overflow reasoning retained** yes
 - **Legitimate** Yes, and by representation rather than by constraint. The canonical problem returns a string too, precisely because the value does not fit any integer type. This is the shape to prefer whenever it is available: change what is returned, not what is asked.
 
-### 23. Maximum product of a contiguous subarray
+### 24. Maximum product of a contiguous subarray
 
 - **Canonical range** LeetCode guarantees the answer fits a 32-bit integer — this is the CANONICAL constraint, not a Robinhood invention
 - **Robinhood range** the same: bound n and |value| so the product stays within int32
@@ -1046,7 +1062,7 @@ reasoning survive, and whether the constraint is legitimate.
 - **Overflow reasoning retained** no
 - **Legitimate** Yes. The lesson is carrying two running extremes because a negative value swaps them; overflow is not part of it, and the canonical problem already excludes overflow by construction.
 
-### 36. Reverse the bits of a 32-bit unsigned value
+### 37. Reverse the bits of a 32-bit unsigned value
 
 - **Canonical range** input and output are unsigned 32-bit, so the result reaches 4294967295
 - **Robinhood range** unchanged, but the RETURN type is `long long` because the canonical vocabulary has no unsigned type and 4294967295 exceeds int32
@@ -1054,7 +1070,7 @@ reasoning survive, and whether the constraint is legitimate.
 - **Overflow reasoning retained** yes
 - **Legitimate** Yes. The value is well inside the exact-integer range; only the declared type changes, and it changes to remain truthful about the range rather than to dodge a limit.
 
-### 46. Number of monotone lattice paths across a grid
+### 47. Number of monotone lattice paths across a grid
 
 - **Canonical range** LeetCode allows m, n up to 100 while asserting the answer fits about 2x10^9 — those two claims are not consistent, since C(198,99) is astronomically larger
 - **Robinhood range** m, n <= 20, giving a maximum of C(38,19) ~ 1.7x10^10, comfortably inside the exact-integer range
@@ -1062,7 +1078,7 @@ reasoning survive, and whether the constraint is legitimate.
 - **Overflow reasoning retained** no
 - **Legitimate** Yes. The lesson is recognising a 2-D table with a base row and column; the magnitude of the count is incidental, and the canonical statement is self-contradictory about it anyway. Tightening the bound makes the problem MORE coherent than the original.
 
-### 52. Minimum total cost to combine all lengths pairwise
+### 53. Minimum total cost to combine all lengths pairwise
 
 - **Canonical range** n up to 10^4 with values up to 10^4, giving a total around 10^9 — already near the int32 edge
 - **Robinhood range** n <= 1000 and value <= 10^4, giving a total under about 10^8
@@ -1072,7 +1088,7 @@ reasoning survive, and whether the constraint is legitimate.
 
 ## Slots C cannot express
 
-12 of 54. Every one is a nested-vector argument or return, which C's calling
+12 of 55. Every one is a nested-vector argument or return, which C's calling
 convention cannot model: a 2-D array needs a row count and a per-row column count, which is a
 different convention rather than a longer one. **Curriculum quality was not distorted to reach
 6/6.** Where a pattern would otherwise be entirely unreachable in C, one slot was chosen with a
@@ -1080,18 +1096,18 @@ naturally flat signature so the pattern still has an accessible entry point.
 
 | # | Pattern | Concept | Signature |
 | ---: | --- | --- | --- |
-| 15 | `recursion/subset-include-exclude` | Enumerate all subsets of a distinct-element array | `vector<int> nums -> vector<vector<int>>` |
-| 16 | `recursion/subset-include-exclude` | Enumerate subsets of an array containing duplicates, without repeats | `vector<int> nums -> vector<vector<int>>` |
-| 18 | `recursion/backtracking-with-restore` | All combinations of candidates summing to a target, reuse allowed | `vector<int> candidates, int target -> vector<vector<int>>` |
-| 20 | `arrays/intervals` | Merge a list of overlapping intervals | `vector<vector<int>> intervals -> vector<vector<int>>` |
-| 21 | `arrays/intervals` | Insert one interval into a sorted disjoint set | `vector<vector<int>> intervals, vector<int> newInterval -> vector<vector<int>>` |
-| 22 | `arrays/intervals` | Minimum number of rooms needed for overlapping meetings | `vector<vector<int>> intervals -> int` |
-| 41 | `graphs/bfs-shortest-path` | Shortest clear path through a binary grid, eight-directional | `vector<vector<int>> grid -> int` |
-| 42 | `graphs/bfs-shortest-path` | Minutes for a spreading state to fill a grid, or report impossible | `vector<vector<int>> grid -> int` |
-| 44 | `graphs/topological-sort` | Whether a set of prerequisite pairs can all be satisfied | `int numCourses, vector<vector<int>> prerequisites -> bool` |
-| 45 | `graphs/topological-sort` | Fewest rounds needed to finish all courses when independent ones run in parallel | `int numCourses, vector<vector<int>> relations -> int` |
-| 47 | `dynamic-programming/2d-grid` | Minimum-cost path from corner to corner of a cost grid | `vector<vector<int>> grid -> int` |
-| 48 | `dynamic-programming/2d-grid` | Monotone lattice paths with blocked cells | `vector<vector<int>> grid -> int` |
+| 16 | `recursion/subset-include-exclude` | Enumerate all subsets of a distinct-element array | `vector<int> nums -> vector<vector<int>>` |
+| 17 | `recursion/subset-include-exclude` | Enumerate subsets of an array containing duplicates, without repeats | `vector<int> nums -> vector<vector<int>>` |
+| 19 | `recursion/backtracking-with-restore` | All combinations of candidates summing to a target, reuse allowed | `vector<int> candidates, int target -> vector<vector<int>>` |
+| 21 | `arrays/intervals` | Merge a list of overlapping intervals | `vector<vector<int>> intervals -> vector<vector<int>>` |
+| 22 | `arrays/intervals` | Insert one interval into a sorted disjoint set | `vector<vector<int>> intervals, vector<int> newInterval -> vector<vector<int>>` |
+| 23 | `arrays/intervals` | Minimum number of rooms needed for overlapping meetings | `vector<vector<int>> intervals -> int` |
+| 42 | `graphs/bfs-shortest-path` | Shortest clear path through a binary grid, eight-directional | `vector<vector<int>> grid -> int` |
+| 43 | `graphs/bfs-shortest-path` | Minutes for a spreading state to fill a grid, or report impossible | `vector<vector<int>> grid -> int` |
+| 45 | `graphs/topological-sort` | Whether a set of prerequisite pairs can all be satisfied | `int numCourses, vector<vector<int>> prerequisites -> bool` |
+| 46 | `graphs/topological-sort` | Fewest rounds needed to finish all courses when independent ones run in parallel | `int numCourses, vector<vector<int>> relations -> int` |
+| 48 | `dynamic-programming/2d-grid` | Minimum-cost path from corner to corner of a cost grid | `vector<vector<int>> grid -> int` |
+| 49 | `dynamic-programming/2d-grid` | Monotone lattice paths with blocked cells | `vector<vector<int>> grid -> int` |
 
 ## Deliberately deferred
 

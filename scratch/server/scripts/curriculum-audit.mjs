@@ -32,9 +32,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  BLOCKERS, CLASSIFICATION, CONCEPTUAL_PATTERNS, FUTURE_ARCHITECTURE, KINDS, LEARNER_SEQUENCE,
-  MILESTONE_150, PATTERN_DEPENDENCIES, REQUIRES_REAUTHOR_AFTER_NODE_ENCODING, SLOT_DETAIL, TIERS,
-  blockedPatternKeys, patternKind,
+  BATCHES, BLOCKERS, CLASSIFICATION, CONCEPTUAL_PATTERNS, FUTURE_ARCHITECTURE, KINDS,
+  KNOWN_PIPELINE_DEFECTS, LEARNER_SEQUENCE, MILESTONE_150, PATTERN_DEPENDENCIES,
+  REQUIRES_REAUTHOR_AFTER_NODE_ENCODING, SLOT_DETAIL, TIERS, blockedPatternKeys, patternKind,
 } from './lib/curriculum-judgements.mjs';
 import { languageSupportsSignature, productionLanguages } from '../languages/registry.js';
 
@@ -347,6 +347,10 @@ for (const s of DUPLICATE_SUSPECTS) {
   });
 }
 defects.push(...detectDuplicateProblems());
+// Pipeline findings the audit cannot detect by inspection, because it never opens a database.
+for (const d of KNOWN_PIPELINE_DEFECTS) {
+  defects.push({ id: d.id, severity: d.severity, where: 'pipeline', detail: `${d.detail} CONSEQUENCE: ${d.consequence} FIX: ${d.fix}` });
+}
 
 // A problem whose statement both permits any order AND demands a specific one. Ungradable
 // prose: the grader uses exact deepEqual, so "any order" is never true.

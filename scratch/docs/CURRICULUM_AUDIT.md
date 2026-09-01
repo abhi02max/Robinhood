@@ -3,7 +3,7 @@
 **Generated** by `node server/scripts/curriculum-audit.mjs`. Do not edit by hand — every
 number below is recomputed from `topics.json`, `patterns/*.json` and `problems/`.
 
-Generated at `2026-09-01T17:59:58.027Z`.
+Generated at `2026-09-01T18:13:03.122Z`.
 
 Sections 1–4 are **repository facts**. Sections 5 onward are **engineering judgement**,
 kept separate on purpose. No company-frequency figures are used anywhere.
@@ -12,11 +12,11 @@ kept separate on purpose. No company-frequency figures are used anywhere.
 
 | | |
 | --- | ---: |
-| Problems | 96 |
+| Problems | 95 |
 | Easy | 34 |
-| Medium | 52 |
+| Medium | 51 |
 | Hard | 10 |
-| Test cases | 1168 |
+| Test cases | 1156 |
 | Topics | 17 |
 | Patterns | 108 |
 | Empty topics | 8 |
@@ -52,8 +52,8 @@ Populated: **16 of 79 (20.3%)**.
 ### Concentration
 
 The single most populated topic is **sliding-window-two-pointers** with 
-**58 of 96 problems (60.4%)**. 
-The five largest patterns hold **59.4%** of everything.
+**57 of 95 problems (60%)**. 
+The five largest patterns hold **58.9%** of everything.
 
 ## 2. Topic distribution
 
@@ -68,7 +68,7 @@ The five largest patterns hold **59.4%** of everything.
 | 7 | Recursion | 6 | 0 | **0** | 0 | 0 | 0 | basics |
 | 8 | Bit Manipulation | 6 | 1 | 4 | 3 | 1 | 0 | basics |
 | 9 | Stack & Queue | 7 | 2 | 8 | 2 | 5 | 1 | arrays |
-| 10 | Sliding Window & Two Pointers | 7 | 6 | 58 | 17 | 32 | 9 | arrays, strings |
+| 10 | Sliding Window & Two Pointers | 7 | 6 | 57 | 17 | 31 | 9 | arrays, strings |
 | 11 | Heaps | 6 | 0 | **0** | 0 | 0 | 0 | arrays, sorting |
 | 12 | Greedy | 6 | 1 | 4 | 1 | 3 | 0 | sorting, arrays |
 | 13 | Binary Trees | 7 | 0 | **0** | 0 | 0 | 0 | recursion |
@@ -180,7 +180,7 @@ The five largest patterns hold **59.4%** of everything.
 | 6 | Queue from Stacks (and Vice Versa) | **0** | 0 | 0 | 0 | IMPORTANT ⛔ | — |
 | 7 | BFS via Queue (Level-by-Level State Search) | **0** | 0 | 0 | 0 | ADVANCED | — |
 
-### 10. Sliding Window & Two Pointers `sliding-window-two-pointers` — 58 problem(s)
+### 10. Sliding Window & Two Pointers `sliding-window-two-pointers` — 57 problem(s)
 
 | # | Pattern | Count | E | M | H | Tier | Problems |
 | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
@@ -190,7 +190,7 @@ The five largest patterns hold **59.4%** of everything.
 | 4 | Opposite-Direction Two Pointers (Converging on Sorted Input) | 12 | 5 | 6 | 1 | FOUNDATION | two-sum-ii-sorted-array (M), 3sum (M), 4sum (M), container-with-most-water (M), trapping-rain-water (H), valid-palindrome (E), valid-palindrome-ii (E), reverse-string (E), sort-colors (M), squares-of-a-sorted-array (E), boats-to-save-people (M), two-sum-less-than-k (E) |
 | 5 | Same-Direction Two Pointers (Fast & Slow / Partition) | 12 | 6 | 6 | 0 | FOUNDATION | remove-duplicates-from-sorted-array (E), remove-element (E), move-zeroes (E), linked-list-cycle (E), linked-list-cycle-ii (M), middle-of-the-linked-list (E), remove-nth-node-from-end-of-list (M), happy-number (E), remove-duplicates-from-sorted-array-ii (M), find-the-duplicate-number (M), partition-labels (M), string-compression (M) |
 | 6 | Multi-Pointer Merge & Sweep | **0** | 0 | 0 | 0 | IMPORTANT | — |
-| 7 | Monotonic Deque Window (Sliding Min/Max in O(1) Amortized) | 9 | 0 | 3 | 6 | ADVANCED | sliding-window-maximum (H), sliding-window-minimum (H), constrained-subsequence-sum (H), shortest-subarray-with-sum-at-least-k (H), jump-game-vi (M), longest-continuous-subarray-with-absolute-diff (M), maximum-number-of-robots-within-budget (H), max-value-of-equation (H), continuous-subarrays-deque (M) |
+| 7 | Monotonic Deque Window (Sliding Min/Max in O(1) Amortized) | 8 | 0 | 2 | 6 | ADVANCED | sliding-window-maximum (H), sliding-window-minimum (H), constrained-subsequence-sum (H), shortest-subarray-with-sum-at-least-k (H), jump-game-vi (M), longest-continuous-subarray-with-absolute-diff (M), maximum-number-of-robots-within-budget (H), max-value-of-equation (H) |
 
 ### 11. Heaps `heaps` — 0 problem(s)
 
@@ -284,14 +284,15 @@ function. Neither counts as a missing coding problem; see section 6.
 - **INVERTED_TEACHING_ORDER** `greedy/sort-then-greedy` — "greedy/sort-then-greedy" holds 0 problems while "greedy/interval-scheduling" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `sorting/custom-comparator-and-stability` — "sorting/custom-comparator-and-stability" holds 0 problems while "greedy/interval-scheduling" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `recursion/subset-include-exclude` — "recursion/subset-include-exclude" holds 0 problems while "dynamic-programming/1d-state" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
-- **NO_ENTRY_PROBLEM** `sliding-window-two-pointers/monotonic-deque-window` — 9 problems, none Easy (M3 H6) — a learner meets this pattern for the first time at Medium.
-- **DUPLICATE_PROBLEM** `continuous-subarrays vs continuous-subarrays-deque` — identical signature (vector<int>->int) AND byte-identical test cases. sliding-window-two-pointers/at-most-k-window vs sliding-window-two-pointers/monotonic-deque-window. One of the two inflates the problem count without teaching anything new. Not deleted in 3A.1: removing a problem changes the milestone baseline and is a content decision.
+- **NO_ENTRY_PROBLEM** `sliding-window-two-pointers/monotonic-deque-window` — 8 problems, none Easy (M2 H6) — a learner meets this pattern for the first time at Medium.
+- **SEEDER_HAS_NO_DELETE_PASS** `pipeline` — seed-learning.js is upsert-only (INSERT ... ON CONFLICT (slug) DO UPDATE) and has no delete pass. Removing a problem from a seed file therefore leaves the row in the database, and problems-index keeps serving it. The divergence is silent: no gate compares the database against the seed files. CONSEQUENCE: Any content deletion has to be done twice, and forgetting the second half ships a problem that exists for users but has no source of truth. FIX: Either a reconciling delete pass in the seeder, or a drift check that fails when the database holds a problem slug no seed file declares. Not built in 3A.2A: it is infrastructure and that phase is content.
 
-### low (4)
+### low (5)
 
-- **DUPLICATE_CONCEPT** `stack-queue/monotonic-deque vs sliding-window-two-pointers/monotonic-deque-window` — Two patterns for the same technique in different topics. The stack-queue one is empty; the sliding-window one holds the repo's largest concentration of Hard problems. [measured: stack-queue/monotonic-deque=0, sliding-window-two-pointers/monotonic-deque-window=9]
+- **DUPLICATE_CONCEPT** `stack-queue/monotonic-deque vs sliding-window-two-pointers/monotonic-deque-window` — Two patterns for the same technique in different topics. The stack-queue one is empty; the sliding-window one holds the repo's largest concentration of Hard problems. [measured: stack-queue/monotonic-deque=0, sliding-window-two-pointers/monotonic-deque-window=8]
 - **DUPLICATE_CONCEPT** `arrays/dutch-national-flag vs sliding-window-two-pointers/opposite-direction-two-pointers` — Three-way partition. The arrays pattern is empty, but sort-colors — the canonical Dutch-flag problem — is already authored under opposite-direction-two-pointers. [measured: arrays/dutch-national-flag=0, sliding-window-two-pointers/opposite-direction-two-pointers=12]
 - **MISPLACED_PROBLEM** `sliding-window-two-pointers/same-direction-two-pointers vs linked-list/*` — Four linked-list problems are authored under a two-pointer pattern because the linked-list topic is harness-blocked. NOT relocated in 3A.1 — see REQUIRES_REAUTHOR_AFTER_NODE_ENCODING: relocation alone is insufficient because a cycle cannot be represented in a flat array at all. [measured: sliding-window-two-pointers/same-direction-two-pointers=12]
+- **V2_FILES_WITHOUT_AUTHORING_SPECS** `pipeline` — Three v2 problem files have no authoring spec: arrays/kadane-maximum-subarray, stack-queue/parenthesis-matching, sliding-window-two-pointers/variable-size-sliding-window. build-authored-problems.js rewrites `<pattern>.json` wholesale from the spec, so creating a spec for one of those patterns would ERASE the existing problem unless it is re-authored into the spec at the same time. CONSEQUENCE: A trap for exactly the patterns the 150 milestone tops up. Hit deliberately rather than accidentally: the kadane spec re-authors maximum-subarray so it is not lost. FIX: Bring all v2 files under the pipeline, which is the same work as defect D7.
 - **CONTRADICTORY_ORDERING_PROSE** `4sum` — the statement says the answer may be returned "in any order" and then requires a specific one. The grader compares with an exact deepEqual, so only the specific order is accepted and the first clause is false. Wording fix, no behaviour change.
 
 ## 5. Classification
@@ -429,15 +430,15 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 
 | | |
 | --- | ---: |
-| Current total | 96 |
-| Proposed additions | 54 |
+| Current total | 95 |
+| Proposed additions | 55 |
 | Resulting total | 150 |
 | Patterns touched | 23 |
 | — newly opened | 20 |
 | — topped up | 3 |
 | Patterns populated after | 36 of 108 (33.3%) |
 | Patterns still empty after | 72 |
-| Additions: Easy / Medium / Hard | 14 / 37 / 3 |
+| Additions: Easy / Medium / Hard | 14 / 38 / 3 |
 | Additions C cannot express | 12 |
 | Additions flagged for 64-bit | 7 |
 
@@ -447,7 +448,7 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 | --- | --- | ---: | ---: | ---: | --- |
 | `basics/simulation` | FOUNDATION | 0 | +3 | 3 | Easy → Easy → Medium |
 | `basics/integer-math-modular` | IMPORTANT | 0 | +3 | 3 | Easy → Medium → Easy |
-| `basics/prefix-arithmetic-basics` | FOUNDATION | 0 | +2 | 2 | Easy → Easy |
+| `basics/prefix-arithmetic-basics` | FOUNDATION | 0 | +3 | 3 | Easy → Easy → Medium |
 | `sorting/comparison-sorts-elementary` | FOUNDATION | 0 | +2 | 2 | Easy → Easy |
 | `sorting/merge-sort-divide-conquer` | CORE_INTERVIEW | 0 | +2 | 2 | Medium → Medium |
 | `sorting/custom-comparator-and-stability` | CORE_INTERVIEW | 0 | +2 | 2 | Medium → Medium |
@@ -481,52 +482,53 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 | 6 | `basics/integer-math-modular` | Count trailing zeroes in a factorial without computing it | Easy | Reason about prime factors instead of evaluating | 6/6 | — |
 | 7 | `basics/prefix-arithmetic-basics` | Running maximum of a sequence | Easy | See a prefix as any associative fold, not only a sum | 6/6 | — |
 | 8 | `basics/prefix-arithmetic-basics` | Answer one range-sum query from a precomputed prefix table | Easy | Separate the precompute step from the query step | 6/6 | — |
-| 9 | `sorting/comparison-sorts-elementary` | Sort an array with an explicit insertion sort | Easy | Write a sort rather than call one, and see the O(N^2) cost | 6/6 | — |
-| 10 | `sorting/comparison-sorts-elementary` | Count the swaps a bubble sort performs, with early termination | Easy | Connect an operation count to the asymptotic bound | 6/6 | — |
-| 11 | `sorting/merge-sort-divide-conquer` | Sort an array with merge sort | Medium | Split, recurse, merge — and see why the merge is the whole algorithm | 6/6 | — |
-| 12 | `sorting/merge-sort-divide-conquer` | Count inversions in an array using the merge step | Medium | Extract a quantity from a sort rather than the sorted order | 6/6 | ⚠ |
-| 13 | `sorting/custom-comparator-and-stability` | Sort values by descending frequency, breaking ties by value | Medium | Sort by a derived key and make the tie-break explicit | 6/6 | — |
-| 14 | `sorting/custom-comparator-and-stability` | Arrange integers to form the largest possible concatenated number | Medium | Recognise a comparator that is not a numeric comparison | 6/6 | ⚠ |
-| 15 | `recursion/subset-include-exclude` | Enumerate all subsets of a distinct-element array | Medium | See the binary include/exclude decision tree | 5/6 — **C no** | — |
-| 16 | `recursion/subset-include-exclude` | Enumerate subsets of an array containing duplicates, without repeats | Medium | Prune a branch by sorting first and skipping equal siblings | 5/6 — **C no** | — |
-| 17 | `recursion/subset-include-exclude` | Count subsets summing to a target, without enumerating them | Medium | Separate counting from enumeration — the step that makes DP possible | 6/6 | — |
-| 18 | `recursion/backtracking-with-restore` | All combinations of candidates summing to a target, reuse allowed | Medium | Mutate shared state and undo it on the way out | 5/6 — **C no** | — |
-| 19 | `recursion/backtracking-with-restore` | All letter strings a digit sequence could spell on a phone keypad | Medium | Backtrack over a mapping rather than over the input array | 6/6 | — |
-| 20 | `arrays/intervals` | Merge a list of overlapping intervals | Medium | Sort by start, then extend or emit | 5/6 — **C no** | — |
-| 21 | `arrays/intervals` | Insert one interval into a sorted disjoint set | Medium | Handle before/overlap/after as three explicit phases | 5/6 — **C no** | — |
-| 22 | `arrays/intervals` | Minimum number of rooms needed for overlapping meetings | Medium | Convert intervals into a sweep over start/end events | 5/6 — **C no** | — |
-| 23 | `arrays/kadane-maximum-subarray` | Maximum product of a contiguous subarray | Medium | Carry two running extremes because a negative flips them | 6/6 | ⚠ |
-| 24 | `arrays/kadane-maximum-subarray` | Maximum subarray sum in a circular array | Medium | Decompose into the non-wrapping case and its complement | 6/6 | — |
-| 25 | `binary-search/lower-upper-bound` | Leftmost insertion position for a target among duplicates | Easy | Make the loop return a boundary, not a hit | 6/6 | — |
-| 26 | `binary-search/lower-upper-bound` | First and last index of a target in a sorted array | Medium | Compose lower and upper bound into a range | 6/6 | — |
-| 27 | `binary-search/lower-upper-bound` | For each query, count sorted values strictly below it | Medium | Reuse one sorted structure across many queries | 6/6 | — |
-| 28 | `binary-search/binary-search-on-answer` | Smallest ship capacity that clears all packages within a day budget | Medium | Binary search a monotone predicate rather than an array | 6/6 | — |
-| 29 | `binary-search/binary-search-on-answer` | Minimum hourly rate to finish all piles within an hour budget | Medium | Recognise the same predicate shape in different prose | 6/6 | — |
-| 30 | `sliding-window-two-pointers/variable-size-sliding-window` | Shortest subarray whose sum reaches a target | Medium | Grow to satisfy, shrink to minimise | 6/6 | — |
-| 31 | `sliding-window-two-pointers/variable-size-sliding-window` | Longest substring obtainable by replacing at most k characters | Medium | Keep a window valid against a derived quantity, not a raw count | 6/6 | — |
-| 32 | `sliding-window-two-pointers/variable-size-sliding-window` | Smallest window of a string containing all characters of a pattern | Hard | Combine a frequency map with a shrinking window | 6/6 | — |
-| 33 | `strings/palindrome-expansion` | Count palindromic substrings by expanding around each centre | Medium | Handle odd and even centres as one loop | 6/6 | — |
-| 34 | `strings/palindrome-expansion` | Longest palindromic substring | Medium | Track the best centre rather than a running count | 6/6 | — |
-| 35 | `bit-manipulation/basic-bit-ops` | Number of set bits for every integer from 0 to n | Easy | Test and shift individual bits, and notice the recurrence | 6/6 | — |
-| 36 | `bit-manipulation/basic-bit-ops` | Reverse the bits of a 32-bit unsigned value | Easy | Build a result bit by bit while consuming the input | 6/6 | ⚠ |
-| 37 | `stack-queue/parenthesis-matching` | Minimum insertions to make a bracket string balanced | Medium | Track a deficit counter instead of a full stack | 6/6 | — |
-| 38 | `stack-queue/parenthesis-matching` | Length of the longest valid parenthesis substring | Hard | Use stacked indices rather than stacked symbols | 6/6 | — |
-| 39 | `greedy/sort-then-greedy` | Maximise satisfied children by matching sorted sizes to sorted demands | Easy | Sort both sides, then advance greedily | 6/6 | — |
-| 40 | `greedy/sort-then-greedy` | Minimum increments to make all values distinct | Medium | Prove the local choice is safe after sorting | 6/6 | — |
-| 41 | `graphs/bfs-shortest-path` | Shortest clear path through a binary grid, eight-directional | Medium | BFS yields shortest paths on an unweighted graph; DFS does not | 5/6 — **C no** | — |
-| 42 | `graphs/bfs-shortest-path` | Minutes for a spreading state to fill a grid, or report impossible | Medium | Seed a BFS from many sources at once and count levels | 5/6 — **C no** | — |
-| 43 | `graphs/bfs-shortest-path` | Fewest one-letter transformations between two words via a dictionary | Hard | Recognise an implicit graph where states are not given as edges | 6/6 | — |
-| 44 | `graphs/topological-sort` | Whether a set of prerequisite pairs can all be satisfied | Medium | Detect a cycle in a directed graph via in-degrees | 5/6 — **C no** | — |
-| 45 | `graphs/topological-sort` | Fewest rounds needed to finish all courses when independent ones run in parallel | Medium | Peel the dependency graph layer by layer with Kahn's algorithm | 5/6 — **C no** | — |
-| 46 | `dynamic-programming/2d-grid` | Number of monotone lattice paths across a grid | Easy | See a 2-D table and its base row and column | 6/6 | ⚠ |
-| 47 | `dynamic-programming/2d-grid` | Minimum-cost path from corner to corner of a cost grid | Medium | Choose between predecessors instead of summing them | 5/6 — **C no** | — |
-| 48 | `dynamic-programming/2d-grid` | Monotone lattice paths with blocked cells | Medium | Encode an obstacle as a zeroed state | 5/6 — **C no** | — |
-| 49 | `dynamic-programming/0-1-knapsack` | Whether an array splits into two equal-sum halves | Medium | Recognise subset-sum behind a partition question | 6/6 | — |
-| 50 | `dynamic-programming/0-1-knapsack` | Smallest achievable difference between two subset sums | Medium | Search reachable sums rather than test one target | 6/6 | — |
-| 51 | `heaps/heap-as-priority-queue` | Repeatedly combine the two largest values until one or none remains | Easy | Use a heap for repeated extract-max | 6/6 | — |
-| 52 | `heaps/heap-as-priority-queue` | Minimum total cost to combine all lengths pairwise | Medium | Extract-min twice, push once, and see why greedy is optimal here | 6/6 | ⚠ |
-| 53 | `heaps/top-k-with-heap` | kth largest element of an unsorted array | Medium | Keep a bounded heap of size k instead of sorting everything | 6/6 | — |
-| 54 | `heaps/top-k-with-heap` | The k most frequent values in an array | Medium | Compose a frequency map with a bounded heap | 6/6 | — |
+| 9 | `basics/prefix-arithmetic-basics` | Count the split positions where the left part's sum is at least the right part's | Medium | Use a running prefix against a fixed total, so each split is answered in constant time | 6/6 | — |
+| 10 | `sorting/comparison-sorts-elementary` | Sort an array with an explicit insertion sort | Easy | Write a sort rather than call one, and see the O(N^2) cost | 6/6 | — |
+| 11 | `sorting/comparison-sorts-elementary` | Count the swaps a bubble sort performs, with early termination | Easy | Connect an operation count to the asymptotic bound | 6/6 | — |
+| 12 | `sorting/merge-sort-divide-conquer` | Sort an array with merge sort | Medium | Split, recurse, merge — and see why the merge is the whole algorithm | 6/6 | — |
+| 13 | `sorting/merge-sort-divide-conquer` | Count inversions in an array using the merge step | Medium | Extract a quantity from a sort rather than the sorted order | 6/6 | ⚠ |
+| 14 | `sorting/custom-comparator-and-stability` | Sort values by descending frequency, breaking ties by value | Medium | Sort by a derived key and make the tie-break explicit | 6/6 | — |
+| 15 | `sorting/custom-comparator-and-stability` | Arrange integers to form the largest possible concatenated number | Medium | Recognise a comparator that is not a numeric comparison | 6/6 | ⚠ |
+| 16 | `recursion/subset-include-exclude` | Enumerate all subsets of a distinct-element array | Medium | See the binary include/exclude decision tree | 5/6 — **C no** | — |
+| 17 | `recursion/subset-include-exclude` | Enumerate subsets of an array containing duplicates, without repeats | Medium | Prune a branch by sorting first and skipping equal siblings | 5/6 — **C no** | — |
+| 18 | `recursion/subset-include-exclude` | Count subsets summing to a target, without enumerating them | Medium | Separate counting from enumeration — the step that makes DP possible | 6/6 | — |
+| 19 | `recursion/backtracking-with-restore` | All combinations of candidates summing to a target, reuse allowed | Medium | Mutate shared state and undo it on the way out | 5/6 — **C no** | — |
+| 20 | `recursion/backtracking-with-restore` | All letter strings a digit sequence could spell on a phone keypad | Medium | Backtrack over a mapping rather than over the input array | 6/6 | — |
+| 21 | `arrays/intervals` | Merge a list of overlapping intervals | Medium | Sort by start, then extend or emit | 5/6 — **C no** | — |
+| 22 | `arrays/intervals` | Insert one interval into a sorted disjoint set | Medium | Handle before/overlap/after as three explicit phases | 5/6 — **C no** | — |
+| 23 | `arrays/intervals` | Minimum number of rooms needed for overlapping meetings | Medium | Convert intervals into a sweep over start/end events | 5/6 — **C no** | — |
+| 24 | `arrays/kadane-maximum-subarray` | Maximum product of a contiguous subarray | Medium | Carry two running extremes because a negative flips them | 6/6 | ⚠ |
+| 25 | `arrays/kadane-maximum-subarray` | Maximum subarray sum in a circular array | Medium | Decompose into the non-wrapping case and its complement | 6/6 | — |
+| 26 | `binary-search/lower-upper-bound` | Leftmost insertion position for a target among duplicates | Easy | Make the loop return a boundary, not a hit | 6/6 | — |
+| 27 | `binary-search/lower-upper-bound` | First and last index of a target in a sorted array | Medium | Compose lower and upper bound into a range | 6/6 | — |
+| 28 | `binary-search/lower-upper-bound` | For each query, count sorted values strictly below it | Medium | Reuse one sorted structure across many queries | 6/6 | — |
+| 29 | `binary-search/binary-search-on-answer` | Smallest ship capacity that clears all packages within a day budget | Medium | Binary search a monotone predicate rather than an array | 6/6 | — |
+| 30 | `binary-search/binary-search-on-answer` | Minimum hourly rate to finish all piles within an hour budget | Medium | Recognise the same predicate shape in different prose | 6/6 | — |
+| 31 | `sliding-window-two-pointers/variable-size-sliding-window` | Shortest subarray whose sum reaches a target | Medium | Grow to satisfy, shrink to minimise | 6/6 | — |
+| 32 | `sliding-window-two-pointers/variable-size-sliding-window` | Longest substring obtainable by replacing at most k characters | Medium | Keep a window valid against a derived quantity, not a raw count | 6/6 | — |
+| 33 | `sliding-window-two-pointers/variable-size-sliding-window` | Smallest window of a string containing all characters of a pattern | Hard | Combine a frequency map with a shrinking window | 6/6 | — |
+| 34 | `strings/palindrome-expansion` | Count palindromic substrings by expanding around each centre | Medium | Handle odd and even centres as one loop | 6/6 | — |
+| 35 | `strings/palindrome-expansion` | Longest palindromic substring | Medium | Track the best centre rather than a running count | 6/6 | — |
+| 36 | `bit-manipulation/basic-bit-ops` | Number of set bits for every integer from 0 to n | Easy | Test and shift individual bits, and notice the recurrence | 6/6 | — |
+| 37 | `bit-manipulation/basic-bit-ops` | Reverse the bits of a 32-bit unsigned value | Easy | Build a result bit by bit while consuming the input | 6/6 | ⚠ |
+| 38 | `stack-queue/parenthesis-matching` | Minimum insertions to make a bracket string balanced | Medium | Track a deficit counter instead of a full stack | 6/6 | — |
+| 39 | `stack-queue/parenthesis-matching` | Length of the longest valid parenthesis substring | Hard | Use stacked indices rather than stacked symbols | 6/6 | — |
+| 40 | `greedy/sort-then-greedy` | Maximise satisfied children by matching sorted sizes to sorted demands | Easy | Sort both sides, then advance greedily | 6/6 | — |
+| 41 | `greedy/sort-then-greedy` | Minimum increments to make all values distinct | Medium | Prove the local choice is safe after sorting | 6/6 | — |
+| 42 | `graphs/bfs-shortest-path` | Shortest clear path through a binary grid, eight-directional | Medium | BFS yields shortest paths on an unweighted graph; DFS does not | 5/6 — **C no** | — |
+| 43 | `graphs/bfs-shortest-path` | Minutes for a spreading state to fill a grid, or report impossible | Medium | Seed a BFS from many sources at once and count levels | 5/6 — **C no** | — |
+| 44 | `graphs/bfs-shortest-path` | Fewest one-letter transformations between two words via a dictionary | Hard | Recognise an implicit graph where states are not given as edges | 6/6 | — |
+| 45 | `graphs/topological-sort` | Whether a set of prerequisite pairs can all be satisfied | Medium | Detect a cycle in a directed graph via in-degrees | 5/6 — **C no** | — |
+| 46 | `graphs/topological-sort` | Fewest rounds needed to finish all courses when independent ones run in parallel | Medium | Peel the dependency graph layer by layer with Kahn's algorithm | 5/6 — **C no** | — |
+| 47 | `dynamic-programming/2d-grid` | Number of monotone lattice paths across a grid | Easy | See a 2-D table and its base row and column | 6/6 | ⚠ |
+| 48 | `dynamic-programming/2d-grid` | Minimum-cost path from corner to corner of a cost grid | Medium | Choose between predecessors instead of summing them | 5/6 — **C no** | — |
+| 49 | `dynamic-programming/2d-grid` | Monotone lattice paths with blocked cells | Medium | Encode an obstacle as a zeroed state | 5/6 — **C no** | — |
+| 50 | `dynamic-programming/0-1-knapsack` | Whether an array splits into two equal-sum halves | Medium | Recognise subset-sum behind a partition question | 6/6 | — |
+| 51 | `dynamic-programming/0-1-knapsack` | Smallest achievable difference between two subset sums | Medium | Search reachable sums rather than test one target | 6/6 | — |
+| 52 | `heaps/heap-as-priority-queue` | Repeatedly combine the two largest values until one or none remains | Easy | Use a heap for repeated extract-max | 6/6 | — |
+| 53 | `heaps/heap-as-priority-queue` | Minimum total cost to combine all lengths pairwise | Medium | Extract-min twice, push once, and see why greedy is optimal here | 6/6 | ⚠ |
+| 54 | `heaps/top-k-with-heap` | kth largest element of an unsorted array | Medium | Keep a bounded heap of size k instead of sorting everything | 6/6 | — |
+| 55 | `heaps/top-k-with-heap` | The k most frequent values in an array | Medium | Compose a frequency map with a bounded heap | 6/6 | — |
 
 ### Deliberately deferred
 
@@ -540,7 +542,7 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 
 ## 9. Six-language implications
 
-12 of 54 proposed problems cannot be expressed in C today. Every one is a
+12 of 55 proposed problems cannot be expressed in C today. Every one is a
 nested-vector argument or return, which C's calling convention cannot model: a 2-D array
 needs a row count and a per-row column count, which is a different convention rather than a
 longer one. Grouped:
