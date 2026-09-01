@@ -1,0 +1,239 @@
+{
+  "$schema": "../../problem.schema.json",
+  "schema_version": "2.0",
+  "topic_slug": "sorting",
+  "pattern_slug": "comparison-sorts-elementary",
+  "problems": [
+    {
+      "slug": "sort-array-by-insertion",
+      "title": "Sort an Array by Insertion",
+      "difficulty": "Easy",
+      "tags": ["sorting", "comparison-sorts-elementary", "insertion-sort", "in-place"],
+      "description": "Return the values of `nums` in non-decreasing order. Write the sort yourself rather than calling a library routine — the point is the mechanics.\n\nUse insertion sort. Treat the front of the array as a sorted region that starts as just the first element, then take each following element and slide it left past every larger value until it lands in the right place. Equal values must keep their original relative order, which insertion sort gives you for free provided you stop sliding at the first value that is not strictly greater.",
+      "real_world_analogy": "Sorting a hand of playing cards as they are dealt. You hold a tidy fan of the cards you already have, and each new card is pushed left past the ones that outrank it until it sits between the right two. You never re-sort the whole hand.",
+      "examples": [
+        {
+          "input": "nums = [5,2,4,6,1,3]",
+          "output": "[1,2,3,4,5,6]",
+          "explanation": "Each element slides left past the larger values already placed."
+        },
+        {
+          "input": "nums = [1,2,3,4]",
+          "output": "[1,2,3,4]",
+          "explanation": "Already sorted. Insertion sort does one comparison per element and no shifts; selection sort would still do every comparison."
+        },
+        {
+          "input": "nums = [4,3,2,1]",
+          "output": "[1,2,3,4]",
+          "explanation": "Reverse sorted, the worst case: every element slides the full width of the sorted prefix."
+        },
+        {
+          "input": "nums = [2,2,1,2]",
+          "output": "[1,2,2,2]",
+          "explanation": "Duplicates. Stopping the slide at the first value that is not strictly greater keeps equal values in their original order."
+        }
+      ],
+      "constraints": [
+        "1 <= nums.length <= 2000",
+        "-10^6 <= nums[i] <= 10^6"
+      ],
+      "edge_cases": [
+        "A single element, which is already sorted",
+        "An already-sorted array, which is the best case and needs no sliding at all",
+        "A reverse-sorted array, which is the worst case and slides every element the maximum distance",
+        "Duplicate values, whose relative order must be preserved",
+        "All values identical, so no element ever moves"
+      ],
+      "hints": [
+        "Grow a sorted region from the left. Before processing index i, positions 0 through i-1 are already in order.",
+        "To place nums[i], compare it with its left neighbour and shift that neighbour right while it is strictly greater. Stop at the first neighbour that is not.",
+        "Stopping on \"not strictly greater\" rather than \"not greater or equal\" is what keeps equal values in their original order. Sliding past an equal value would reverse them."
+      ],
+      "approaches": [
+        {
+          "name": "Selection Sort",
+          "summary": "Repeatedly find the smallest remaining value and move it to the front.",
+          "intuition": "A different elementary sort, and the natural one to reach for first: scan the unsorted region for its minimum, swap it into place, shrink the region, repeat. It is easy to convince yourself it is correct because after k rounds the first k positions provably hold the k smallest values.\n\nIt is the right comparison for insertion sort because it exposes what insertion sort buys. Selection sort always performs the full N^2/2 comparisons even on an already-sorted array, because it cannot know the minimum without looking at everything. Insertion sort stops sliding as soon as an element is in place, so on sorted input it is linear. Same asymptotic class, very different behaviour on real data.\n\nIt is also NOT stable as usually written, since swapping a distant minimum into place jumps it over equal values — which is exactly the property the optimal version has to preserve.",
+          "steps": [
+            "Copy the input so it is not modified in place.",
+            "For each position i from the left, scan positions i onwards for the smallest value.",
+            "Swap that smallest value into position i.",
+            "Continue with the next position."
+          ],
+          "code": {
+            "javascript": "function sortArray(nums) {\n  const out = nums.slice();\n  for (let i = 0; i < out.length; i++) {\n    let smallest = i;\n    for (let j = i + 1; j < out.length; j++) {\n      if (out[j] < out[smallest]) smallest = j;\n    }\n    const swap = out[i];\n    out[i] = out[smallest];\n    out[smallest] = swap;\n  }\n  return out;\n}",
+            "python": "def sort_array(nums):\n    out = list(nums)\n    for i in range(len(out)):\n        smallest = i\n        for j in range(i + 1, len(out)):\n            if out[j] < out[smallest]:\n                smallest = j\n        out[i], out[smallest] = out[smallest], out[i]\n    return out"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Insertion Sort",
+          "summary": "Grow a sorted prefix, sliding each new element left into position.",
+          "intuition": "Maintain the invariant that everything left of the current index is already sorted. To extend it by one, lift out the element at the current index and shift larger neighbours one place right until the gap is where the element belongs, then drop it in.\n\nThe shifting matters more than the comparison. Each element travels only as far as it needs to, so the total work is proportional to how far the input is from sorted — the number of adjacent exchanges required, which is the inversion count. Already-sorted input costs one comparison per element and no shifts; reverse-sorted input costs the full quadratic.\n\nThat sensitivity to existing order is why insertion sort is still used in practice, as the base case inside faster sorts once the subarrays get small.",
+          "steps": [
+            "Copy the input so it is not modified in place.",
+            "For each index i from 1 onwards, hold the value at i aside.",
+            "Shift every element to its left that is strictly greater one position right.",
+            "Place the held value in the gap that opens up.",
+            "Return the array."
+          ],
+          "code": {
+            "javascript": "function sortArray(nums) {\n  const out = nums.slice();\n  for (let i = 1; i < out.length; i++) {\n    const value = out[i];\n    let j = i - 1;\n    while (j >= 0 && out[j] > value) {\n      out[j + 1] = out[j];\n      j -= 1;\n    }\n    out[j + 1] = value;\n  }\n  return out;\n}",
+            "python": "def sort_array(nums):\n    out = list(nums)\n    for i in range(1, len(out)):\n        value = out[i]\n        j = i - 1\n        while j >= 0 and out[j] > value:\n            out[j + 1] = out[j]\n            j -= 1\n        out[j + 1] = value\n    return out"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(N)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function sortArray(nums) {\n  // Your code here\n}",
+        "python": "def sort_array(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    vector<int> sortArray(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int[] sortArray(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n",
+        "c": "/**\n * Return a malloc'd array and set *returnSize to its length.\n */\nint* sortArray(int* nums, int numsSize, int* returnSize) {\n    // Write your solution here.\n    *returnSize = 0;\n    return NULL;\n}\n",
+        "csharp": "public class Solution {\n    public int[] SortArray(int[] nums) {\n        // Write your solution here.\n        return null;\n    }\n}\n"
+      },
+      "cpp_signature":       {
+        "fn": "sortArray",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "vector<int>"
+      },
+      "time_complexity": "O(N^2)",
+      "space_complexity": "O(N)",
+      "test_cases": [
+        { "input_payload": {"nums":[5,2,4,6,1,3]}, "expected_output": [1,2,3,4,5,6], "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[1,2,3,4]}, "expected_output": [1,2,3,4], "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[4,3,2,1]}, "expected_output": [1,2,3,4], "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[2,2,1,2]}, "expected_output": [1,2,2,2], "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[7]}, "expected_output": [7], "is_hidden": true, "order_index": 5, "label": "single element" },
+        { "input_payload": {"nums":[2,1]}, "expected_output": [1,2], "is_hidden": true, "order_index": 6, "label": "smallest array needing a swap" },
+        { "input_payload": {"nums":[1,2]}, "expected_output": [1,2], "is_hidden": true, "order_index": 7, "label": "smallest array already sorted" },
+        { "input_payload": {"nums":[3,3,3,3,3]}, "expected_output": [3,3,3,3,3], "is_hidden": true, "order_index": 8, "label": "all identical, nothing moves" },
+        { "input_payload": {"nums":[-5,-1,-3,-2,-4]}, "expected_output": [-5,-4,-3,-2,-1], "is_hidden": true, "order_index": 9, "label": "all negative" },
+        { "input_payload": {"nums":[0,-1000000,1000000,0]}, "expected_output": [-1000000,0,0,1000000], "is_hidden": true, "order_index": 10, "label": "constraint boundary values with a duplicate zero" },
+        { "input_payload": {"nums":[10,9,8,7,6,5,4,3,2,1]}, "expected_output": [1,2,3,4,5,6,7,8,9,10], "is_hidden": true, "order_index": 11, "label": "ten elements fully reversed" },
+        { "input_payload": {"nums":[1,5,2,5,3,5,4]}, "expected_output": [1,2,3,4,5,5,5], "is_hidden": true, "order_index": 12, "label": "a repeated value interleaved with smaller ones" },
+        { "input_payload": {"nums":[100,1,99,2,98,3]}, "expected_output": [1,2,3,98,99,100], "is_hidden": true, "order_index": 13, "label": "large and small alternating, so elements travel far" },
+        { "input_payload": {"nums":[2,1,4,3,6,5,8,7]}, "expected_output": [1,2,3,4,5,6,7,8], "is_hidden": true, "order_index": 14, "label": "many adjacent inversions, each needing exactly one shift" }
+      ]
+    },
+    {
+      "slug": "count-adjacent-swaps-to-sort",
+      "title": "Count Adjacent Swaps to Sort",
+      "difficulty": "Easy",
+      "tags": ["sorting", "comparison-sorts-elementary", "bubble-sort", "inversions", "operation-counting"],
+      "description": "Return the number of swaps of *adjacent* elements needed to sort `nums` into non-decreasing order, using the fewest possible.\n\nThis is the minimum, and it does not depend on the order you make the swaps in: it is exactly the number of pairs `(i, j)` with `i < j` where `nums[i] > nums[j]`. Such a pair is called an inversion, and every adjacent swap of two out-of-order neighbours removes exactly one of them.\n\nThe simplest way to see the answer is to run a bubble sort and count. The reason this problem is worth solving is that the count turns out to be a property of the input rather than of the algorithm.",
+      "real_world_analogy": "People shuffling along a row of cinema seats to end up in ticket order, and only ever able to swap with the person immediately beside them. The number of swaps required is fixed by how tangled the row is to begin with, not by who decides to move first.",
+      "examples": [
+        {
+          "input": "nums = [2,1,3]",
+          "output": "1",
+          "explanation": "Only the pair (2, 1) is out of order, so one adjacent swap sorts the array."
+        },
+        {
+          "input": "nums = [1,2,3]",
+          "output": "0",
+          "explanation": "Already sorted, so there are no inversions and no swaps are needed."
+        },
+        {
+          "input": "nums = [3,2,1]",
+          "output": "3",
+          "explanation": "Every one of the three pairs is out of order, which is the maximum for three elements."
+        },
+        {
+          "input": "nums = [2,2,1]",
+          "output": "2",
+          "explanation": "The two 2s are NOT an inversion of each other. Only the pairs involving the 1 count, giving 2 rather than 3."
+        }
+      ],
+      "constraints": [
+        "1 <= nums.length <= 1000",
+        "-10^6 <= nums[i] <= 10^6"
+      ],
+      "edge_cases": [
+        "An already-sorted array, which needs zero swaps",
+        "A reverse-sorted array, which needs the maximum n(n-1)/2 swaps",
+        "A single element, which needs zero swaps",
+        "Duplicate values, which are NOT inversions of each other and must not be counted",
+        "All values identical, which needs zero swaps despite every pair being comparable"
+      ],
+      "hints": [
+        "Run a bubble sort and count every time you exchange two adjacent elements. Do the counting first and worry about why it is minimal afterwards.",
+        "A pair is out of order when the earlier value is STRICTLY greater than the later one. Equal values are already in a valid order, so they contribute nothing.",
+        "Because each adjacent swap fixes exactly one out-of-order pair, the count equals the number of such pairs — which means you can also get it with two nested loops and no sorting at all."
+      ],
+      "approaches": [
+        {
+          "name": "Bubble Sort and Tally",
+          "summary": "Sort by repeatedly exchanging out-of-order neighbours, counting each exchange.",
+          "intuition": "This is the definition made executable. Sweep the array, swap any neighbour pair that is out of order, and repeat until a full sweep makes no swaps. Count the swaps.\n\nCalling it the brute force is slightly unfair — it is the honest way to discover the answer, and the early-exit version is linear on sorted input. It is the baseline here because it does more work than needed: it actually performs the sort, moving data around, when the question only asks how much moving would be required.\n\nThe early exit is worth keeping rather than looping n times regardless. Without it, an already-sorted array still costs the full quadratic, and the whole reason to prefer bubble sort over selection sort is that it can notice it is finished.",
+          "steps": [
+            "Copy the input so it is not modified in place.",
+            "Repeatedly sweep from left to right, swapping any pair of neighbours that is out of order.",
+            "Count each swap performed.",
+            "Stop as soon as a full sweep performs no swaps.",
+            "Return the count."
+          ],
+          "code": {
+            "javascript": "function countAdjacentSwaps(nums) {\n  const out = nums.slice();\n  let swaps = 0;\n  let moved = true;\n  while (moved) {\n    moved = false;\n    for (let i = 0; i + 1 < out.length; i++) {\n      if (out[i] > out[i + 1]) {\n        const swap = out[i];\n        out[i] = out[i + 1];\n        out[i + 1] = swap;\n        swaps += 1;\n        moved = true;\n      }\n    }\n  }\n  return swaps;\n}",
+            "python": "def count_adjacent_swaps(nums):\n    out = list(nums)\n    swaps = 0\n    moved = True\n    while moved:\n        moved = False\n        for i in range(len(out) - 1):\n            if out[i] > out[i + 1]:\n                out[i], out[i + 1] = out[i + 1], out[i]\n                swaps += 1\n                moved = True\n    return swaps"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(N)"
+        },
+        {
+          "name": "Count Inversions Directly",
+          "summary": "Count the pairs that are out of order, without sorting anything.",
+          "intuition": "Every adjacent swap of two out-of-order neighbours removes exactly one inversion and creates none, and a sorted array has zero inversions. So the minimum number of adjacent swaps IS the inversion count, and no sorting is needed to find it — just count the pairs.\n\nThe strict comparison is the detail to get right. Equal values are not an inversion: they are already in a legal relative order, and counting them would inflate the answer on any input with duplicates. That is the bug the all-identical and duplicate-heavy test cases are there to catch.\n\nThis is still quadratic, so it is not faster in the asymptotic sense — it is simpler, moves no data, and reframes the question as a property of the input. The next pattern shows how a merge sort gets the same number in O(N log N).",
+          "steps": [
+            "Set a counter to zero.",
+            "For every pair of indices i < j, compare nums[i] with nums[j].",
+            "Increment the counter when nums[i] is strictly greater than nums[j].",
+            "Return the counter."
+          ],
+          "code": {
+            "javascript": "function countAdjacentSwaps(nums) {\n  let inversions = 0;\n  for (let i = 0; i < nums.length; i++) {\n    for (let j = i + 1; j < nums.length; j++) {\n      if (nums[i] > nums[j]) inversions += 1;\n    }\n  }\n  return inversions;\n}",
+            "python": "def count_adjacent_swaps(nums):\n    inversions = 0\n    n = len(nums)\n    for i in range(n):\n        row = nums[i]\n        for j in range(i + 1, n):\n            if row > nums[j]:\n                inversions += 1\n    return inversions"
+          },
+          "time_complexity": "O(N^2)",
+          "space_complexity": "O(1)"
+        }
+      ],
+      "starter_code": {
+        "javascript": "function countAdjacentSwaps(nums) {\n  // Your code here\n}",
+        "python": "def count_adjacent_swaps(nums):\n    pass",
+        "cpp": "#include <bits/stdc++.h>\nusing namespace std;\n\nclass Solution {\npublic:\n    int countAdjacentSwaps(vector<int>& nums) {\n        // Write your solution here.\n        return {};\n    }\n};\n",
+        "java": "class Solution {\n    public int countAdjacentSwaps(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n",
+        "c": "int countAdjacentSwaps(int* nums, int numsSize) {\n    // Write your solution here.\n    return 0;\n}\n",
+        "csharp": "public class Solution {\n    public int CountAdjacentSwaps(int[] nums) {\n        // Write your solution here.\n        return 0;\n    }\n}\n"
+      },
+      "cpp_signature":       {
+        "fn": "countAdjacentSwaps",
+        "class": "Solution",
+        "args": [{ "name": "nums", "type": "vector<int>" }],
+        "ret": "int"
+      },
+      "time_complexity": "O(N^2)",
+      "space_complexity": "O(1)",
+      "test_cases": [
+        { "input_payload": {"nums":[2,1,3]}, "expected_output": 1, "is_hidden": false, "order_index": 1 },
+        { "input_payload": {"nums":[1,2,3]}, "expected_output": 0, "is_hidden": false, "order_index": 2 },
+        { "input_payload": {"nums":[3,2,1]}, "expected_output": 3, "is_hidden": false, "order_index": 3 },
+        { "input_payload": {"nums":[2,2,1]}, "expected_output": 2, "is_hidden": false, "order_index": 4 },
+        { "input_payload": {"nums":[1]}, "expected_output": 0, "is_hidden": true, "order_index": 5, "label": "single element, zero swaps" },
+        { "input_payload": {"nums":[5,5,5,5]}, "expected_output": 0, "is_hidden": true, "order_index": 6, "label": "all identical — zero, and a non-strict comparison would wrongly return 6" },
+        { "input_payload": {"nums":[1,2,3,4,5,6,7,8]}, "expected_output": 0, "is_hidden": true, "order_index": 7, "label": "already sorted, zero" },
+        { "input_payload": {"nums":[8,7,6,5,4,3,2,1]}, "expected_output": 28, "is_hidden": true, "order_index": 8, "label": "fully reversed, the maximum 28" },
+        { "input_payload": {"nums":[2,1]}, "expected_output": 1, "is_hidden": true, "order_index": 9, "label": "smallest non-zero answer" },
+        { "input_payload": {"nums":[-1,-2,-3]}, "expected_output": 3, "is_hidden": true, "order_index": 10, "label": "all negative, fully reversed" },
+        { "input_payload": {"nums":[1,3,2,3,1]}, "expected_output": 4, "is_hidden": true, "order_index": 11, "label": "duplicates on both sides of a larger value" },
+        { "input_payload": {"nums":[4,4,3,3,2,2]}, "expected_output": 12, "is_hidden": true, "order_index": 12, "label": "duplicate pairs in descending blocks" },
+        { "input_payload": {"nums":[1,5,3,2,4]}, "expected_output": 4, "is_hidden": true, "order_index": 13, "label": "a mid-sized mixture" },
+        { "input_payload": {"nums":[1000000,-1000000,0]}, "expected_output": 2, "is_hidden": true, "order_index": 14, "label": "constraint boundary values" },
+        { "input_payload": {"nums":[2,4,1,3,5]}, "expected_output": 3, "is_hidden": true, "order_index": 15, "label": "two elements each displaced by two positions" }
+      ]
+    }
+  ]
+}

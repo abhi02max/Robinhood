@@ -5,32 +5,32 @@
 The final approved additions for the 150 milestone. **No full problem specifications** — no
 descriptions, examples, constraints, reference solutions or test cases. Those are Phase 3A.2.
 
-Generated at `2026-09-01T18:21:49.997Z`.
+Generated at `2026-09-01T18:31:43.650Z`.
 
 ## Totals
 
 | | |
 | --- | ---: |
-| Current total | 104 |
+| Current total | 110 |
 | Additions | 55 |
-| Resulting total | 159 |
-| Patterns touched | 23 (17 opened, 6 topped up) |
+| Resulting total | 165 |
+| Patterns touched | 23 (14 opened, 9 topped up) |
 | Coding-capable patterns | 79 |
-| Coding-capable populated, before | 19 (24.1%) |
+| Coding-capable populated, before | 22 (27.8%) |
 | Coding-capable populated, after | 36 (45.6%) |
 | Conceptual patterns | 2 |
 | Structurally blocked patterns | 27 |
 | Easy / Medium / Hard | 14 / 38 / 3 |
 | C cannot express | 12 |
-| 64-bit flagged | 7 |
+| 64-bit flagged | 6 |
 
 Coding-capable pattern distribution after the milestone:
 
 | Problems | Before | After |
 | --- | ---: | ---: |
-| 0 (empty) | 60 | 43 |
+| 0 (empty) | 57 | 43 |
 | 1 | 3 | 0 |
-| 2–4 | 9 | 26 |
+| 2–4 | 12 | 26 |
 | 5+ | 7 | 10 |
 
 ## Learner order
@@ -332,7 +332,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** none within the milestone
 - **Learning objective** Write a sort rather than call one, and see the O(N^2) cost
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** sort-array-by-insertion (Easy), count-adjacent-swaps-to-sort (Easy)
 - **Non-redundant because** Every existing problem calls a library sort or avoids sorting.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -347,7 +347,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** sorting/comparison-sorts-elementary (insertion sort)
 - **Learning objective** Connect an operation count to the asymptotic bound
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** sort-array-by-insertion (Easy), count-adjacent-swaps-to-sort (Easy)
 - **Non-redundant because** Makes cost measurable, which is the assessable half of complexity-analysis.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -362,7 +362,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** sorting/comparison-sorts-elementary
 - **Learning objective** Split, recurse, merge — and see why the merge is the whole algorithm
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** sort-array-by-merging (Medium), count-inversions-while-merging (Medium)
 - **Non-redundant because** First divide-and-conquer recurrence in the curriculum.
 - **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -373,13 +373,13 @@ harder application.
 - **Sequence** stage 2
 - **Topic / pattern** `sorting` / `merge-sort-divide-conquer` — CORE_INTERVIEW
 - **Difficulty** Medium
-- **Signature** `vector<int> nums -> long long`
+- **Signature** `vector<int> nums -> int`
 - **Language capability** 6/6
 - **Prerequisite** sorting/merge-sort-divide-conquer (merge sort)
 - **Learning objective** Extract a quantity from a sort rather than the sorted order
-- **Preceded in this pattern by** none — this pattern is empty today
-- **Non-redundant because** The first problem whose answer requires a 64-bit return type, which exercises a registry type no seeded problem has ever used.
-- **64-bit risk** return must be long long — an inversion count reaches ~5x10^9, past int32 but well inside the JSON-safe range
+- **Preceded in this pattern by** sort-array-by-merging (Medium), count-inversions-while-merging (Medium)
+- **Non-redundant because** The first problem where the sort is a means rather than the goal — the merge step counts pairs it would otherwise just move.
+- **64-bit risk** none
 - **Architecture blocker** none — this pattern is coding-capable today
 - **Milestone reason** arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.
 
@@ -392,7 +392,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** sorting/comparison-sorts-elementary
 - **Learning objective** Sort by a derived key and make the tie-break explicit
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** sort-by-frequency-then-value (Medium), largest-number-from-concatenation (Medium)
 - **Non-redundant because** strings/sort-characters-by-frequency does this for characters only; this is the general integer form and states the tie-break, which that one leaves implicit.
 - **Output ordering** Fully determined: descending frequency, then ascending value. The tie-break is the lesson, so it is stated rather than left free.
 - **64-bit risk** none
@@ -408,7 +408,7 @@ harder application.
 - **Language capability** 6/6
 - **Prerequisite** sorting/custom-comparator-and-stability (frequency sort)
 - **Learning objective** Recognise a comparator that is not a numeric comparison
-- **Preceded in this pattern by** none — this pattern is empty today
+- **Preceded in this pattern by** sort-by-frequency-then-value (Medium), largest-number-from-concatenation (Medium)
 - **Non-redundant because** The comparator is on string concatenation, which is where "just sort descending" fails; nothing else teaches that.
 - **64-bit risk** returns a STRING deliberately — the numeric value would exceed the ceiling, and the string form sidesteps it legitimately rather than by constraint
 - **Architecture blocker** none — this pattern is coding-capable today
@@ -1037,14 +1037,6 @@ reasoning survive, and whether the constraint is legitimate.
 - **Algorithm identical** yes
 - **Overflow reasoning retained** yes
 - **Legitimate** Yes, and nothing is constrained. Worth recording only because the lesson is asymmetric across languages: in C/C++/Java/C# the check is genuinely necessary, while in JavaScript and Python the intermediate never overflows, so those two solve it by comparing against the 32-bit bound rather than by avoiding an overflow.
-
-### 13. Count inversions in an array using the merge step
-
-- **Canonical range** n up to 10^5, so the count reaches n(n-1)/2 ~ 5x10^9
-- **Robinhood range** unchanged — 5x10^9 is far inside the exact-integer range (2^53-1 ~ 9x10^15)
-- **Algorithm identical** yes
-- **Overflow reasoning retained** yes
-- **Legitimate** Yes, and no constraint is applied. The return type must be `long long` because the answer exceeds int32, which is exactly the point: this would be the first curriculum problem to exercise `long long` on a real provider, a registry type implemented in Phases 2B-2D and never executed.
 
 ### 15. Arrange integers to form the largest possible concatenated number
 

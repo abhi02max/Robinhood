@@ -561,7 +561,20 @@ export const MILESTONE_150 = Object.freeze({
     { topic: 'sorting', pattern: 'comparison-sorts-elementary', concept: 'Sort an array with an explicit insertion sort', difficulty: 'Easy', objective: 'Write a sort rather than call one, and see the O(N^2) cost', prereq: null, notRedundant: 'Every existing problem calls a library sort or avoids sorting.', langs: { c: true }, int64: false },
     { topic: 'sorting', pattern: 'comparison-sorts-elementary', concept: 'Count the swaps a bubble sort performs, with early termination', difficulty: 'Easy', objective: 'Connect an operation count to the asymptotic bound', prereq: 'sorting/comparison-sorts-elementary (insertion sort)', notRedundant: 'Makes cost measurable, which is the assessable half of complexity-analysis.', langs: { c: true }, int64: false },
     { topic: 'sorting', pattern: 'merge-sort-divide-conquer', concept: 'Sort an array with merge sort', difficulty: 'Medium', objective: 'Split, recurse, merge — and see why the merge is the whole algorithm', prereq: 'sorting/comparison-sorts-elementary', notRedundant: 'First divide-and-conquer recurrence in the curriculum.', langs: { c: true }, int64: false },
-    { topic: 'sorting', pattern: 'merge-sort-divide-conquer', concept: 'Count inversions in an array using the merge step', difficulty: 'Medium', objective: 'Extract a quantity from a sort rather than the sorted order', prereq: 'sorting/merge-sort-divide-conquer (merge sort)', notRedundant: 'The first problem whose answer requires a 64-bit return type, which exercises a registry type no seeded problem has ever used.', langs: { c: true }, int64: 'return must be long long — an inversion count reaches ~5x10^9, past int32 but well inside the JSON-safe range' },
+    // CORRECTED during 3A.2A authoring. The 3A.1 blueprint claimed this would be the first
+    // problem to exercise `long long` on a provider. That is not achievable here, and the
+    // blocker is not the 64-bit guard:
+    //
+    //   an inversion count exceeds int32 only when n(n-1)/2 > 2.1x10^9, i.e. n > ~65,536;
+    //   the literal-based harness caps one argument at MAX_LITERAL_BYTES = 24,000 bytes, which
+    //   is about 4,000 integers, whose maximum inversion count is ~8x10^6.
+    //
+    // So the array needed to reach `long long` is a hundred times larger than the harness can
+    // embed. The signature inferrer is magnitude-based, so this problem correctly infers `int`.
+    // `long long` therefore remains unexercised on a provider; reaching it needs a problem with a
+    // SMALL input and a large answer, which is recorded as a 3A.2B recommendation rather than
+    // invented here.
+    { topic: 'sorting', pattern: 'merge-sort-divide-conquer', concept: 'Count inversions in an array using the merge step', difficulty: 'Medium', objective: 'Extract a quantity from a sort rather than the sorted order', prereq: 'sorting/merge-sort-divide-conquer (merge sort)', notRedundant: 'The first problem where the sort is a means rather than the goal — the merge step counts pairs it would otherwise just move.', langs: { c: true }, int64: false },
     { topic: 'sorting', pattern: 'custom-comparator-and-stability', concept: 'Sort values by descending frequency, breaking ties by value', difficulty: 'Medium', objective: 'Sort by a derived key and make the tie-break explicit', prereq: 'sorting/comparison-sorts-elementary', notRedundant: 'strings/sort-characters-by-frequency does this for characters only; this is the general integer form and states the tie-break, which that one leaves implicit.', langs: { c: true }, int64: false },
     { topic: 'sorting', pattern: 'custom-comparator-and-stability', concept: 'Arrange integers to form the largest possible concatenated number', difficulty: 'Medium', objective: 'Recognise a comparator that is not a numeric comparison', prereq: 'sorting/custom-comparator-and-stability (frequency sort)', notRedundant: 'The comparator is on string concatenation, which is where "just sort descending" fails; nothing else teaches that.', langs: { c: true }, int64: 'returns a STRING deliberately — the numeric value would exceed the ceiling, and the string form sidesteps it legitimately rather than by constraint' },
 
@@ -673,6 +686,21 @@ export const KNOWN_PIPELINE_DEFECTS = Object.freeze([
       + 'infrastructure and that phase is content.',
   },
   {
+    id: 'WIDE_TYPES_UNREACHABLE_VIA_LARGE_INPUTS',
+    severity: 'low',
+    found: 'Phase 3A.2A, while authoring sorting/merge-sort-divide-conquer',
+    detail: 'The literal-based harness embeds each argument as source, capped at MAX_LITERAL_BYTES = '
+      + '24,000 bytes, which is roughly 4,000 integers. Any problem that reaches `long long` only '
+      + 'because the INPUT is large is therefore unauthorable: inversion counting needs n > 65,536 '
+      + 'to exceed int32, and that array renders to about 400KB of Java or C source.',
+    consequence: '`long long`, `vector<long long>`, `vector<double>` and `vector<bool>` are still '
+      + 'implemented, unit-tested, and never executed on a provider. The 3A.1 blueprint expected '
+      + 'inversion counting to close that gap and it cannot.',
+    fix: 'Reach the wide types with a SMALL input and a large answer instead — a product over a '
+      + 'handful of values, or a bit-shift result — rather than a large input and a counted answer. '
+      + 'Recommended for 3A.2B; not invented during 3A.2A because it is not a blueprint slot.',
+  },
+  {
     id: 'V2_FILES_WITHOUT_AUTHORING_SPECS',
     severity: 'low',
     found: 'Phase 3A.2A, while planning which patterns to author',
@@ -734,17 +762,7 @@ export const SLOT_DETAIL = Object.freeze([
   { concept: 'Sort an array with an explicit insertion sort', signature: 'vector<int> nums -> vector<int>' },
   { concept: 'Count the swaps a bubble sort performs, with early termination', signature: 'vector<int> nums -> int' },
   { concept: 'Sort an array with merge sort', signature: 'vector<int> nums -> vector<int>' },
-  {
-    concept: 'Count inversions in an array using the merge step',
-    signature: 'vector<int> nums -> long long',
-    constraint: {
-      canonical: 'n up to 10^5, so the count reaches n(n-1)/2 ~ 5x10^9',
-      robinhood: 'unchanged — 5x10^9 is far inside the exact-integer range (2^53-1 ~ 9x10^15)',
-      algorithmIdentical: true,
-      overflowReasoningRetained: true,
-      legitimate: 'Yes, and no constraint is applied. The return type must be `long long` because the answer exceeds int32, which is exactly the point: this would be the first curriculum problem to exercise `long long` on a real provider, a registry type implemented in Phases 2B-2D and never executed.',
-    },
-  },
+  { concept: 'Count inversions in an array using the merge step', signature: 'vector<int> nums -> int' },
   { concept: 'Sort values by descending frequency, breaking ties by value', signature: 'vector<int> nums -> vector<int>', ordering: 'Fully determined: descending frequency, then ascending value. The tie-break is the lesson, so it is stated rather than left free.' },
   {
     concept: 'Arrange integers to form the largest possible concatenated number',
