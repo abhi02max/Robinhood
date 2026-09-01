@@ -37,6 +37,39 @@
  */
 export const TIERS = Object.freeze(['FOUNDATION', 'CORE_INTERVIEW', 'IMPORTANT', 'ADVANCED', 'SPECIALIZED']);
 
+// ---------------------------------------------------------------------------
+// 1b. Pattern KIND — what sort of curriculum item a pattern can hold
+// ---------------------------------------------------------------------------
+
+/**
+ * Tier says how IMPORTANT a pattern is. Kind says what it can CONTAIN. They are independent,
+ * and conflating them is what made the first coverage metric misleading: reporting "92 of 108
+ * patterns empty" counted `basics/complexity-analysis` — which should never hold a graded
+ * function — the same as `arrays/intervals`, which is simply unwritten.
+ *
+ *   CODING                a normal graded function problem
+ *   CONCEPTUAL            deliberately never a graded function. Not a gap.
+ *   STRUCTURALLY_BLOCKED  would be a coding problem, but the execution architecture cannot
+ *                         represent it faithfully today. A gap, but not a content gap.
+ *
+ * Only CODING patterns belong in the denominator of a curriculum-coverage KPI.
+ */
+export const KINDS = Object.freeze(['CODING', 'CONCEPTUAL', 'STRUCTURALLY_BLOCKED']);
+
+/**
+ * Patterns that are deliberately not coding problems. KEPT in the taxonomy on purpose.
+ *
+ * Robinhood should eventually carry curriculum items that are not conventional coding
+ * problems — an explanation, a proof, a complexity derivation. That is recorded as
+ * architecture debt in FUTURE_ARCHITECTURE, not built here. Until then these two patterns
+ * stay in the taxonomy as conceptual anchors and are excluded from coverage arithmetic
+ * rather than counted as missing content.
+ */
+export const CONCEPTUAL_PATTERNS = Object.freeze({
+  'basics/complexity-analysis': 'Deriving an asymptotic bound is assessed by explanation. A function that returns a complexity string tests string formatting, not analysis.',
+  'greedy/exchange-argument': 'Proving a greedy choice is safe is a proof obligation. Any function wrapping it would grade the implementation of an algorithm the learner was told to use, which is the opposite of the skill.',
+});
+
 /** @type {Record<string, {tier: string, why: string}>} keyed by `topic/pattern` */
 export const CLASSIFICATION = Object.freeze({
   // --- basics: the declared prerequisite of every other topic -------------
@@ -335,6 +368,110 @@ export const BLOCKERS = Object.freeze({
   },
 });
 
+/** Every pattern key a blocker covers, expanded from topics + explicit patterns. */
+export function blockedPatternKeys(allKeys) {
+  const out = new Map();
+  for (const [id, b] of Object.entries(BLOCKERS)) {
+    if (id === 'NOT_A_GRADED_FUNCTION') continue; // those are CONCEPTUAL, not blocked
+    for (const topic of b.topics) {
+      for (const k of allKeys) if (k.startsWith(`${topic}/`)) out.set(k, id);
+    }
+    for (const k of b.patterns) out.set(k, id);
+  }
+  return out;
+}
+
+/**
+ * CODING / CONCEPTUAL / STRUCTURALLY_BLOCKED for one pattern.
+ *
+ * CONCEPTUAL wins over blocked: a pattern that should never be a graded function is not
+ * waiting on architecture.
+ */
+export function patternKind(key, blockedMap) {
+  if (CONCEPTUAL_PATTERNS[key]) return { kind: 'CONCEPTUAL', reason: CONCEPTUAL_PATTERNS[key], blocker: null };
+  const blocker = blockedMap.get(key);
+  if (blocker) return { kind: 'STRUCTURALLY_BLOCKED', reason: BLOCKERS[blocker].label, blocker };
+  return { kind: 'CODING', reason: null, blocker: null };
+}
+
+// ---------------------------------------------------------------------------
+// 3b. Problems that must be re-authored, not merely relocated
+// ---------------------------------------------------------------------------
+
+/**
+ * Four linked-list problems are authored under a two-pointer pattern because the linked-list
+ * topic is harness-blocked. They are NOT relocated in this phase, and relocation alone would
+ * not be enough for all of them.
+ *
+ * The distinction that matters: a problem modelled as a flat array is only *misfiled* if the
+ * array faithfully represents the structure. `linked-list-cycle` is worse than misfiled — a
+ * cycle cannot be expressed in a flat JSON array at all, so whatever the test cases encode,
+ * the answer is derivable without Floyd's algorithm. That is a wrong problem, not a wrongly
+ * placed one, and INDEX.md already says so.
+ */
+export const REQUIRES_REAUTHOR_AFTER_NODE_ENCODING = Object.freeze({
+  'linked-list-cycle': {
+    currentlyIn: 'sliding-window-two-pointers/same-direction-two-pointers',
+    shouldBe: 'linked-list/cycle-detection-floyd',
+    action: 'REAUTHOR',
+    why: 'A cycle is not representable in a flat array. The problem as it stands can be solved without cycle detection, so relocating it would move a broken problem into the right folder. It must be re-authored against a genuine node representation.',
+  },
+  'linked-list-cycle-ii': {
+    currentlyIn: 'sliding-window-two-pointers/same-direction-two-pointers',
+    shouldBe: 'linked-list/cycle-detection-floyd',
+    action: 'REAUTHOR',
+    why: 'Same defect as linked-list-cycle, and it additionally has to return the entry node of the cycle — which has no meaning without a node type.',
+  },
+  'middle-of-the-linked-list': {
+    currentlyIn: 'sliding-window-two-pointers/same-direction-two-pointers',
+    shouldBe: 'linked-list/fast-slow-pointer',
+    action: 'RELOCATE_THEN_REAUTHOR',
+    why: 'As an array this is index arithmetic and teaches nothing about pointers; the fast/slow technique is only necessary when you cannot index. Faithful only with a node type.',
+  },
+  'remove-nth-node-from-end-of-list': {
+    currentlyIn: 'sliding-window-two-pointers/same-direction-two-pointers',
+    shouldBe: 'linked-list/kth-node-and-rearrangement',
+    action: 'RELOCATE_THEN_REAUTHOR',
+    why: 'Array removal is a splice. The lesson is pointer rewiring with a gap of n, which needs a node type.',
+  },
+});
+
+// ---------------------------------------------------------------------------
+// 3c. Future architecture work — recorded, deliberately NOT started
+// ---------------------------------------------------------------------------
+
+/**
+ * None of this is Phase 3A work. It is written down so the 150 milestone can be honest about
+ * what it is choosing not to cover, and so the 250 milestone has a prerequisite list.
+ */
+export const FUTURE_ARCHITECTURE = Object.freeze([
+  {
+    id: 'NODE_ENCODING',
+    unblocks: '19 patterns across linked-list, binary-trees, bst, plus recursion/recursion-on-data-structures',
+    needs: 'A node type in the canonical vocabulary, its literal emitters for all six languages, and a JSON encoding that can express sharing and cycles rather than only a tree-shaped array.',
+    alsoRequires: `re-authoring the ${Object.keys(REQUIRES_REAUTHOR_AFTER_NODE_ENCODING).length} problems in REQUIRES_REAUTHOR_AFTER_NODE_ENCODING`,
+    milestone: 'prerequisite for serious linked-list / tree / BST expansion, i.e. before 250',
+  },
+  {
+    id: 'MULTI_METHOD_JUDGE',
+    unblocks: '8 patterns: all of tries, plus min-stack, queue-from-stacks, two-heaps-median',
+    needs: 'A protocol for a stateful object: construct, then apply a sequence of method calls, then compare a sequence of returns. The signature model today is one function, one return.',
+    milestone: 'after node encoding; design questions are common in interviews but not foundational',
+  },
+  {
+    id: 'TYPED_EXPECTED_OUTPUT',
+    unblocks: 'problems whose correct answer needs exact integers beyond 2^53-1, including canonical modular exponentiation with modulus 10^9+7',
+    needs: 'See PRODUCTION_READINESS.md section 18. Note this is not only a storage problem: every authored problem carries a JavaScript reference solution, and JS numbers are doubles, so the derivation path needs addressing too.',
+    milestone: 'before authoring any problem whose answer exceeds the exact-integer range',
+  },
+  {
+    id: 'NON_GRADED_CURRICULUM_ITEMS',
+    unblocks: '2 CONCEPTUAL patterns, and the explanatory half of every pattern',
+    needs: 'A curriculum item type that is not a graded function — a derivation, a proof, a complexity argument — with some form of assessment that is not deepEqual on a return value.',
+    milestone: 'not blocking any milestone; the two patterns stay as anchors until then',
+  },
+]);
+
 // ---------------------------------------------------------------------------
 // 4. The proposed 150 milestone
 // ---------------------------------------------------------------------------
@@ -371,9 +508,28 @@ export const MILESTONE_150 = Object.freeze({
     // ===== basics: the empty root, 8 =====
     { topic: 'basics', pattern: 'simulation', concept: 'Increment a big-integer represented as a digit array, propagating carry', difficulty: 'Easy', objective: 'Translate a prose rule into a reverse-order loop with a carry invariant', prereq: null, notRedundant: 'No existing problem manipulates a digit-array representation; prefix-sum problems read the array, they do not restructure it.', langs: { c: true }, int64: false },
     { topic: 'basics', pattern: 'simulation', concept: 'Reverse the digits of a signed 32-bit integer, refusing values that would overflow', difficulty: 'Easy', objective: 'Detect overflow BEFORE it happens rather than after', prereq: null, notRedundant: 'Overflow-safe arithmetic appears nowhere in the current 96.', langs: { c: true }, int64: 'bounded — the answer is int32 by construction, but the check needs 64-bit reasoning; constrain input to int32' },
-    { topic: 'basics', pattern: 'simulation', concept: 'Traverse a matrix in spiral order', difficulty: 'Medium', objective: 'Maintain four shrinking boundaries without off-by-one', prereq: null, notRedundant: 'The only matrix problems in the repo are graph flood-fills; none is a pure traversal.', langs: { c: false }, int64: false },
+    // REPLACED in the 3A.1 review. Was "traverse a matrix in spiral order", which is a fine
+    // simulation problem but takes a nested vector, so C cannot express it. Putting a
+    // C-unsupported problem third in the FIRST pattern of the FIRST topic would wall off a
+    // learner working in C before they had finished the introduction. Spiral order is deferred
+    // to a later milestone under a matrix-appropriate pattern.
+    { topic: 'basics', pattern: 'simulation', concept: 'Convert an integer to its Roman-numeral form', difficulty: 'Medium', objective: 'Simulate repeated greedy subtraction against an ordered value table', prereq: 'basics/simulation (reverse integer)', notRedundant: 'No existing problem builds an output string by consuming an input quantity; it is also the first place a lookup table drives the loop.', langs: { c: true }, int64: false },
     { topic: 'basics', pattern: 'integer-math-modular', concept: 'Greatest common divisor by the Euclidean algorithm', difficulty: 'Easy', objective: 'Reduce a problem by a recurrence on remainders', prereq: null, notRedundant: 'Nothing in the curriculum does number theory.', langs: { c: true }, int64: false },
-    { topic: 'basics', pattern: 'integer-math-modular', concept: 'Modular exponentiation by squaring', difficulty: 'Medium', objective: 'Halve the exponent each step and keep intermediates bounded', prereq: 'basics/integer-math-modular (gcd)', notRedundant: 'Introduces the modulus discipline every hashing problem later needs.', langs: { c: true }, int64: 'CONSTRAIN — a product of two residues must stay under 2^53, so cap the modulus at 10^6 rather than the usual 10^9+7' },
+    // REPLACED in the 3A.1 review. Was "modular exponentiation by squaring", constrained to a
+    // modulus of 10^6. Two things were wrong with that, and the second is fatal:
+    //
+    //   1. With a modulus small enough that residue products stay under 2^53, there is no
+    //      overflow left to reason about — and overflow discipline is the entire reason the
+    //      canonical version uses 10^9+7. The constraint removed the lesson.
+    //   2. The authoring pipeline derives expected outputs from a JavaScript reference
+    //      solution. JS numbers are doubles, so a JS reference CANNOT compute
+    //      (a * b) % 1000000007 exactly for residues near 10^9 — products reach ~10^18. The
+    //      canonical problem is unauthorable today regardless of what the guard allows.
+    //
+    // Exponentiation by squaring over doubles teaches the identical halving recurrence with no
+    // representation compromise at all. Canonical modular exponentiation is deferred to the
+    // TYPED_EXPECTED_OUTPUT architecture item.
+    { topic: 'basics', pattern: 'integer-math-modular', concept: 'Raise a value to an integer power by squaring, handling a negative exponent', difficulty: 'Medium', objective: 'Halve the exponent each step instead of multiplying n times', prereq: 'basics/integer-math-modular (gcd)', notRedundant: 'The only divide-and-halve recurrence outside binary search, and one of very few problems using the `double` type — currently exercised by exactly one seeded problem.', langs: { c: true }, int64: false },
     { topic: 'basics', pattern: 'integer-math-modular', concept: 'Count trailing zeroes in a factorial without computing it', difficulty: 'Easy', objective: 'Reason about prime factors instead of evaluating', prereq: null, notRedundant: 'Teaches avoiding the big value entirely — directly relevant to the 64-bit ceiling.', langs: { c: true }, int64: false },
     { topic: 'basics', pattern: 'prefix-arithmetic-basics', concept: 'Running maximum of a sequence', difficulty: 'Easy', objective: 'See a prefix as any associative fold, not only a sum', prereq: null, notRedundant: 'arrays/prefix-sum is entirely sum-based; this generalises the operator.', langs: { c: true }, int64: false },
     { topic: 'basics', pattern: 'prefix-arithmetic-basics', concept: 'Answer one range-sum query from a precomputed prefix table', difficulty: 'Easy', objective: 'Separate the precompute step from the query step', prereq: 'basics/prefix-arithmetic-basics (running max)', notRedundant: 'The existing running-sum problem RETURNS the prefix array; this one uses it to answer a query, which is the actual point of the technique.', langs: { c: true }, int64: false },
@@ -433,7 +589,14 @@ export const MILESTONE_150 = Object.freeze({
     { topic: 'graphs', pattern: 'bfs-shortest-path', concept: 'Minutes for a spreading state to fill a grid, or report impossible', difficulty: 'Medium', objective: 'Seed a BFS from many sources at once and count levels', prereq: 'graphs/bfs-shortest-path (grid shortest path)', notRedundant: 'Multi-source BFS and level counting are distinct from single-source distance.', langs: { c: false }, int64: false },
     { topic: 'graphs', pattern: 'bfs-shortest-path', concept: 'Fewest one-letter transformations between two words via a dictionary', difficulty: 'Hard', objective: 'Recognise an implicit graph where states are not given as edges', prereq: 'graphs/bfs-shortest-path (multi-source)', notRedundant: 'The graph must be inferred rather than supplied, and the string signature keeps the pattern reachable in C.', langs: { c: true }, int64: false },
     { topic: 'graphs', pattern: 'topological-sort', concept: 'Whether a set of prerequisite pairs can all be satisfied', difficulty: 'Medium', objective: 'Detect a cycle in a directed graph via in-degrees', prereq: 'graphs/dfs-connectivity', notRedundant: 'The existing graph problems are all undirected; direction changes what connectivity means.', langs: { c: false }, int64: false },
-    { topic: 'graphs', pattern: 'topological-sort', concept: 'Produce a valid completion order for prerequisite pairs', difficulty: 'Medium', objective: 'Turn cycle detection into an ordering', prereq: 'graphs/topological-sort (feasibility)', notRedundant: 'Returning an order is materially harder than returning a boolean and admits several correct answers, which is a grading consideration to settle here.', langs: { c: false }, int64: false },
+    // REPLACED in the 3A.1 review. Was "produce a valid completion order", which the grader
+    // cannot mark: a topological order is not unique and the comparison layer is an exact
+    // deepEqual. The repo's convention for non-unique answers is to pin a canonical ordering in
+    // the statement (3sum does exactly that), but here that does not work — demanding the
+    // lexicographically smallest order changes the algorithm from plain Kahn's to Kahn's with a
+    // min-heap, so it would teach a different technique to satisfy the grader. Counting levels
+    // is uniquely determined and keeps the technique intact.
+    { topic: 'graphs', pattern: 'topological-sort', concept: 'Fewest rounds needed to finish all courses when independent ones run in parallel', difficulty: 'Medium', objective: 'Peel the dependency graph layer by layer with Kahn\'s algorithm', prereq: 'graphs/topological-sort (feasibility)', notRedundant: 'Turns cycle detection into a quantity, and the answer is unique so it needs no artificial ordering rule.', langs: { c: false }, int64: false },
 
     // ===== dynamic programming: 5 =====
     { topic: 'dynamic-programming', pattern: '2d-grid', concept: 'Number of monotone lattice paths across a grid', difficulty: 'Easy', objective: 'See a 2-D table and its base row and column', prereq: 'dynamic-programming/1d-state', notRedundant: 'Every existing DP problem is one-dimensional; this is the first table.', langs: { c: true }, int64: 'CONSTRAIN — the count is a binomial coefficient, so cap grid dimensions so it stays inside the exact-integer range' },
@@ -460,3 +623,188 @@ export const MILESTONE_150 = Object.freeze({
     { scope: 'ADVANCED patterns whose prerequisites land at 150 (dijkstra, union-find, lis-and-lcs, unbounded-knapsack, edit-distance, kmp, rolling-hash, monotonic-deque, bitmask patterns)', reason: 'Their prerequisites are being built at this milestone. They become the natural core of the 250 milestone.' },
   ]),
 });
+
+// ---------------------------------------------------------------------------
+// 5. Per-slot detail for the blueprint
+// ---------------------------------------------------------------------------
+
+/**
+ * Parallel to `MILESTONE_150.additions`, one entry per slot in the same order.
+ *
+ * The `concept` field is echoed so the audit can assert the arrays are still aligned; a
+ * reorder or an inserted slot then fails loudly instead of silently attaching the wrong
+ * signature to the wrong problem.
+ *
+ * `signature` uses the canonical type vocabulary from the registry, so the predicted language
+ * capability follows from it mechanically rather than being asserted by hand.
+ *
+ * `ordering` is present only where the answer is NOT unique. This matters more than it looks:
+ * the grader compares with an exact deepEqual, so a problem with several correct answers is
+ * ungradable unless the statement pins one. The repo already established the convention —
+ * `3sum` says "each triplet sorted ascending and the array of triplets sorted
+ * lexicographically". Every enumeration slot below inherits that discipline.
+ *
+ * `constraint` is present only for slots that touch the exact-integer boundary, and states the
+ * five things a constraint has to justify: the canonical range, the Robinhood range, whether
+ * the algorithm survives, whether overflow reasoning survives, and whether it is legitimate.
+ */
+export const SLOT_DETAIL = Object.freeze([
+  { concept: 'Increment a big-integer represented as a digit array, propagating carry', signature: 'vector<int> digits -> vector<int>' },
+  {
+    concept: 'Reverse the digits of a signed 32-bit integer, refusing values that would overflow',
+    signature: 'int n -> int',
+    constraint: {
+      canonical: 'input and output both confined to signed 32-bit, returning 0 when the reversal would not fit',
+      robinhood: 'identical — no change',
+      algorithmIdentical: true,
+      overflowReasoningRetained: true,
+      legitimate: 'Yes, and nothing is constrained. Worth recording only because the lesson is asymmetric across languages: in C/C++/Java/C# the check is genuinely necessary, while in JavaScript and Python the intermediate never overflows, so those two solve it by comparing against the 32-bit bound rather than by avoiding an overflow.',
+    },
+  },
+  { concept: 'Convert an integer to its Roman-numeral form', signature: 'int n -> string' },
+  { concept: 'Greatest common divisor by the Euclidean algorithm', signature: 'int a, int b -> int' },
+  { concept: 'Raise a value to an integer power by squaring, handling a negative exponent', signature: 'double x, int n -> double' },
+  { concept: 'Count trailing zeroes in a factorial without computing it', signature: 'int n -> int' },
+  { concept: 'Running maximum of a sequence', signature: 'vector<int> nums -> vector<int>' },
+  { concept: 'Answer one range-sum query from a precomputed prefix table', signature: 'vector<int> nums, int left, int right -> int' },
+  { concept: 'Sort an array with an explicit insertion sort', signature: 'vector<int> nums -> vector<int>' },
+  { concept: 'Count the swaps a bubble sort performs, with early termination', signature: 'vector<int> nums -> int' },
+  { concept: 'Sort an array with merge sort', signature: 'vector<int> nums -> vector<int>' },
+  {
+    concept: 'Count inversions in an array using the merge step',
+    signature: 'vector<int> nums -> long long',
+    constraint: {
+      canonical: 'n up to 10^5, so the count reaches n(n-1)/2 ~ 5x10^9',
+      robinhood: 'unchanged — 5x10^9 is far inside the exact-integer range (2^53-1 ~ 9x10^15)',
+      algorithmIdentical: true,
+      overflowReasoningRetained: true,
+      legitimate: 'Yes, and no constraint is applied. The return type must be `long long` because the answer exceeds int32, which is exactly the point: this would be the first curriculum problem to exercise `long long` on a real provider, a registry type implemented in Phases 2B-2D and never executed.',
+    },
+  },
+  { concept: 'Sort values by descending frequency, breaking ties by value', signature: 'vector<int> nums -> vector<int>', ordering: 'Fully determined: descending frequency, then ascending value. The tie-break is the lesson, so it is stated rather than left free.' },
+  {
+    concept: 'Arrange integers to form the largest possible concatenated number',
+    signature: 'vector<int> nums -> string',
+    constraint: {
+      canonical: 'the concatenation of up to 100 numbers, which as an integer would be hundreds of digits',
+      robinhood: 'unchanged — the answer is returned as a STRING, so no numeric range applies',
+      algorithmIdentical: true,
+      overflowReasoningRetained: true,
+      legitimate: 'Yes, and by representation rather than by constraint. The canonical problem returns a string too, precisely because the value does not fit any integer type. This is the shape to prefer whenever it is available: change what is returned, not what is asked.',
+    },
+  },
+  { concept: 'Enumerate all subsets of a distinct-element array', signature: 'vector<int> nums -> vector<vector<int>>', ordering: 'REQUIRED — subsets have no natural order. Each subset ascending, the outer list sorted by length then lexicographically. Follows the 3sum precedent.' },
+  { concept: 'Enumerate subsets of an array containing duplicates, without repeats', signature: 'vector<int> nums -> vector<vector<int>>', ordering: 'REQUIRED — same convention as the distinct case, so the two problems are directly comparable.' },
+  { concept: 'Count subsets summing to a target, without enumerating them', signature: 'vector<int> nums, int target -> int' },
+  { concept: 'All combinations of candidates summing to a target, reuse allowed', signature: 'vector<int> candidates, int target -> vector<vector<int>>', ordering: 'REQUIRED — each combination non-decreasing, outer list sorted lexicographically.' },
+  { concept: 'All letter strings a digit sequence could spell on a phone keypad', signature: 'string digits -> vector<string>', ordering: 'REQUIRED — lexicographic, which is also what a straightforward recursion produces if the keypad is walked in order.' },
+  { concept: 'Merge a list of overlapping intervals', signature: 'vector<vector<int>> intervals -> vector<vector<int>>', ordering: 'Determined by the algorithm: ascending by start. Stated anyway so it is not accidental.' },
+  { concept: 'Insert one interval into a sorted disjoint set', signature: 'vector<vector<int>> intervals, vector<int> newInterval -> vector<vector<int>>', ordering: 'Determined: ascending by start.' },
+  { concept: 'Minimum number of rooms needed for overlapping meetings', signature: 'vector<vector<int>> intervals -> int' },
+  {
+    concept: 'Maximum product of a contiguous subarray',
+    signature: 'vector<int> nums -> int',
+    constraint: {
+      canonical: 'LeetCode guarantees the answer fits a 32-bit integer — this is the CANONICAL constraint, not a Robinhood invention',
+      robinhood: 'the same: bound n and |value| so the product stays within int32',
+      algorithmIdentical: true,
+      overflowReasoningRetained: false,
+      legitimate: 'Yes. The lesson is carrying two running extremes because a negative value swaps them; overflow is not part of it, and the canonical problem already excludes overflow by construction.',
+    },
+  },
+  { concept: 'Maximum subarray sum in a circular array', signature: 'vector<int> nums -> int' },
+  { concept: 'Leftmost insertion position for a target among duplicates', signature: 'vector<int> nums, int target -> int' },
+  { concept: 'First and last index of a target in a sorted array', signature: 'vector<int> nums, int target -> vector<int>' },
+  { concept: 'For each query, count sorted values strictly below it', signature: 'vector<int> nums, vector<int> queries -> vector<int>', ordering: 'Determined: one answer per query, in query order.' },
+  { concept: 'Smallest ship capacity that clears all packages within a day budget', signature: 'vector<int> weights, int days -> int' },
+  { concept: 'Minimum hourly rate to finish all piles within an hour budget', signature: 'vector<int> piles, int hours -> int' },
+  { concept: 'Shortest subarray whose sum reaches a target', signature: 'vector<int> nums, int target -> int' },
+  { concept: 'Longest substring obtainable by replacing at most k characters', signature: 'string s, int k -> int' },
+  { concept: 'Smallest window of a string containing all characters of a pattern', signature: 'string s, string t -> string', ordering: 'The window is unique in length but not necessarily in position; the statement must require the LEFTMOST shortest window.' },
+  { concept: 'Count palindromic substrings by expanding around each centre', signature: 'string s -> int' },
+  { concept: 'Longest palindromic substring', signature: 'string s -> string', ordering: 'Ties are possible, so the statement must require the leftmost longest substring.' },
+  { concept: 'Number of set bits for every integer from 0 to n', signature: 'int n -> vector<int>' },
+  {
+    concept: 'Reverse the bits of a 32-bit unsigned value',
+    signature: 'int n -> long long',
+    constraint: {
+      canonical: 'input and output are unsigned 32-bit, so the result reaches 4294967295',
+      robinhood: 'unchanged, but the RETURN type is `long long` because the canonical vocabulary has no unsigned type and 4294967295 exceeds int32',
+      algorithmIdentical: true,
+      overflowReasoningRetained: true,
+      legitimate: 'Yes. The value is well inside the exact-integer range; only the declared type changes, and it changes to remain truthful about the range rather than to dodge a limit.',
+    },
+  },
+  { concept: 'Minimum insertions to make a bracket string balanced', signature: 'string s -> int' },
+  { concept: 'Length of the longest valid parenthesis substring', signature: 'string s -> int' },
+  { concept: 'Maximise satisfied children by matching sorted sizes to sorted demands', signature: 'vector<int> demands, vector<int> sizes -> int' },
+  { concept: 'Minimum increments to make all values distinct', signature: 'vector<int> nums -> int' },
+  { concept: 'Shortest clear path through a binary grid, eight-directional', signature: 'vector<vector<int>> grid -> int' },
+  { concept: 'Minutes for a spreading state to fill a grid, or report impossible', signature: 'vector<vector<int>> grid -> int' },
+  { concept: 'Fewest one-letter transformations between two words via a dictionary', signature: 'string beginWord, string endWord, vector<string> wordList -> int' },
+  { concept: 'Whether a set of prerequisite pairs can all be satisfied', signature: 'int numCourses, vector<vector<int>> prerequisites -> bool' },
+  { concept: 'Fewest rounds needed to finish all courses when independent ones run in parallel', signature: 'int numCourses, vector<vector<int>> relations -> int' },
+  {
+    concept: 'Number of monotone lattice paths across a grid',
+    signature: 'int m, int n -> int',
+    constraint: {
+      canonical: 'LeetCode allows m, n up to 100 while asserting the answer fits about 2x10^9 — those two claims are not consistent, since C(198,99) is astronomically larger',
+      robinhood: 'm, n <= 20, giving a maximum of C(38,19) ~ 1.7x10^10, comfortably inside the exact-integer range',
+      algorithmIdentical: true,
+      overflowReasoningRetained: false,
+      legitimate: 'Yes. The lesson is recognising a 2-D table with a base row and column; the magnitude of the count is incidental, and the canonical statement is self-contradictory about it anyway. Tightening the bound makes the problem MORE coherent than the original.',
+    },
+  },
+  { concept: 'Minimum-cost path from corner to corner of a cost grid', signature: 'vector<vector<int>> grid -> int' },
+  { concept: 'Monotone lattice paths with blocked cells', signature: 'vector<vector<int>> grid -> int' },
+  { concept: 'Whether an array splits into two equal-sum halves', signature: 'vector<int> nums -> bool' },
+  { concept: 'Smallest achievable difference between two subset sums', signature: 'vector<int> nums -> int' },
+  { concept: 'Repeatedly combine the two largest values until one or none remains', signature: 'vector<int> stones -> int' },
+  {
+    concept: 'Minimum total cost to combine all lengths pairwise',
+    signature: 'vector<int> lengths -> int',
+    constraint: {
+      canonical: 'n up to 10^4 with values up to 10^4, giving a total around 10^9 — already near the int32 edge',
+      robinhood: 'n <= 1000 and value <= 10^4, giving a total under about 10^8',
+      algorithmIdentical: true,
+      overflowReasoningRetained: false,
+      legitimate: 'Yes. The lesson is extract-min twice, push the sum back, and see why the greedy choice is optimal. The accumulated total is bookkeeping. A tighter bound also keeps the answer inside int32, so every typed language uses its natural type.',
+    },
+  },
+  { concept: 'kth largest element of an unsorted array', signature: 'vector<int> nums, int k -> int' },
+  { concept: 'The k most frequent values in an array', signature: 'vector<int> nums, int k -> vector<int>', ordering: 'REQUIRED — the canonical problem permits any order, which this grader cannot accept. The statement must require descending frequency then ascending value, which also makes the answer unique when frequencies tie.' },
+]);
+
+// ---------------------------------------------------------------------------
+// 6. Learner order
+// ---------------------------------------------------------------------------
+
+/**
+ * The order a learner should actually meet the 54 additions, which is NOT the order they sit
+ * in the taxonomy or in a file listing.
+ *
+ * Two rules shape it. First, a topic appears only after the topics it declares as
+ * prerequisites — including the corrected `sliding-window-two-pointers` -> `strings` edge, which
+ * is why the strings additions come before the window additions rather than after. Second,
+ * within a pattern the slots run recognition -> application -> variation -> harder application,
+ * so `integer-math-modular` is met as gcd, then factorial-zeroes, then power-by-squaring, rather
+ * than in the order the slots happen to be declared.
+ *
+ * Values are 1-based indexes into `MILESTONE_150.additions`. The audit asserts the sequence is
+ * a permutation of every slot, so a dropped or duplicated entry cannot pass unnoticed.
+ */
+export const LEARNER_SEQUENCE = Object.freeze([
+  { stage: 1, name: 'Foundations — the empty root', why: 'basics is the declared prerequisite of all 16 other topics and holds nothing. Everything else waits on it.', slots: [1, 2, 3, 4, 6, 5, 7, 8] },
+  { stage: 2, name: 'Sorting — the preprocessing step four topics assume', why: 'arrays, binary-search, heaps and greedy all declare sorting as a prerequisite, and it is empty.', slots: [9, 10, 11, 12, 13, 14] },
+  { stage: 3, name: 'Recursion — the shape DP is built from', why: 'dynamic-programming declares recursion as a prerequisite and already holds four problems while recursion holds none.', slots: [15, 16, 17, 18, 19] },
+  { stage: 4, name: 'Arrays — depth on what is already started', why: 'kadane has one problem; intervals is a first-tier pattern and empty. Intervals follows stage 2 because it is sort-then-scan.', slots: [23, 24, 20, 21, 22] },
+  { stage: 5, name: 'Binary search — boundaries, then the predicate leap', why: 'lower-upper-bound is the discipline every other binary-search pattern reduces to; search-on-answer is the conceptual jump the topic exists for.', slots: [25, 26, 27, 28, 29] },
+  { stage: 6, name: 'Strings — before the window topic that uses them', why: 'the corrected prerequisite direction: 14 of the window topic\'s problems are string-typed, and two of them need frequency counting.', slots: [33, 34] },
+  { stage: 7, name: 'Sliding window — repair the one-problem gap', why: 'variable-size is the most transferable window idea and had a single problem beside neighbours holding twelve.', slots: [30, 31, 32] },
+  { stage: 8, name: 'Bit manipulation — the groundwork under xor', why: 'basic-bit-ops was empty while xor-properties, which builds on it, held four.', slots: [35, 36] },
+  { stage: 9, name: 'Stack and queue — give the entry pattern a progression', why: 'parenthesis-matching held one boolean problem; it now runs check -> quantity -> hard.', slots: [37, 38] },
+  { stage: 10, name: 'Greedy — the base move under interval scheduling', why: 'sort-then-greedy was empty while interval-scheduling, a specialisation of it, held four.', slots: [39, 40] },
+  { stage: 11, name: 'Heaps — open an empty core topic', why: 'nothing in the curriculum used a priority queue. Comes after sorting, which it declares as a prerequisite.', slots: [51, 52, 53, 54] },
+  { stage: 12, name: 'Dynamic programming — the first table, then knapsack', why: 'every existing DP problem is 1-D. Knapsack follows stage 3, since the equal-partition problem is the DP counterpart of the recursive subset count.', slots: [46, 47, 48, 49, 50] },
+  { stage: 13, name: 'Graphs — distance, then dependency order', why: 'all four existing graph problems are DFS connectivity; nothing computes a distance or handles direction.', slots: [41, 42, 43, 44, 45] },
+]);

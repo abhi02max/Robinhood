@@ -32,7 +32,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  BLOCKERS, CLASSIFICATION, MILESTONE_150, PATTERN_DEPENDENCIES, TIERS,
+  BLOCKERS, CLASSIFICATION, CONCEPTUAL_PATTERNS, FUTURE_ARCHITECTURE, KINDS, LEARNER_SEQUENCE,
+  MILESTONE_150, PATTERN_DEPENDENCIES, REQUIRES_REAUTHOR_AFTER_NODE_ENCODING, SLOT_DETAIL, TIERS,
+  blockedPatternKeys, patternKind,
 } from './lib/curriculum-judgements.mjs';
 import { languageSupportsSignature, productionLanguages } from '../languages/registry.js';
 
@@ -40,6 +42,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LEARNING = path.join(__dirname, '..', 'data', 'learning');
 const JSON_OUT = path.join(__dirname, 'curriculum-coverage-report.json');
 const MD_OUT = path.join(__dirname, '..', '..', 'docs', 'CURRICULUM_AUDIT.md');
+const BLUEPRINT_OUT = path.join(__dirname, '..', '..', 'docs', 'CURRICULUM_150_BLUEPRINT.md');
 
 const argv = process.argv.slice(2);
 const WRITE = argv.includes('--write') || argv.includes('--json') || argv.includes('--md');
@@ -79,6 +82,8 @@ for (const topicDir of fs.readdirSync(problemsDir)) {
         cpp_signature: p.cpp_signature ?? null,
         test_case_count: Array.isArray(p.test_cases) ? p.test_cases.length : 0,
         tags: p.tags ?? [],
+        // Used to detect duplicate PROBLEMS, not merely duplicate patterns.
+        test_case_fingerprint: Array.isArray(p.test_cases) ? JSON.stringify(p.test_cases) : null,
       });
     }
   }
@@ -290,15 +295,47 @@ const DUPLICATE_SUSPECTS = [
     id: 'MISPLACED_PROBLEM',
     a: 'sliding-window-two-pointers/same-direction-two-pointers',
     b: 'linked-list/*',
-    detail: 'Four linked-list problems (linked-list-cycle, linked-list-cycle-ii, middle-of-the-linked-list, remove-nth-node-from-end-of-list) are authored under a two-pointer pattern, because the linked-list topic is harness-blocked. INDEX.md already names linked-list-cycle as a known modelling mistake: as a flat array the answer is derivable without the algorithm.',
-  },
-  {
-    id: 'MISPLACED_PROBLEM',
-    a: 'sliding-window-two-pointers/monotonic-deque-window',
-    b: 'stack-queue/monotonic-stack',
-    detail: 'largest-rectangle-in-histogram and sum-of-subarray-minimums are monotonic-STACK problems, not deque-window problems; they sit in the window topic.',
+    detail: 'Four linked-list problems are authored under a two-pointer pattern because the linked-list topic is harness-blocked. NOT relocated in 3A.1 — see REQUIRES_REAUTHOR_AFTER_NODE_ENCODING: relocation alone is insufficient because a cycle cannot be represented in a flat array at all.',
   },
 ];
+
+/**
+ * Duplicate PROBLEMS, detected by comparing test-case payloads rather than by reading prose.
+ *
+ * The 3A.0 audit compared patterns and missed this: two problems can sit in different patterns,
+ * look different, and be the same problem. Byte-identical test cases plus an identical signature
+ * is strong evidence, and it costs nothing to check.
+ */
+function detectDuplicateProblems() {
+  const out = [];
+  const bySignature = new Map();
+  for (const p of problems) {
+    if (!p.cpp_signature) continue;
+    const shape = `${(p.cpp_signature.args || []).map((a) => a.type).join(',')}->${p.cpp_signature.ret}`;
+    if (!bySignature.has(shape)) bySignature.set(shape, []);
+    bySignature.get(shape).push(p);
+  }
+  for (const [shape, group] of bySignature) {
+    if (group.length < 2) continue;
+    for (let i = 0; i < group.length; i += 1) {
+      for (let j = i + 1; j < group.length; j += 1) {
+        const a = group[i]; const b = group[j];
+        if (a.test_case_fingerprint && a.test_case_fingerprint === b.test_case_fingerprint) {
+          out.push({
+            id: 'DUPLICATE_PROBLEM',
+            severity: 'medium',
+            where: `${a.slug} vs ${b.slug}`,
+            detail: `identical signature (${shape}) AND byte-identical test cases. `
+              + `${a.topic_slug}/${a.pattern_slug} vs ${b.topic_slug}/${b.pattern_slug}. `
+              + 'One of the two inflates the problem count without teaching anything new. Not deleted '
+              + 'in 3A.1: removing a problem changes the milestone baseline and is a content decision.',
+          });
+        }
+      }
+    }
+  }
+  return out;
+}
 for (const s of DUPLICATE_SUSPECTS) {
   const aFact = patternFacts.find((p) => p.key === s.a);
   const bFact = s.b.endsWith('/*') ? null : patternFacts.find((p) => p.key === s.b);
@@ -308,6 +345,25 @@ for (const s of DUPLICATE_SUSPECTS) {
     where: `${s.a} vs ${s.b}`,
     detail: `${s.detail} [measured: ${s.a}=${aFact ? aFact.problem_count : '?'}${bFact ? `, ${s.b}=${bFact.problem_count}` : ''}]`,
   });
+}
+defects.push(...detectDuplicateProblems());
+
+// A problem whose statement both permits any order AND demands a specific one. Ungradable
+// prose: the grader uses exact deepEqual, so "any order" is never true.
+for (const p of problems) {
+  const doc = fs.readFileSync(path.join(problemsDir, p.source_file), 'utf8');
+  const entry = JSON.parse(doc).problems.find((x) => x.slug === p.slug);
+  const desc = String(entry?.description ?? '');
+  if (/in any order/i.test(desc) && /(sorted|lexicograph|for grading)/i.test(desc)) {
+    defects.push({
+      id: 'CONTRADICTORY_ORDERING_PROSE',
+      severity: 'low',
+      where: p.slug,
+      detail: 'the statement says the answer may be returned "in any order" and then requires a specific one. '
+        + 'The grader compares with an exact deepEqual, so only the specific order is accepted and the first '
+        + 'clause is false. Wording fix, no behaviour change.',
+    });
+  }
 }
 
 // ===========================================================================
@@ -324,12 +380,52 @@ for (const p of patternFacts) {
   if (c) tierCounts[c.tier] += 1;
 }
 
-const blockedPatternKeys = new Set();
-for (const b of Object.values(BLOCKERS)) {
-  for (const topic of b.topics) {
-    for (const p of patternFacts) if (p.topic_slug === topic) blockedPatternKeys.add(p.key);
+// ---------------------------------------------------------------------------
+// KIND — what a pattern can contain, which is independent of how important it is
+// ---------------------------------------------------------------------------
+const allKeys = patternFacts.map((p) => p.key);
+const blockedMap = blockedPatternKeys(allKeys);
+const kindByKey = new Map(patternFacts.map((p) => [p.key, patternKind(p.key, blockedMap)]));
+const blockedKeySet = new Set([...kindByKey.entries()].filter(([, v]) => v.kind === 'STRUCTURALLY_BLOCKED').map(([k]) => k));
+
+for (const key of Object.keys(CONCEPTUAL_PATTERNS)) {
+  if (!declaredKeys.has(key)) defects.push({ id: 'STALE_CONCEPTUAL', severity: 'low', where: key, detail: 'declared conceptual but no longer in the taxonomy' });
+}
+
+/**
+ * Coverage counted over CODING patterns only.
+ *
+ * The 3A.0 headline was "92 of 108 patterns empty, 85.2%". That number is true and misleading:
+ * it counts two patterns that should never hold a coding problem and 27 that the execution
+ * architecture cannot represent yet as if they were unwritten content. Neither is a content gap.
+ */
+const kindCounts = Object.fromEntries(KINDS.map((k) => [k, 0]));
+for (const v of kindByKey.values()) kindCounts[v.kind] += 1;
+
+const codingPatterns = patternFacts.filter((p) => kindByKey.get(p.key).kind === 'CODING');
+const bucket = (list) => ({
+  empty: list.filter((p) => p.problem_count === 0).length,
+  one: list.filter((p) => p.problem_count === 1).length,
+  two_to_four: list.filter((p) => p.problem_count >= 2 && p.problem_count <= 4).length,
+  five_plus: list.filter((p) => p.problem_count >= 5).length,
+});
+const codingCoverage = {
+  total_patterns: patternFacts.length,
+  coding_capable: codingPatterns.length,
+  conceptual: kindCounts.CONCEPTUAL,
+  structurally_blocked: kindCounts.STRUCTURALLY_BLOCKED,
+  coding_buckets: bucket(codingPatterns),
+  coding_populated: codingPatterns.filter((p) => p.problem_count > 0).length,
+};
+codingCoverage.pct_coding_populated = +((codingCoverage.coding_populated / codingCoverage.coding_capable) * 100).toFixed(1);
+
+// A blocked or conceptual pattern must never hold a problem — if one does, either the blocker
+// is wrong or the problem is misfiled.
+for (const p of patternFacts) {
+  const k = kindByKey.get(p.key);
+  if (k.kind !== 'CODING' && p.problem_count > 0) {
+    defects.push({ id: 'PROBLEM_IN_NONCODING_PATTERN', severity: 'high', where: p.key, detail: `${p.problem_count} problem(s) in a ${k.kind} pattern` });
   }
-  for (const k of b.patterns) blockedPatternKeys.add(k);
 }
 
 // --- milestone validation --------------------------------------------------
@@ -355,11 +451,54 @@ const milestoneRows = [...additionsByKey.entries()].map(([key, adds]) => {
   };
 });
 
-// Every milestone target must name a real pattern, and must not be harness-blocked.
+// Every milestone target must name a real pattern, and must be a CODING pattern.
 for (const row of milestoneRows) {
   if (!row.exists_in_taxonomy) defects.push({ id: 'MILESTONE_UNKNOWN_PATTERN', severity: 'high', where: row.key, detail: 'the 150 proposal targets a pattern the taxonomy does not declare' });
-  if (blockedPatternKeys.has(row.key)) defects.push({ id: 'MILESTONE_BLOCKED_PATTERN', severity: 'high', where: row.key, detail: 'the 150 proposal targets a structurally blocked pattern' });
+  const k = kindByKey.get(row.key);
+  if (k && k.kind !== 'CODING') defects.push({ id: 'MILESTONE_NONCODING_PATTERN', severity: 'high', where: row.key, detail: `the 150 proposal targets a ${k.kind} pattern` });
 }
+
+// ---------------------------------------------------------------------------
+// Join assertions on the blueprint layer — drift must fail loudly, not silently
+// ---------------------------------------------------------------------------
+if (SLOT_DETAIL.length !== milestone.additions.length) {
+  defects.push({ id: 'SLOT_DETAIL_LENGTH', severity: 'high', where: 'judgements', detail: `SLOT_DETAIL has ${SLOT_DETAIL.length} entries for ${milestone.additions.length} slots` });
+}
+milestone.additions.forEach((a, i) => {
+  const d = SLOT_DETAIL[i];
+  if (!d) return;
+  if (d.concept !== a.concept) {
+    defects.push({ id: 'SLOT_DETAIL_MISALIGNED', severity: 'high', where: `slot ${i + 1}`, detail: `SLOT_DETAIL[${i}] describes "${d.concept}" but the slot is "${a.concept}"` });
+  }
+  if (!d.signature) defects.push({ id: 'SLOT_NO_SIGNATURE', severity: 'high', where: `slot ${i + 1}`, detail: 'no expected signature shape declared' });
+});
+
+const sequenced = LEARNER_SEQUENCE.flatMap((s) => s.slots);
+if (sequenced.length !== milestone.additions.length || new Set(sequenced).size !== sequenced.length) {
+  defects.push({ id: 'LEARNER_SEQUENCE_INVALID', severity: 'high', where: 'judgements', detail: `learner sequence holds ${sequenced.length} entries (${new Set(sequenced).size} distinct) for ${milestone.additions.length} slots` });
+}
+for (let n = 1; n <= milestone.additions.length; n += 1) {
+  if (!sequenced.includes(n)) defects.push({ id: 'LEARNER_SEQUENCE_GAP', severity: 'high', where: `slot ${n}`, detail: 'not placed in the learner sequence' });
+}
+
+// A slot whose signature mentions a nested vector must be marked C-unsupported, and vice
+// versa: the prediction has to follow from the signature rather than being asserted by hand.
+milestone.additions.forEach((a, i) => {
+  const sig = SLOT_DETAIL[i]?.signature ?? '';
+  const nested = sig.includes('vector<vector<');
+  if (nested && a.langs.c !== false) defects.push({ id: 'LANG_PREDICTION_MISMATCH', severity: 'high', where: `slot ${i + 1}`, detail: `signature "${sig}" is nested but the slot claims C support` });
+  if (!nested && a.langs.c === false) defects.push({ id: 'LANG_PREDICTION_MISMATCH', severity: 'high', where: `slot ${i + 1}`, detail: `signature "${sig}" is flat but the slot claims C cannot express it` });
+});
+
+// Every slot flagged for 64-bit risk must carry a full constraint analysis.
+milestone.additions.forEach((a, i) => {
+  if (!a.int64) return;
+  const c = SLOT_DETAIL[i]?.constraint;
+  if (!c) { defects.push({ id: 'MISSING_CONSTRAINT_ANALYSIS', severity: 'high', where: `slot ${i + 1}`, detail: 'flagged for 64-bit risk with no constraint analysis' }); return; }
+  for (const field of ['canonical', 'robinhood', 'algorithmIdentical', 'overflowReasoningRetained', 'legitimate']) {
+    if (!(field in c)) defects.push({ id: 'INCOMPLETE_CONSTRAINT_ANALYSIS', severity: 'high', where: `slot ${i + 1}`, detail: `constraint analysis missing "${field}"` });
+  }
+});
 
 const milestoneTotals = {
   current_total: totals.problems,
@@ -370,6 +509,9 @@ const milestoneTotals = {
   patterns_topped_up: milestoneRows.filter((r) => (r.current ?? 0) > 0).length,
   patterns_populated_after: totals.populated_patterns.length + milestoneRows.filter((r) => r.current === 0).length,
   patterns_still_empty_after: totals.patterns - (totals.populated_patterns.length + milestoneRows.filter((r) => r.current === 0).length),
+  coding_populated_before: codingCoverage.coding_populated,
+  coding_populated_after: codingCoverage.coding_populated + milestoneRows.filter((r) => r.current === 0).length,
+  coding_capable: codingCoverage.coding_capable,
   by_difficulty: (() => {
     const d = emptyDiff();
     for (const a of milestone.additions) if (a.difficulty in d) d[a.difficulty] += 1;
@@ -379,6 +521,15 @@ const milestoneTotals = {
   int64_flagged: milestone.additions.filter((a) => a.int64).length,
 };
 milestoneTotals.pct_patterns_populated_after = +((milestoneTotals.patterns_populated_after / totals.patterns) * 100).toFixed(1);
+milestoneTotals.pct_coding_populated_before = +((milestoneTotals.coding_populated_before / milestoneTotals.coding_capable) * 100).toFixed(1);
+milestoneTotals.pct_coding_populated_after = +((milestoneTotals.coding_populated_after / milestoneTotals.coding_capable) * 100).toFixed(1);
+milestoneTotals.coding_buckets_after = (() => {
+  const projected = codingPatterns.map((p) => {
+    const row = milestoneRows.find((r) => r.key === p.key);
+    return { ...p, problem_count: row ? row.target : p.problem_count };
+  });
+  return bucket(projected);
+})();
 
 // ===========================================================================
 // Emit
@@ -395,6 +546,7 @@ const report = {
   },
   facts: {
     totals,
+    coverage_by_kind: codingCoverage,
     concentration,
     topics: topicFacts,
     patterns: patternFacts,
@@ -412,19 +564,27 @@ const report = {
     disclaimer: 'Judgement, not repository data. No company-frequency figures are used anywhere.',
     tier_definitions: TIERS,
     tier_counts: tierCounts,
+    kind_definitions: KINDS,
+    kind_counts: kindCounts,
     classification: Object.fromEntries(patternFacts.map((p) => [p.key, {
       ...(CLASSIFICATION[p.key] ?? { tier: 'UNCLASSIFIED', why: null }),
+      kind: kindByKey.get(p.key).kind,
+      kind_reason: kindByKey.get(p.key).reason,
+      blocker: kindByKey.get(p.key).blocker,
       problem_count: p.problem_count,
-      blocked: blockedPatternKeys.has(p.key) || null,
     }])),
+    conceptual_patterns: CONCEPTUAL_PATTERNS,
     pattern_dependencies: PATTERN_DEPENDENCIES,
     pattern_dependencies_source: 'JUDGEMENT — patterns/*.json carries no prerequisites field',
     blockers: BLOCKERS,
-    blocked_pattern_count: blockedPatternKeys.size,
+    blocked_pattern_count: blockedKeySet.size,
+    requires_reauthor_after_node_encoding: REQUIRES_REAUTHOR_AFTER_NODE_ENCODING,
+    future_architecture: FUTURE_ARCHITECTURE,
     milestone_150: {
       totals: milestoneTotals,
       by_pattern: milestoneRows,
-      slots: milestone.additions,
+      slots: milestone.additions.map((a, i) => ({ n: i + 1, ...a, ...SLOT_DETAIL[i] })),
+      learner_sequence: LEARNER_SEQUENCE,
       deferred: milestone.deferred,
     },
   },
@@ -462,6 +622,30 @@ w(`| Patterns with exactly 1 problem | ${totals.one_problem_patterns.length} (${
 w(`| Patterns with exactly 2 problems | ${totals.two_problem_patterns.length} |`);
 w(`| Patterns with 2 or more | ${patternFacts.filter((p) => p.problem_count >= 2).length} (${totals.pct_patterns_two_plus}%) |`);
 w('');
+w('### Coverage by pattern KIND — the meaningful KPI');
+w('');
+w('Counting all 108 patterns in one denominator is true but misleading: it treats a pattern that');
+w('should never hold a coding problem, and one the execution architecture cannot represent yet,');
+w('as if they were simply unwritten. Neither is a content gap.');
+w('');
+w('| | | |');
+w('| --- | ---: | --- |');
+w(`| Total patterns | ${codingCoverage.total_patterns} | |`);
+w(`| **Coding-capable** | **${codingCoverage.coding_capable}** | the real denominator |`);
+w(`| Conceptual | ${codingCoverage.conceptual} | deliberately never a graded function |`);
+w(`| Structurally blocked | ${codingCoverage.structurally_blocked} | architecture, not content |`);
+w('');
+w('Of the coding-capable patterns:');
+w('');
+w('| Problems | Patterns |');
+w('| --- | ---: |');
+w(`| 0 (empty) | ${codingCoverage.coding_buckets.empty} |`);
+w(`| 1 | ${codingCoverage.coding_buckets.one} |`);
+w(`| 2–4 | ${codingCoverage.coding_buckets.two_to_four} |`);
+w(`| 5+ | ${codingCoverage.coding_buckets.five_plus} |`);
+w('');
+w(`Populated: **${codingCoverage.coding_populated} of ${codingCoverage.coding_capable} (${codingCoverage.pct_coding_populated}%)**.`);
+w('');
 w('### Concentration');
 w('');
 w(`The single most populated topic is **${concentration.top_topic.slug}** with `);
@@ -485,13 +669,15 @@ for (const t of [...topicFacts].sort((a, b) => a.order_index - b.order_index)) {
   w('| ---: | --- | ---: | ---: | ---: | ---: | --- | --- |');
   for (const p of patternFacts.filter((x) => x.topic_slug === t.slug).sort((a, b) => a.pattern_order - b.pattern_order)) {
     const cls = CLASSIFICATION[p.key];
-    const blocked = blockedPatternKeys.has(p.key) ? ' ⛔' : '';
+    const k = kindByKey.get(p.key);
+    const mark = k.kind === 'STRUCTURALLY_BLOCKED' ? ' ⛔' : (k.kind === 'CONCEPTUAL' ? ' 💭' : '');
     const names = p.problems.map((x) => `${x.slug} (${x.difficulty[0]})`).join(', ') || '—';
-    w(`| ${p.pattern_order} | ${p.pattern_name} | ${p.problem_count === 0 ? '**0**' : p.problem_count} | ${p.by_difficulty.Easy} | ${p.by_difficulty.Medium} | ${p.by_difficulty.Hard} | ${cls?.tier ?? '?'}${blocked} | ${names} |`);
+    w(`| ${p.pattern_order} | ${p.pattern_name} | ${p.problem_count === 0 ? '**0**' : p.problem_count} | ${p.by_difficulty.Easy} | ${p.by_difficulty.Medium} | ${p.by_difficulty.Hard} | ${cls?.tier ?? '?'}${mark} | ${names} |`);
   }
   w('');
 }
-w('⛔ = structurally blocked; see section 6.');
+w('⛔ = structurally blocked (architecture, not content). 💭 = conceptual, deliberately not a graded');
+w('function. Neither counts as a missing coding problem; see section 6.');
 w('');
 w('## 4. Data defects observed (not fixed)');
 w('');
@@ -623,11 +809,170 @@ w('');
 
 const md = L.join('\n');
 
+// ===========================================================================
+// The 150 blueprint — final approved additions, in LEARNER order
+// ===========================================================================
+const B = [];
+const b = (s = '') => B.push(s);
+const slotOf = (n) => ({ n, ...milestone.additions[n - 1], ...SLOT_DETAIL[n - 1] });
+
+b('# Curriculum 150 blueprint');
+b('');
+b('**Generated** by `node server/scripts/curriculum-audit.mjs --write`. Do not edit by hand.');
+b('');
+b('The final approved additions for the 150 milestone. **No full problem specifications** — no');
+b('descriptions, examples, constraints, reference solutions or test cases. Those are Phase 3A.2.');
+b('');
+b(`Generated at \`${report.generated_at}\`.`);
+b('');
+b('## Totals');
+b('');
+b('| | |');
+b('| --- | ---: |');
+b(`| Current total | ${milestoneTotals.current_total} |`);
+b(`| Additions | ${milestoneTotals.additions} |`);
+b(`| Resulting total | ${milestoneTotals.resulting_total} |`);
+b(`| Patterns touched | ${milestoneTotals.patterns_touched} (${milestoneTotals.patterns_newly_opened} opened, ${milestoneTotals.patterns_topped_up} topped up) |`);
+b(`| Coding-capable patterns | ${milestoneTotals.coding_capable} |`);
+b(`| Coding-capable populated, before | ${milestoneTotals.coding_populated_before} (${milestoneTotals.pct_coding_populated_before}%) |`);
+b(`| Coding-capable populated, after | ${milestoneTotals.coding_populated_after} (${milestoneTotals.pct_coding_populated_after}%) |`);
+b(`| Conceptual patterns | ${codingCoverage.conceptual} |`);
+b(`| Structurally blocked patterns | ${codingCoverage.structurally_blocked} |`);
+b(`| Easy / Medium / Hard | ${milestoneTotals.by_difficulty.Easy} / ${milestoneTotals.by_difficulty.Medium} / ${milestoneTotals.by_difficulty.Hard} |`);
+b(`| C cannot express | ${milestoneTotals.c_unsupported} |`);
+b(`| 64-bit flagged | ${milestoneTotals.int64_flagged} |`);
+b('');
+b('Coding-capable pattern distribution after the milestone:');
+b('');
+b('| Problems | Before | After |');
+b('| --- | ---: | ---: |');
+b(`| 0 (empty) | ${codingCoverage.coding_buckets.empty} | ${milestoneTotals.coding_buckets_after.empty} |`);
+b(`| 1 | ${codingCoverage.coding_buckets.one} | ${milestoneTotals.coding_buckets_after.one} |`);
+b(`| 2–4 | ${codingCoverage.coding_buckets.two_to_four} | ${milestoneTotals.coding_buckets_after.two_to_four} |`);
+b(`| 5+ | ${codingCoverage.coding_buckets.five_plus} | ${milestoneTotals.coding_buckets_after.five_plus} |`);
+b('');
+b('## Learner order');
+b('');
+b('This is the order a learner should meet the additions, which is **not** the order they sit in');
+b('the taxonomy or in a file listing. A topic appears only after the topics it declares as');
+b('prerequisites, and within a pattern the slots run recognition → application → variation →');
+b('harder application.');
+b('');
+for (const stage of LEARNER_SEQUENCE) {
+  b(`### Stage ${stage.stage} — ${stage.name}`);
+  b('');
+  b(`*${stage.why}*`);
+  b('');
+  b('| Seq | # | Pattern | Concept | Diff |');
+  b('| ---: | ---: | --- | --- | --- |');
+  stage.slots.forEach((n, i) => {
+    const s = slotOf(n);
+    b(`| ${stage.stage}.${i + 1} | ${n} | \`${s.pattern}\` | ${s.concept} | ${s.difficulty} |`);
+  });
+  b('');
+}
+b('## Every addition in detail');
+b('');
+for (const stage of LEARNER_SEQUENCE) {
+  for (const n of stage.slots) {
+    const s = slotOf(n);
+    const fact = patternFacts.find((p) => p.key === `${s.topic}/${s.pattern}`);
+    const existing = fact && fact.problems.length
+      ? fact.problems.map((p) => `${p.slug} (${p.difficulty})`).join(', ')
+      : 'none — this pattern is empty today';
+    const cls = CLASSIFICATION[`${s.topic}/${s.pattern}`];
+    b(`### ${n}. ${s.concept}`);
+    b('');
+    b(`- **Sequence** stage ${stage.stage}`);
+    b(`- **Topic / pattern** \`${s.topic}\` / \`${s.pattern}\` — ${cls?.tier ?? '?'}`);
+    b(`- **Difficulty** ${s.difficulty}`);
+    b(`- **Signature** \`${s.signature}\``);
+    b(`- **Language capability** ${s.langs.c === false ? '5/6 — **C cannot express this**' : '6/6'}`);
+    b(`- **Prerequisite** ${s.prereq ?? 'none within the milestone'}`);
+    b(`- **Learning objective** ${s.objective}`);
+    b(`- **Preceded in this pattern by** ${existing}`);
+    b(`- **Non-redundant because** ${s.notRedundant}`);
+    if (s.ordering) b(`- **Output ordering** ${s.ordering}`);
+    b(`- **64-bit risk** ${s.int64 ? s.int64 : 'none'}`);
+    b('- **Architecture blocker** none — this pattern is coding-capable today');
+    b(`- **Milestone reason** ${stage.why}`);
+    b('');
+  }
+}
+b('## Constraint analysis for every 64-bit-flagged slot');
+b('');
+b('The validator refuses expected outputs outside ±(2^53−1) and is never bypassed. Each slot below');
+b('states the canonical range, the Robinhood range, whether the algorithm and the overflow');
+b('reasoning survive, and whether the constraint is legitimate.');
+b('');
+for (let i = 0; i < milestone.additions.length; i += 1) {
+  const a = milestone.additions[i];
+  if (!a.int64) continue;
+  const c = SLOT_DETAIL[i].constraint;
+  b(`### ${i + 1}. ${a.concept}`);
+  b('');
+  b(`- **Canonical range** ${c.canonical}`);
+  b(`- **Robinhood range** ${c.robinhood}`);
+  b(`- **Algorithm identical** ${c.algorithmIdentical ? 'yes' : 'NO'}`);
+  b(`- **Overflow reasoning retained** ${c.overflowReasoningRetained ? 'yes' : 'no'}`);
+  b(`- **Legitimate** ${c.legitimate}`);
+  b('');
+}
+b('## Slots C cannot express');
+b('');
+b(`${milestoneTotals.c_unsupported} of ${milestoneTotals.additions}. Every one is a nested-vector argument or return, which C's calling`);
+b('convention cannot model: a 2-D array needs a row count and a per-row column count, which is a');
+b('different convention rather than a longer one. **Curriculum quality was not distorted to reach');
+b('6/6.** Where a pattern would otherwise be entirely unreachable in C, one slot was chosen with a');
+b('naturally flat signature so the pattern still has an accessible entry point.');
+b('');
+b('| # | Pattern | Concept | Signature |');
+b('| ---: | --- | --- | --- |');
+milestone.additions.forEach((a, i) => {
+  if (a.langs.c !== false) return;
+  b(`| ${i + 1} | \`${a.topic}/${a.pattern}\` | ${a.concept} | \`${SLOT_DETAIL[i].signature}\` |`);
+});
+b('');
+b('## Deliberately deferred');
+b('');
+for (const d of milestone.deferred) b(`- **${d.scope}** — ${d.reason}`);
+b('');
+b('## Future architecture, recorded and NOT started');
+b('');
+for (const f of FUTURE_ARCHITECTURE) {
+  b(`### ${f.id}`);
+  b('');
+  b(`- **Unblocks** ${f.unblocks}`);
+  b(`- **Needs** ${f.needs}`);
+  if (f.alsoRequires) b(`- **Also requires** ${f.alsoRequires}`);
+  b(`- **Milestone** ${f.milestone}`);
+  b('');
+}
+b('## Problems requiring re-authoring after node encoding');
+b('');
+b('Not relocated in this phase. Relocation alone is insufficient for the first two: a cycle cannot');
+b('be represented in a flat JSON array, so those problems are wrong rather than merely misfiled.');
+b('');
+b('| Problem | Currently in | Should be | Action |');
+b('| --- | --- | --- | --- |');
+for (const [slug, r] of Object.entries(REQUIRES_REAUTHOR_AFTER_NODE_ENCODING)) {
+  b(`| \`${slug}\` | \`${r.currentlyIn}\` | \`${r.shouldBe}\` | **${r.action}** |`);
+}
+b('');
+for (const [slug, r] of Object.entries(REQUIRES_REAUTHOR_AFTER_NODE_ENCODING)) {
+  b(`- \`${slug}\` — ${r.why}`);
+}
+b('');
+
+const blueprint = B.join('\n');
+
 if (WRITE) {
   fs.writeFileSync(JSON_OUT, JSON.stringify(report, null, 2));
   fs.writeFileSync(MD_OUT, md);
+  fs.writeFileSync(BLUEPRINT_OUT, blueprint);
   console.log(`wrote ${path.relative(process.cwd(), JSON_OUT)}`);
   console.log(`wrote ${path.relative(process.cwd(), MD_OUT)}`);
+  console.log(`wrote ${path.relative(process.cwd(), BLUEPRINT_OUT)}`);
 } else {
   console.log(md);
 }

@@ -3,7 +3,7 @@
 **Generated** by `node server/scripts/curriculum-audit.mjs`. Do not edit by hand — every
 number below is recomputed from `topics.json`, `patterns/*.json` and `problems/`.
 
-Generated at `2026-09-01T14:52:51.784Z`.
+Generated at `2026-09-01T17:59:58.027Z`.
 
 Sections 1–4 are **repository facts**. Sections 5 onward are **engineering judgement**,
 kept separate on purpose. No company-frequency figures are used anywhere.
@@ -25,11 +25,35 @@ kept separate on purpose. No company-frequency figures are used anywhere.
 | Patterns with exactly 2 problems | 0 |
 | Patterns with 2 or more | 13 (12%) |
 
+### Coverage by pattern KIND — the meaningful KPI
+
+Counting all 108 patterns in one denominator is true but misleading: it treats a pattern that
+should never hold a coding problem, and one the execution architecture cannot represent yet,
+as if they were simply unwritten. Neither is a content gap.
+
+| | | |
+| --- | ---: | --- |
+| Total patterns | 108 | |
+| **Coding-capable** | **79** | the real denominator |
+| Conceptual | 2 | deliberately never a graded function |
+| Structurally blocked | 27 | architecture, not content |
+
+Of the coding-capable patterns:
+
+| Problems | Patterns |
+| --- | ---: |
+| 0 (empty) | 63 |
+| 1 | 3 |
+| 2–4 | 6 |
+| 5+ | 7 |
+
+Populated: **16 of 79 (20.3%)**.
+
 ### Concentration
 
 The single most populated topic is **sliding-window-two-pointers** with 
-**61 of 96 problems (63.5%)**. 
-The five largest patterns hold **62.5%** of everything.
+**58 of 96 problems (60.4%)**. 
+The five largest patterns hold **59.4%** of everything.
 
 ## 2. Topic distribution
 
@@ -39,12 +63,12 @@ The five largest patterns hold **62.5%** of everything.
 | 2 | Sorting | 6 | 0 | **0** | 0 | 0 | 0 | basics |
 | 3 | Arrays | 7 | 2 | 6 | 2 | 4 | 0 | basics, sorting |
 | 4 | Binary Search | 6 | 1 | 4 | 3 | 1 | 0 | basics, sorting |
-| 5 | Strings | 6 | 1 | 4 | 3 | 1 | 0 | arrays, sliding-window-two-pointers |
+| 5 | Strings | 6 | 1 | 4 | 3 | 1 | 0 | arrays |
 | 6 | Linked List | 6 | 0 | **0** | 0 | 0 | 0 | basics |
 | 7 | Recursion | 6 | 0 | **0** | 0 | 0 | 0 | basics |
 | 8 | Bit Manipulation | 6 | 1 | 4 | 3 | 1 | 0 | basics |
-| 9 | Stack & Queue | 7 | 2 | 5 | 2 | 3 | 0 | arrays |
-| 10 | Sliding Window & Two Pointers | 7 | 6 | 61 | 17 | 34 | 10 | arrays |
+| 9 | Stack & Queue | 7 | 2 | 8 | 2 | 5 | 1 | arrays |
+| 10 | Sliding Window & Two Pointers | 7 | 6 | 58 | 17 | 32 | 9 | arrays, strings |
 | 11 | Heaps | 6 | 0 | **0** | 0 | 0 | 0 | arrays, sorting |
 | 12 | Greedy | 6 | 1 | 4 | 1 | 3 | 0 | sorting, arrays |
 | 13 | Binary Trees | 7 | 0 | **0** | 0 | 0 | 0 | recursion |
@@ -59,7 +83,7 @@ The five largest patterns hold **62.5%** of everything.
 
 | # | Pattern | Count | E | M | H | Tier | Problems |
 | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
-| 1 | Complexity Analysis | **0** | 0 | 0 | 0 | FOUNDATION ⛔ | — |
+| 1 | Complexity Analysis | **0** | 0 | 0 | 0 | FOUNDATION 💭 | — |
 | 2 | Direct Simulation | **0** | 0 | 0 | 0 | FOUNDATION | — |
 | 3 | Integer Math & Modular Arithmetic | **0** | 0 | 0 | 0 | IMPORTANT | — |
 | 4 | Prefix & Running Aggregates | **0** | 0 | 0 | 0 | FOUNDATION | — |
@@ -144,19 +168,19 @@ The five largest patterns hold **62.5%** of everything.
 | 5 | Bitmask as DP State | **0** | 0 | 0 | 0 | ADVANCED | — |
 | 6 | Power-of-Two Detection & Bit Tricks | **0** | 0 | 0 | 0 | IMPORTANT | — |
 
-### 9. Stack & Queue `stack-queue` — 5 problem(s)
+### 9. Stack & Queue `stack-queue` — 8 problem(s)
 
 | # | Pattern | Count | E | M | H | Tier | Problems |
 | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
 | 1 | Parenthesis & Bracket Matching | 1 | 1 | 0 | 0 | FOUNDATION | valid-parentheses (E) |
-| 2 | Monotonic Stack | 4 | 1 | 3 | 0 | CORE_INTERVIEW | next-greater-element-i (E), next-greater-element-ii (M), daily-temperatures (M), remove-k-digits (M) |
+| 2 | Monotonic Stack | 7 | 1 | 5 | 1 | CORE_INTERVIEW | sum-of-subarray-minimums (M), largest-rectangle-in-histogram (H), maximum-subarray-min-product (M), next-greater-element-i (E), next-greater-element-ii (M), daily-temperatures (M), remove-k-digits (M) |
 | 3 | Monotonic Deque (Sliding Window Max) | **0** | 0 | 0 | 0 | ADVANCED | — |
 | 4 | Expression Evaluation (Infix / Postfix) | **0** | 0 | 0 | 0 | IMPORTANT | — |
 | 5 | Augmented Stack (Min/Max Stack) | **0** | 0 | 0 | 0 | CORE_INTERVIEW ⛔ | — |
 | 6 | Queue from Stacks (and Vice Versa) | **0** | 0 | 0 | 0 | IMPORTANT ⛔ | — |
 | 7 | BFS via Queue (Level-by-Level State Search) | **0** | 0 | 0 | 0 | ADVANCED | — |
 
-### 10. Sliding Window & Two Pointers `sliding-window-two-pointers` — 61 problem(s)
+### 10. Sliding Window & Two Pointers `sliding-window-two-pointers` — 58 problem(s)
 
 | # | Pattern | Count | E | M | H | Tier | Problems |
 | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
@@ -166,7 +190,7 @@ The five largest patterns hold **62.5%** of everything.
 | 4 | Opposite-Direction Two Pointers (Converging on Sorted Input) | 12 | 5 | 6 | 1 | FOUNDATION | two-sum-ii-sorted-array (M), 3sum (M), 4sum (M), container-with-most-water (M), trapping-rain-water (H), valid-palindrome (E), valid-palindrome-ii (E), reverse-string (E), sort-colors (M), squares-of-a-sorted-array (E), boats-to-save-people (M), two-sum-less-than-k (E) |
 | 5 | Same-Direction Two Pointers (Fast & Slow / Partition) | 12 | 6 | 6 | 0 | FOUNDATION | remove-duplicates-from-sorted-array (E), remove-element (E), move-zeroes (E), linked-list-cycle (E), linked-list-cycle-ii (M), middle-of-the-linked-list (E), remove-nth-node-from-end-of-list (M), happy-number (E), remove-duplicates-from-sorted-array-ii (M), find-the-duplicate-number (M), partition-labels (M), string-compression (M) |
 | 6 | Multi-Pointer Merge & Sweep | **0** | 0 | 0 | 0 | IMPORTANT | — |
-| 7 | Monotonic Deque Window (Sliding Min/Max in O(1) Amortized) | 12 | 0 | 5 | 7 | ADVANCED | sliding-window-maximum (H), sliding-window-minimum (H), constrained-subsequence-sum (H), shortest-subarray-with-sum-at-least-k (H), jump-game-vi (M), longest-continuous-subarray-with-absolute-diff (M), maximum-number-of-robots-within-budget (H), max-value-of-equation (H), continuous-subarrays-deque (M), sum-of-subarray-minimums (M), largest-rectangle-in-histogram (H), maximum-subarray-min-product (M) |
+| 7 | Monotonic Deque Window (Sliding Min/Max in O(1) Amortized) | 9 | 0 | 3 | 6 | ADVANCED | sliding-window-maximum (H), sliding-window-minimum (H), constrained-subsequence-sum (H), shortest-subarray-with-sum-at-least-k (H), jump-game-vi (M), longest-continuous-subarray-with-absolute-diff (M), maximum-number-of-robots-within-budget (H), max-value-of-equation (H), continuous-subarrays-deque (M) |
 
 ### 11. Heaps `heaps` — 0 problem(s)
 
@@ -185,7 +209,7 @@ The five largest patterns hold **62.5%** of everything.
 | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |
 | 1 | Sort Then Pick | **0** | 0 | 0 | 0 | FOUNDATION | — |
 | 2 | Interval Scheduling | 4 | 1 | 3 | 0 | CORE_INTERVIEW | meeting-rooms (E), non-overlapping-intervals (M), minimum-number-of-arrows-to-burst-balloons (M), maximum-length-of-pair-chain (M) |
-| 3 | Exchange-Argument Proof | **0** | 0 | 0 | 0 | ADVANCED ⛔ | — |
+| 3 | Exchange-Argument Proof | **0** | 0 | 0 | 0 | ADVANCED 💭 | — |
 | 4 | Gas Station / Circular Greedy | **0** | 0 | 0 | 0 | IMPORTANT | — |
 | 5 | Jump Game (Reachability Greedy) | **0** | 0 | 0 | 0 | CORE_INTERVIEW | — |
 | 6 | Huffman-Style Repeated Merge | **0** | 0 | 0 | 0 | IMPORTANT | — |
@@ -248,26 +272,27 @@ The five largest patterns hold **62.5%** of everything.
 | 4 | Binary Trie for Maximum XOR | **0** | 0 | 0 | 0 | SPECIALIZED ⛔ | — |
 | 5 | Trie with Counts & Deletion | **0** | 0 | 0 | 0 | SPECIALIZED ⛔ | — |
 
-⛔ = structurally blocked; see section 6.
+⛔ = structurally blocked (architecture, not content). 💭 = conceptual, deliberately not a graded
+function. Neither counts as a missing coding problem; see section 6.
 
 ## 4. Data defects observed (not fixed)
 
 ### medium (7)
 
-- **PREREQ_ORDER_INVERTED** `topics.json:strings` — "strings" (order 5) declares a prerequisite on "sliding-window-two-pointers" (order 10), which the curriculum presents LATER. Either the order or the prerequisite is wrong.
 - **INVERTED_TEACHING_ORDER** `basics/prefix-arithmetic-basics` — "basics/prefix-arithmetic-basics" holds 0 problems while "arrays/prefix-sum" — which builds on it — holds 5. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `bit-manipulation/basic-bit-ops` — "bit-manipulation/basic-bit-ops" holds 0 problems while "bit-manipulation/xor-properties" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `greedy/sort-then-greedy` — "greedy/sort-then-greedy" holds 0 problems while "greedy/interval-scheduling" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `sorting/custom-comparator-and-stability` — "sorting/custom-comparator-and-stability" holds 0 problems while "greedy/interval-scheduling" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
 - **INVERTED_TEACHING_ORDER** `recursion/subset-include-exclude` — "recursion/subset-include-exclude" holds 0 problems while "dynamic-programming/1d-state" — which builds on it — holds 4. (Dependency is a curriculum judgement, not repository metadata.)
-- **NO_ENTRY_PROBLEM** `sliding-window-two-pointers/monotonic-deque-window` — 12 problems, none Easy (M5 H7) — a learner meets this pattern for the first time at Medium.
+- **NO_ENTRY_PROBLEM** `sliding-window-two-pointers/monotonic-deque-window` — 9 problems, none Easy (M3 H6) — a learner meets this pattern for the first time at Medium.
+- **DUPLICATE_PROBLEM** `continuous-subarrays vs continuous-subarrays-deque` — identical signature (vector<int>->int) AND byte-identical test cases. sliding-window-two-pointers/at-most-k-window vs sliding-window-two-pointers/monotonic-deque-window. One of the two inflates the problem count without teaching anything new. Not deleted in 3A.1: removing a problem changes the milestone baseline and is a content decision.
 
 ### low (4)
 
-- **DUPLICATE_CONCEPT** `stack-queue/monotonic-deque vs sliding-window-two-pointers/monotonic-deque-window` — Two patterns for the same technique in different topics. The stack-queue one is empty; the sliding-window one holds the repo's largest concentration of Hard problems. [measured: stack-queue/monotonic-deque=0, sliding-window-two-pointers/monotonic-deque-window=12]
+- **DUPLICATE_CONCEPT** `stack-queue/monotonic-deque vs sliding-window-two-pointers/monotonic-deque-window` — Two patterns for the same technique in different topics. The stack-queue one is empty; the sliding-window one holds the repo's largest concentration of Hard problems. [measured: stack-queue/monotonic-deque=0, sliding-window-two-pointers/monotonic-deque-window=9]
 - **DUPLICATE_CONCEPT** `arrays/dutch-national-flag vs sliding-window-two-pointers/opposite-direction-two-pointers` — Three-way partition. The arrays pattern is empty, but sort-colors — the canonical Dutch-flag problem — is already authored under opposite-direction-two-pointers. [measured: arrays/dutch-national-flag=0, sliding-window-two-pointers/opposite-direction-two-pointers=12]
-- **MISPLACED_PROBLEM** `sliding-window-two-pointers/same-direction-two-pointers vs linked-list/*` — Four linked-list problems (linked-list-cycle, linked-list-cycle-ii, middle-of-the-linked-list, remove-nth-node-from-end-of-list) are authored under a two-pointer pattern, because the linked-list topic is harness-blocked. INDEX.md already names linked-list-cycle as a known modelling mistake: as a flat array the answer is derivable without the algorithm. [measured: sliding-window-two-pointers/same-direction-two-pointers=12]
-- **MISPLACED_PROBLEM** `sliding-window-two-pointers/monotonic-deque-window vs stack-queue/monotonic-stack` — largest-rectangle-in-histogram and sum-of-subarray-minimums are monotonic-STACK problems, not deque-window problems; they sit in the window topic. [measured: sliding-window-two-pointers/monotonic-deque-window=12, stack-queue/monotonic-stack=4]
+- **MISPLACED_PROBLEM** `sliding-window-two-pointers/same-direction-two-pointers vs linked-list/*` — Four linked-list problems are authored under a two-pointer pattern because the linked-list topic is harness-blocked. NOT relocated in 3A.1 — see REQUIRES_REAUTHOR_AFTER_NODE_ENCODING: relocation alone is insufficient because a cycle cannot be represented in a flat array at all. [measured: sliding-window-two-pointers/same-direction-two-pointers=12]
+- **CONTRADICTORY_ORDERING_PROSE** `4sum` — the statement says the answer may be returned "in any order" and then requires a specific one. The grader compares with an exact deepEqual, so only the specific order is accepted and the first clause is false. Wording fix, no behaviour change.
 
 ## 5. Classification
 
@@ -289,7 +314,7 @@ Judgement. Tier definitions:
 
 ## 6. Structural blockers
 
-29 of 108 patterns cannot receive a problem today, for reasons that are not about priority.
+undefined of 108 patterns cannot receive a problem today, for reasons that are not about priority.
 
 ### NODE_ENCODING — harness has no node type
 
@@ -413,8 +438,8 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 | Patterns populated after | 36 of 108 (33.3%) |
 | Patterns still empty after | 72 |
 | Additions: Easy / Medium / Hard | 14 / 37 / 3 |
-| Additions C cannot express | 13 |
-| Additions flagged for 64-bit | 8 |
+| Additions C cannot express | 12 |
+| Additions flagged for 64-bit | 7 |
 
 ### Allocation by pattern
 
@@ -450,9 +475,9 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 | ---: | --- | --- | --- | --- | --- | --- |
 | 1 | `basics/simulation` | Increment a big-integer represented as a digit array, propagating carry | Easy | Translate a prose rule into a reverse-order loop with a carry invariant | 6/6 | — |
 | 2 | `basics/simulation` | Reverse the digits of a signed 32-bit integer, refusing values that would overflow | Easy | Detect overflow BEFORE it happens rather than after | 6/6 | ⚠ |
-| 3 | `basics/simulation` | Traverse a matrix in spiral order | Medium | Maintain four shrinking boundaries without off-by-one | 5/6 — **C no** | — |
+| 3 | `basics/simulation` | Convert an integer to its Roman-numeral form | Medium | Simulate repeated greedy subtraction against an ordered value table | 6/6 | — |
 | 4 | `basics/integer-math-modular` | Greatest common divisor by the Euclidean algorithm | Easy | Reduce a problem by a recurrence on remainders | 6/6 | — |
-| 5 | `basics/integer-math-modular` | Modular exponentiation by squaring | Medium | Halve the exponent each step and keep intermediates bounded | 6/6 | ⚠ |
+| 5 | `basics/integer-math-modular` | Raise a value to an integer power by squaring, handling a negative exponent | Medium | Halve the exponent each step instead of multiplying n times | 6/6 | — |
 | 6 | `basics/integer-math-modular` | Count trailing zeroes in a factorial without computing it | Easy | Reason about prime factors instead of evaluating | 6/6 | — |
 | 7 | `basics/prefix-arithmetic-basics` | Running maximum of a sequence | Easy | See a prefix as any associative fold, not only a sum | 6/6 | — |
 | 8 | `basics/prefix-arithmetic-basics` | Answer one range-sum query from a precomputed prefix table | Easy | Separate the precompute step from the query step | 6/6 | — |
@@ -492,7 +517,7 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 | 42 | `graphs/bfs-shortest-path` | Minutes for a spreading state to fill a grid, or report impossible | Medium | Seed a BFS from many sources at once and count levels | 5/6 — **C no** | — |
 | 43 | `graphs/bfs-shortest-path` | Fewest one-letter transformations between two words via a dictionary | Hard | Recognise an implicit graph where states are not given as edges | 6/6 | — |
 | 44 | `graphs/topological-sort` | Whether a set of prerequisite pairs can all be satisfied | Medium | Detect a cycle in a directed graph via in-degrees | 5/6 — **C no** | — |
-| 45 | `graphs/topological-sort` | Produce a valid completion order for prerequisite pairs | Medium | Turn cycle detection into an ordering | 5/6 — **C no** | — |
+| 45 | `graphs/topological-sort` | Fewest rounds needed to finish all courses when independent ones run in parallel | Medium | Peel the dependency graph layer by layer with Kahn's algorithm | 5/6 — **C no** | — |
 | 46 | `dynamic-programming/2d-grid` | Number of monotone lattice paths across a grid | Easy | See a 2-D table and its base row and column | 6/6 | ⚠ |
 | 47 | `dynamic-programming/2d-grid` | Minimum-cost path from corner to corner of a cost grid | Medium | Choose between predecessors instead of summing them | 5/6 — **C no** | — |
 | 48 | `dynamic-programming/2d-grid` | Monotone lattice paths with blocked cells | Medium | Encode an obstacle as a zeroed state | 5/6 — **C no** | — |
@@ -515,12 +540,11 @@ repository metadata. Topic-level prerequisites in `topics.json` ARE, and appear 
 
 ## 9. Six-language implications
 
-13 of 54 proposed problems cannot be expressed in C today. Every one is a
+12 of 54 proposed problems cannot be expressed in C today. Every one is a
 nested-vector argument or return, which C's calling convention cannot model: a 2-D array
 needs a row count and a per-row column count, which is a different convention rather than a
 longer one. Grouped:
 
-- `basics/simulation` — Traverse a matrix in spiral order
 - `recursion/subset-include-exclude` — Enumerate all subsets of a distinct-element array
 - `recursion/subset-include-exclude` — Enumerate subsets of an array containing duplicates, without repeats
 - `recursion/backtracking-with-restore` — All combinations of candidates summing to a target, reuse allowed
@@ -530,7 +554,7 @@ longer one. Grouped:
 - `graphs/bfs-shortest-path` — Shortest clear path through a binary grid, eight-directional
 - `graphs/bfs-shortest-path` — Minutes for a spreading state to fill a grid, or report impossible
 - `graphs/topological-sort` — Whether a set of prerequisite pairs can all be satisfied
-- `graphs/topological-sort` — Produce a valid completion order for prerequisite pairs
+- `graphs/topological-sort` — Fewest rounds needed to finish all courses when independent ones run in parallel
 - `dynamic-programming/2d-grid` — Minimum-cost path from corner to corner of a cost grid
 - `dynamic-programming/2d-grid` — Monotone lattice paths with blocked cells
 
@@ -543,12 +567,11 @@ Curriculum quality was not otherwise bent to reach 6/6.
 ## 10. 64-bit ceiling implications
 
 The validator refuses expected outputs outside ±(2^53−1) — see `PRODUCTION_READINESS.md`
-section 18. 8 proposed concepts touch that boundary:
+section 18. 7 proposed concepts touch that boundary:
 
 | Pattern | Concept | Disposition |
 | --- | --- | --- |
 | `basics/simulation` | Reverse the digits of a signed 32-bit integer, refusing values that would overflow | bounded — the answer is int32 by construction, but the check needs 64-bit reasoning; constrain input to int32 |
-| `basics/integer-math-modular` | Modular exponentiation by squaring | CONSTRAIN — a product of two residues must stay under 2^53, so cap the modulus at 10^6 rather than the usual 10^9+7 |
 | `sorting/merge-sort-divide-conquer` | Count inversions in an array using the merge step | return must be long long — an inversion count reaches ~5x10^9, past int32 but well inside the JSON-safe range |
 | `sorting/custom-comparator-and-stability` | Arrange integers to form the largest possible concatenated number | returns a STRING deliberately — the numeric value would exceed the ceiling, and the string form sidesteps it legitimately rather than by constraint |
 | `arrays/kadane-maximum-subarray` | Maximum product of a contiguous subarray | CONSTRAIN — cap n and |value| so the product stays inside the exact-integer range |

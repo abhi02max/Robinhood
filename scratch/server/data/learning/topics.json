@@ -59,7 +59,7 @@
       "name": "Strings",
       "order_index": 5,
       "description": "Strings are arrays with extra structure: character frequency, alphabets, prefixes/suffixes, palindromes. Covers frequency-counter techniques, palindrome expansion, KMP, Z-algorithm, and rolling hashes (Rabin–Karp).",
-      "prerequisites": ["arrays", "sliding-window-two-pointers"],
+      "prerequisites": ["arrays"],
       "learning_outcomes": [
         "Solve anagram and frequency-comparison problems with O(σ) extra space",
         "Find palindromic substrings via expansion and Manacher's algorithm",
@@ -124,7 +124,7 @@
       "name": "Sliding Window & Two Pointers",
       "order_index": 10,
       "description": "Two of the most powerful linear-time techniques. Sliding window converts O(N·K) and O(N²) brute-force scans into O(N) by maintaining a running aggregate over a moving range. Two pointers exploit sorted or monotonic structure to converge or scan in lockstep. Together they cover hundreds of interview problems.",
-      "prerequisites": ["arrays"],
+      "prerequisites": ["arrays", "strings"],
       "learning_outcomes": [
         "Apply fixed-size sliding window to aggregate-over-range problems",
         "Apply variable-size sliding window with shrink-on-violation",

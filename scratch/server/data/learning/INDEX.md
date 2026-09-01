@@ -95,8 +95,25 @@ server/data/learning/
 
 ## Generation status
 
+> **The table below is a snapshot from 2026-08-30 and is no longer maintained by hand.**
+>
+> Phase 3A.1 moved three problems between patterns, which made two of its rows wrong
+> immediately — which is the problem with a hand-maintained count. The authoritative,
+> recomputed-from-source version is:
+>
+> ```
+> npm run audit:curriculum
+> ```
+>
+> which writes `docs/CURRICULUM_AUDIT.md` and `server/scripts/curriculum-coverage-report.json`
+> from `topics.json`, `patterns/*.json` and `problems/`. It also distinguishes patterns that are
+> **coding-capable** from those that are **conceptual** or **structurally blocked**, so the
+> coverage figure means something: 108 is not the right denominator.
+>
+> Kept here for the per-topic prose and the 🚫 notes, which are still accurate.
+
 Measured against the live database on 2026-08-30: 96 problems, 1,168 test cases,
-16 of 108 patterns filled.
+16 of 108 patterns filled. **Superseded — regenerate rather than trusting these numbers.**
 
 Legend: ✅ complete · 🟡 partial · ⬜ pending · 🚫 blocked
 
